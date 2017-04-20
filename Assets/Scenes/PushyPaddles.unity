@@ -617,6 +617,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AirConsoleManager: {fileID: 1565417713}
   RewardsManager: {fileID: 2078058590}
+  IsShowing: 0
 --- !u!225 &303318665
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2139,7 +2140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tideStrength: 25
-  _maxPaddleStrength: 50
+  _maxPaddleStrength: 100
 --- !u!1 &1355552228
 GameObject:
   m_ObjectHideFlags: 0

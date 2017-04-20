@@ -65,8 +65,16 @@ public class Player : MovingObject
         var newPosition = new Vector3(
             transform.position.x,
             transform.position.y,
-            transform.position.z + (direction * MovementSpeed * DirectionModifier * SpeedModifier)    
+            transform.position.z + (direction * MovementSpeed * DirectionModifier * SpeedModifier)
         );
+        if (PlayerRole == Role.Floater)
+        {
+            newPosition = new Vector3(
+                transform.position.x + (direction * MovementSpeed * DirectionModifier * SpeedModifier) ,
+                transform.position.y,
+                transform.position.z 
+            );
+        } 
 
         transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime);
     }
