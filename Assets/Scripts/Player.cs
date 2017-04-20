@@ -6,7 +6,7 @@ using UnityEngine.TestTools;
 
 public class Player : MovingObject
 {
-
+    public string Name;
     public int DirectionModifier = 1;
     public float SpeedModifier = 1f;
 
@@ -23,6 +23,8 @@ public class Player : MovingObject
     private bool _moving = false;
     private float _direction = 0f;
 
+    private GameObject _holdingGameObject;
+
     public override void Start()
     {
         MovementSpeed = 1f;
@@ -33,6 +35,8 @@ public class Player : MovingObject
 
         // TODO Set repawn location
         RespawnLocation = transform.position;
+
+        _holdingGameObject = null;
     }
 
     public override void ResetObject()
@@ -77,18 +81,55 @@ public class Player : MovingObject
         } 
 
         transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime);
+        if (_holdingGameObject != null)
+        {
+            _holdingGameObject.transform.position = transform.position + new Vector3(0f, 1f, 0f);
+        }
     }
 
     public void Interact()
     {
+        var platform = GameObject.FindGameObjectWithTag("Platform").GetComponent<FloatingPlatform>();
+        var platformStart = GameObject.FindGameObjectWithTag("PlatformStart").gameObject;
         switch (PlayerRole)
         {
             case Role.Floater:
-                GameObject.FindGameObjectWithTag("Platform").GetComponent<FloatingPlatform>().PlaceOnWater(this);
+                if (platform.InRange(gameObject))
+                {
+                    if (_holdingGameObject == null)
+                    {
+                        _holdingGameObject = platform.gameObject;
+                        _holdingGameObject.transform.position = transform.position + new Vector3(0f, 1f, 0f);
+                    }
+                    else if (Vector3.Distance(platformStart.transform.position, transform.position) < 3f)
+                    {
+                        platform.ResetObject();
+                        _holdingGameObject.transform.position = platformStart.transform.position;
+
+                        _holdingGameObject = null;
+                        platform.PlaceOnWater(this);
+                    }
+                }
                 break;
             case Role.Paddle_Left:
             case Role.Paddle_Right:
-                GameObject.FindGameObjectWithTag("Water").GetComponent<WaterBehaviour>().PaddleUsed(this);
+                if (platform.InRange(gameObject))
+                {
+                    if (_holdingGameObject == null)
+                    {
+                        _holdingGameObject = platform.gameObject;
+                        _holdingGameObject.transform.position = transform.position + new Vector3(0f, 1f, 0f);
+                    }
+                    else
+                    {
+                        _holdingGameObject.transform.position = new Vector3(_holdingGameObject.transform.position.x, 0.5f, _holdingGameObject.transform.position.z);
+                        _holdingGameObject = null;
+                    }
+                }
+                else
+                {
+                    GameObject.FindGameObjectWithTag("Water").GetComponent<WaterBehaviour>().PaddleUsed(this);
+                }
                 break;
             case Role.Unassigned:
             default:

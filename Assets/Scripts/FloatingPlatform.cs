@@ -70,4 +70,11 @@ public class FloatingPlatform : MovingObject
             MenuManager.ShowRewards();
         }
     }
+
+    public bool InRange(GameObject other)
+    {
+        var distance = Vector3.Distance(other.transform.position, transform.position);
+        return distance < 1.5f;
+
+    }
 }

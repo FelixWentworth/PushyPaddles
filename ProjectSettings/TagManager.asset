@@ -8,6 +8,7 @@ TagManager:
   - Platform
   - Obstacle
   - Treasure
+  - PlatformStart
   layers:
   - Default
   - TransparentFX

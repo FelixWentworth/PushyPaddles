@@ -24,12 +24,16 @@ public class WaterBehaviour : MonoBehaviour
 
     private GameObject _currentPlatform;
 
+    public Material Material;
+
     void Awake()
     {
         _respawnZPos = transform.position.z + (transform.localScale.y / 2f);
 
         _minXClamp = transform.position.x - (transform.localScale.x / 2f);
         _maxXClamp = transform.position.x + (transform.localScale.x / 2f);
+
+        StartCoroutine(ParallaxWater());
     }
 
     public void TouchedWater(MovingObject movingObject)
@@ -152,5 +156,17 @@ public class WaterBehaviour : MonoBehaviour
             yield return null;
         }
         _paddleStrength = 0f;
+    }
+
+    private IEnumerator ParallaxWater()
+    {
+        while (true)
+        {
+            var y = Mathf.Repeat(Time.time * _tideStrength * 0.01f, 1);
+            var offset = new Vector2(Material.mainTextureOffset.x, y);
+            Material.SetTextureOffset("_MainTex", offset);
+
+            yield return null;
+        }
     }
 }
