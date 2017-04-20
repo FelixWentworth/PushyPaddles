@@ -57,10 +57,17 @@ public class FloatingPlatform : MovingObject
         }
         else if (other.gameObject.tag == "Treasure")
         {
-            _playerOnPlatform.transform.position = new Vector3(other.transform.position.x, _playerOnPlatform.transform.position.y, (other.transform.position.z - 0.5f));
+            // VICTORY CONDITION
+
+            var victoryPosition = other.transform.FindChild("VicrtoryLocation").position;
+            _playerOnPlatform.transform.position = victoryPosition;
             _playerOnPlatform = null;
             CanFloat = false;
             Water.TouchedWater(this);
+
+
+            // Show the reward screen
+            MenuManager.ShowRewards();
         }
     }
 }

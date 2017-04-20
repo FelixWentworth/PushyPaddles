@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 260974b7caf2a5a45ab04f4d0c7b48c6
+timeCreated: 1492680152
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: bleedingwatercolor
+  fontNames:
+  - bleedingwatercolor
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

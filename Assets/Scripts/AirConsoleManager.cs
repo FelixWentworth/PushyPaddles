@@ -53,7 +53,15 @@ public class AirConsoleManager : MonoBehaviour
             {
                 if ((bool) data["Down"]["pressed"])
                 {
-                    Players[active_player].StartMoving(-1f);
+                    if (!MenuManager.IsMenuActive())
+                    {
+                        Players[active_player].StartMoving(-1f);
+                    }
+                    else if (active_player == 0)
+                    {
+                        // can control a menu
+                        MenuManager.LeftPressed();
+                    }
                 }
                 else
                 {
@@ -64,7 +72,15 @@ public class AirConsoleManager : MonoBehaviour
             {
                 if ((bool)data["Up"]["pressed"])
                 {
-                    Players[active_player].StartMoving(1f);
+                    if (!MenuManager.IsMenuActive())
+                    {
+                        Players[active_player].StartMoving(1f);
+                    }
+                    else if (active_player == 0)
+                    {
+                        // can control a menu
+                        MenuManager.RightPressed();
+                    }
                 }
                 else
                 {
@@ -73,7 +89,15 @@ public class AirConsoleManager : MonoBehaviour
             }
             if (data.ToString().Contains("Interact") && (bool)data["Interact"]["pressed"])
             {
-                Players[active_player].Interact();
+                if (!MenuManager.IsMenuActive())
+                {
+                    Players[active_player].Interact();
+                }
+                else if (active_player == 0)
+                {
+                    // can control a menu
+                    MenuManager.SelectPressed();
+                }
             }   
         }
     }

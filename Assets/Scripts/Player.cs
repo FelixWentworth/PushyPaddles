@@ -4,7 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-public class Player : MovingObject {
+public class Player : MovingObject
+{
+
+    public int DirectionModifier = 1;
+    public float SpeedModifier = 1f;
 
     public enum Role
     {
@@ -61,7 +65,7 @@ public class Player : MovingObject {
         var newPosition = new Vector3(
             transform.position.x,
             transform.position.y,
-            transform.position.z + (direction * MovementSpeed)    
+            transform.position.z + (direction * MovementSpeed * DirectionModifier * SpeedModifier)    
         );
 
         transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime);
