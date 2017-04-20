@@ -18,7 +18,10 @@ public class FloatingPlatform : MovingObject
         PlayerCanHit = true;
         CanRespawn = true;
 
-        RespawnLocation = transform.position;
+        RespawnLocation.Add(transform.position);
+        var oppositeSide = new Vector3(transform.position.x * -1, transform.position.y, transform.position.z);
+
+        RespawnLocation.Add(oppositeSide);
     }
 
     public override void ResetObject()
@@ -32,6 +35,7 @@ public class FloatingPlatform : MovingObject
     public override void Respawn()
     {
         base.Respawn();
+        
         _playerOnPlatform = null;
     }
 
@@ -44,6 +48,7 @@ public class FloatingPlatform : MovingObject
     {
         if (_playerOnPlatform != null)
         {
+            _playerOnPlatform.GetComponent<Rigidbody>().useGravity = false;
             _playerOnPlatform.transform.position = new Vector3(transform.position.x, _playerOnPlatform.transform.position.y, transform.position.z);
             Water.TouchedWater(this);
         }
@@ -53,7 +58,13 @@ public class FloatingPlatform : MovingObject
     {
         if (other.gameObject.tag == "Obstacle")
         {
-            CanFloat = false;
+            if (_playerOnPlatform != null)
+            {
+                _playerOnPlatform.GetComponent<Rigidbody>().useGravity = true;
+                _playerOnPlatform = null;
+                CanFloat = false;
+                Water.TouchedWater(this);
+            }
         }
         else if (other.gameObject.tag == "Treasure")
         {
@@ -73,6 +84,11 @@ public class FloatingPlatform : MovingObject
 
     public bool InRange(GameObject other)
     {
+        if (_playerOnPlatform != null)
+        {
+            // Player cannot interact
+            return false;
+        }
         var distance = Vector3.Distance(other.transform.position, transform.position);
         return distance < 1.5f;
 

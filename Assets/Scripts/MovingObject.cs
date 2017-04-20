@@ -14,7 +14,7 @@ public class MovingObject : MonoBehaviour
     // If the player collides with this object
     public bool PlayerCanHit;
 
-    public Vector3 RespawnLocation;
+    public List<Vector3> RespawnLocation = new List<Vector3>();
     private Vector3 _initialRotation;
 
 
@@ -47,7 +47,9 @@ public class MovingObject : MonoBehaviour
         yield return new WaitForSeconds(RespawnTime);
         GetComponent<BoxCollider>().enabled = true;
         ResetObject();
-        transform.position = RespawnLocation;
+
+        var randomRespawn = Random.Range(0, RespawnLocation.Count);
+        transform.position = RespawnLocation[randomRespawn];
 
     }
 

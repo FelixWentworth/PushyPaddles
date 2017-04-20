@@ -27,14 +27,13 @@ public class Player : MovingObject
 
     public override void Start()
     {
-        MovementSpeed = 1f;
+        MovementSpeed = 3f;
         CanFloat = false;
         PlayerCanInteract = false;
         PlayerCanHit = false;
         CanRespawn = true;
 
-        // TODO Set repawn location
-        RespawnLocation = transform.position;
+        RespawnLocation.Add(transform.position);
 
         _holdingGameObject = null;
     }
@@ -129,6 +128,7 @@ public class Player : MovingObject
                 else
                 {
                     GameObject.FindGameObjectWithTag("Water").GetComponent<WaterBehaviour>().PaddleUsed(this);
+                    GetComponentInChildren<ParticleSystem>().Play();
                 }
                 break;
             case Role.Unassigned:

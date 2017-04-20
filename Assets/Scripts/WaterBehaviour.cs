@@ -163,7 +163,7 @@ public class WaterBehaviour : MonoBehaviour
         while (true)
         {
             var y = Mathf.Repeat(Time.time * _tideStrength * 0.01f, 1);
-            var offset = new Vector2(Material.mainTextureOffset.x, y);
+            var offset = new Vector2(Material.mainTextureOffset.x + (_paddleStrength * 0.01f), y);
             Material.SetTextureOffset("_MainTex", offset);
 
             yield return null;
