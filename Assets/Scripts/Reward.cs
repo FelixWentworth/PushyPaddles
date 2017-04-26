@@ -25,7 +25,6 @@ public class Reward : MonoBehaviour
 
     public void SetHighlight(bool highlight)
     {
-        Debug.Log("Set Highlight" + highlight);
         if (!IsAvailable)
         {
             return;

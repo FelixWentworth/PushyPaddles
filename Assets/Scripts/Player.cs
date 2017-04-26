@@ -25,7 +25,6 @@ public class Player : MovingObject
 
     public override void Start()
     {
-        MovementSpeed = 3f;
         CanFloat = false;
         PlayerCanInteract = false;
         PlayerCanHit = false;
@@ -34,6 +33,8 @@ public class Player : MovingObject
         RespawnLocation.Add(transform.position);
 
         _holdingGameObject = null;
+
+        GetComponent<Rigidbody>().isKinematic = !isServer;
     }
 
     public override void ResetObject()
@@ -60,15 +61,54 @@ public class Player : MovingObject
         if (Input.GetKeyDown(KeyCode.Space))
         {
             // Interact Command
+            var platform = GameObject.FindGameObjectWithTag("Platform");
+            //if (platform.transform.parent == null)
+            //{
+                CmdPickup(platform);
+            //}
+            //else if (platform.transform.parent == this.transform)
+            //{
+            //    // Drop it
+            //    CmdDrop(platform);
+            //}
+        }
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            // Interact Command
+            var platform = GameObject.FindGameObjectWithTag("Platform");
+            //if (platform.transform.parent == null)
+            //{
+            CmdDrop(platform);
+            //}
+            //else if (platform.transform.parent == this.transform)
+            //{
+            //    // Drop it
+            //    CmdDrop(platform);
+            //}
         }
     }
 
     [Command]
     private void CmdMove(GameObject go, float x, float z)
     {
-        go.transform.Rotate(0, x, 0);
-        go.transform.Translate(0, 0, z);
+        go.transform.Rotate(0, x * RotationSpeed, 0);
+        go.transform.Translate(0, 0, z * MovementSpeed);
     }
+
+    [Command]
+    private void CmdPickup(GameObject go)
+    {
+        go.transform.SetParent(this.transform, true);
+        go.transform.localPosition = Vector3.forward;
+    }
+
+    [Command]
+    private void CmdDrop(GameObject go)
+    {
+        go.transform.SetParent(null, true);
+
+    }
+
     public void Interact()
     {
         var platform = GameObject.FindGameObjectWithTag("Platform").GetComponent<FloatingPlatform>();

@@ -5,7 +5,8 @@ using UnityEngine.Networking;
 
 public class MovingObject : NetworkBehaviour
 {
-    public float MovementSpeed;
+    [SyncVar] public float MovementSpeed;
+    [SyncVar] public float RotationSpeed;
     public float RespawnTime = 1f;
 
     public bool CanFloat;
