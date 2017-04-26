@@ -8,6 +8,8 @@ public class Player : MovingObject
     public int DirectionModifier = 1;
     public float SpeedModifier = 1f;
 
+    [SyncVar] public bool HoldingPlatform;
+
     public enum Role
     {
         Unassigned = 0,
@@ -60,38 +62,43 @@ public class Player : MovingObject
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            // Interact Command
             var platform = GameObject.FindGameObjectWithTag("Platform");
-            CmdPickup(platform);
-        }
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            // Interact Command
-            var platform = GameObject.FindGameObjectWithTag("Platform");
-            CmdDrop(platform);
+            if (platform.GetComponent<FloatingPlatform>().CanPickUp && !HoldingPlatform)
+            {
+                // Drop Plaftorm
+                CmdPickupPlatform(platform);
+            }
+            else if (HoldingPlatform)
+            {
+                // Pickup Platform
+                CmdDropPlatform(platform);
+            }
         }
     }
 
     [Command]
     private void CmdMove(GameObject go, float x, float z)
     {
-        go.transform.Rotate(0, x * RotationSpeed, 0);
-        go.transform.Translate(0, 0, z * MovementSpeed);
+        go.transform.position += new Vector3(x * MovementSpeed, 0, z * MovementSpeed);
+        go.transform.LookAt(new Vector3(go.transform.localPosition.x + x, go.transform.localPosition.y, go.transform.localPosition.z + z));
     }
 
     [Command]
-    private void CmdPickup(GameObject go)
+    private void CmdPickupPlatform(GameObject platform)
     {
-        go.transform.SetParent(this.transform, true);
-        go.transform.localPosition = new Vector3(0f, 1.0f, 1.5f);
+        HoldingPlatform = true;
+        platform.GetComponent<FloatingPlatform>().CanPickUp = !HoldingPlatform;
+        platform.transform.SetParent(this.transform, true);
+        platform.transform.localPosition = new Vector3(0f, 1.0f, 1.5f);
     }
 
     [Command]
-    private void CmdDrop(GameObject go)
+    private void CmdDropPlatform(GameObject platform)
     {
-        go.transform.position = new Vector3(transform.position.x, -0.6f, transform.position.z);
-        go.transform.SetParent(null, true);
-
+        platform.transform.position = new Vector3(transform.position.x, -0.6f, transform.position.z);
+        platform.transform.SetParent(null, true);
+        HoldingPlatform = false;
+        platform.GetComponent<FloatingPlatform>().CanPickUp = !HoldingPlatform;
     }
 
     public void Interact()
