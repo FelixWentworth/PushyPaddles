@@ -62,29 +62,13 @@ public class Player : MovingObject
         {
             // Interact Command
             var platform = GameObject.FindGameObjectWithTag("Platform");
-            //if (platform.transform.parent == null)
-            //{
-                CmdPickup(platform);
-            //}
-            //else if (platform.transform.parent == this.transform)
-            //{
-            //    // Drop it
-            //    CmdDrop(platform);
-            //}
+            CmdPickup(platform);
         }
         if (Input.GetKeyUp(KeyCode.Space))
         {
             // Interact Command
             var platform = GameObject.FindGameObjectWithTag("Platform");
-            //if (platform.transform.parent == null)
-            //{
             CmdDrop(platform);
-            //}
-            //else if (platform.transform.parent == this.transform)
-            //{
-            //    // Drop it
-            //    CmdDrop(platform);
-            //}
         }
     }
 
@@ -99,12 +83,13 @@ public class Player : MovingObject
     private void CmdPickup(GameObject go)
     {
         go.transform.SetParent(this.transform, true);
-        go.transform.localPosition = Vector3.forward;
+        go.transform.localPosition = new Vector3(0f, 1.0f, 1.5f);
     }
 
     [Command]
     private void CmdDrop(GameObject go)
     {
+        go.transform.position = new Vector3(transform.position.x, -0.6f, transform.position.z);
         go.transform.SetParent(null, true);
 
     }
