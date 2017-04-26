@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.TestTools;
+using UnityEngine.Networking;
 
 public class Player : MovingObject
 {
@@ -43,49 +41,34 @@ public class Player : MovingObject
 
     }
 
-    public void StartMoving(float direction)
-    {
-        _moving = true;
-        _direction = direction;
-    }
 
-    public void StopMoving()
+    // Update is called once per frame
+    void FixedUpdate()
     {
-        _moving = false;
-        _direction = 0f;
-    }
-
-    void Update()
-    {
-        if (_moving)
+        if (!isLocalPlayer)
         {
-            Move(_direction);
+            return;
+        }
+        var x = Input.GetAxis("Horizontal");
+        var z = Input.GetAxis("Vertical");
+
+        if (x != 0 || z != 0)
+        {
+            // Move Player Command
+            CmdMove(gameObject, x, z);
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            // Interact Command
         }
     }
 
-    private void Move(float direction)
+    [Command]
+    private void CmdMove(GameObject go, float x, float z)
     {
-        var newPosition = new Vector3(
-            transform.position.x,
-            transform.position.y,
-            transform.position.z + (direction * MovementSpeed * DirectionModifier * SpeedModifier)
-        );
-        if (PlayerRole == Role.Floater)
-        {
-            newPosition = new Vector3(
-                transform.position.x + (direction * MovementSpeed * DirectionModifier * SpeedModifier) ,
-                transform.position.y,
-                transform.position.z 
-            );
-        } 
-
-        transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime);
-        if (_holdingGameObject != null)
-        {
-            _holdingGameObject.transform.position = transform.position + new Vector3(0f, 1f, 0f);
-        }
+        go.transform.Rotate(0, x, 0);
+        go.transform.Translate(0, 0, z);
     }
-
     public void Interact()
     {
         var platform = GameObject.FindGameObjectWithTag("Platform").GetComponent<FloatingPlatform>();

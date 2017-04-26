@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class MovingObject : MonoBehaviour
+public class MovingObject : NetworkBehaviour
 {
     public float MovementSpeed;
     public float RespawnTime = 1f;
