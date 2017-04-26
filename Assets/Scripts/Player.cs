@@ -63,15 +63,26 @@ public class Player : MovingObject
         if (Input.GetKeyDown(KeyCode.Space))
         {
             var platform = GameObject.FindGameObjectWithTag("Platform");
-            if (platform.GetComponent<FloatingPlatform>().CanPickUp && !HoldingPlatform)
+            var fp = platform.GetComponent<FloatingPlatform>();
+            
+            if (fp.CanPickUp && fp.InRange(gameObject) && !HoldingPlatform)
             {
-                // Drop Plaftorm
+                // Pickup Plaftorm
                 CmdPickupPlatform(platform);
             }
             else if (HoldingPlatform)
             {
-                // Pickup Platform
-                CmdDropPlatform(platform);
+                if (fp.CanBePlacedInWater())
+                {
+                    // Place in water
+                    CmdDropPlatform(platform);
+                    CmdPlacePlatformInWater(platform);
+                }
+                else
+                {
+                    // Drop Platform
+                    CmdDropPlatform(platform);
+                }
             }
         }
     }
@@ -99,6 +110,19 @@ public class Player : MovingObject
         platform.transform.SetParent(null, true);
         HoldingPlatform = false;
         platform.GetComponent<FloatingPlatform>().CanPickUp = !HoldingPlatform;
+    }
+
+    [Command]
+    private void CmdPlacePlatformInWater(GameObject platform)
+    {
+        var start = GameObject.Find("PlatformStartPoint");
+
+        platform.transform.position = start.transform.position;
+
+        var fp = platform.GetComponent<FloatingPlatform>();
+
+        fp.CanPickUp = false;
+        fp.PlaceOnWater(this);
     }
 
     public void Interact()

@@ -50,8 +50,12 @@ public class MovingObject : NetworkBehaviour
         ResetObject();
 
         var randomRespawn = Random.Range(0, RespawnLocation.Count);
-        transform.position = RespawnLocation[randomRespawn];
-
+        CmdRespawn(gameObject, RespawnLocation[randomRespawn]);
     }
 
+    [Command]
+    private void CmdRespawn(GameObject go, Vector3 pos)
+    {
+        go.transform.position = pos;
+    }
 }

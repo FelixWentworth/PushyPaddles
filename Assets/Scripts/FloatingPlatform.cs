@@ -39,6 +39,7 @@ public class FloatingPlatform : MovingObject
         base.Respawn();
         
         _playerOnPlatform = null;
+        CmdReset();
     }
 
     public void PlaceOnWater(Player player)
@@ -94,5 +95,19 @@ public class FloatingPlatform : MovingObject
         var distance = Vector3.Distance(other.transform.position, transform.position);
         return distance < 1.5f;
 
+    }
+
+    public bool CanBePlacedInWater()
+    {
+        // Get Start Point
+        var start = GameObject.Find("PlatformStartPoint");
+
+        return Vector3.Distance(start.transform.position, transform.position) < 1.5f;
+    }
+
+    [Command]
+    private void CmdReset()
+    {
+        CanPickUp = true;
     }
 }
