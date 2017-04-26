@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class RewardScreenManager : MonoBehaviour
 {
-    public AirConsoleManager AirConsoleManager;
+    //public AirConsoleManager AirConsoleManager;
     public RewardsManager RewardsManager;
     private CanvasGroup _canvasGroup;
 
@@ -40,10 +40,10 @@ public class RewardScreenManager : MonoBehaviour
             case Reward.RewardType.None:
                 break;
             case Reward.RewardType.SpeedBoost:
-                AirConsoleManager.Players[playerIndex].SpeedModifier += 0.5f;
+                //AirConsoleManager.Players[playerIndex].SpeedModifier += 0.5f;
                 break;
             case Reward.RewardType.ReverseControls:
-                AirConsoleManager.Players[playerIndex].DirectionModifier *= -1;
+                //AirConsoleManager.Players[playerIndex].DirectionModifier *= -1;
                 break;
             default:
                 throw new ArgumentOutOfRangeException("type", type, null);

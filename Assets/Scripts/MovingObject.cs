@@ -21,7 +21,6 @@ public class MovingObject : MonoBehaviour
     public virtual void Start()
     {
         _initialRotation = transform.eulerAngles;
-        Debug.Log(_initialRotation);
     }
 
     public virtual void ResetObject()
