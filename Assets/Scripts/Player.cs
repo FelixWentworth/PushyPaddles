@@ -20,6 +20,18 @@ public class Player : MovingObject
 
     public Role PlayerRole;
 
+    private enum AnimationState{
+        IDLE = 0,
+        
+        WALKING,
+        HOLDING,
+        FALLING
+    }
+
+    private AnimationState _animationState;
+
+    [SyncVar] public int _animState = 0;
+
     private bool _moving = false;
     private float _direction = 0f;
 
@@ -48,6 +60,7 @@ public class Player : MovingObject
     // Update is called once per frame
     void FixedUpdate()
     {
+        SetAnimation();
         if (!isLocalPlayer)
         {
             return;
@@ -59,6 +72,11 @@ public class Player : MovingObject
         {
             // Move Player Command
             CmdMove(gameObject, x, z);
+            CmdChangeState((int) AnimationState.WALKING);
+        }
+        else
+        {
+            CmdChangeState((int) AnimationState.IDLE);
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -85,6 +103,7 @@ public class Player : MovingObject
                 }
             }
         }
+
     }
 
     [Command]
@@ -123,6 +142,12 @@ public class Player : MovingObject
 
         fp.CanPickUp = false;
         fp.PlaceOnWater(this);
+    }
+
+    [Command]
+    private void CmdChangeState(int newState)
+    {
+        _animState = newState;
     }
 
     public void Interact()
@@ -174,6 +199,36 @@ public class Player : MovingObject
             default:
                 throw new ArgumentOutOfRangeException();
         }
+    }
+
+    private void SetAnimation()
+    {
+        if ((int) _animationState == _animState)
+        {
+            return;
+        }
+
+        var nextState = (AnimationState) _animState;
+
+        var anim = GetComponentInChildren<Animator>();
+        switch (nextState)
+        {
+            case AnimationState.IDLE:
+                // Set speed to 0f;
+                anim.SetFloat("Speed_f", 0f);
+                break;
+            case AnimationState.WALKING:
+                anim.SetFloat("Speed_f", 1f);
+                break;
+            case AnimationState.HOLDING:
+                break;
+            case AnimationState.FALLING:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        _animationState = nextState;
     }
 
     void OnCollisionEnter(Collision other)
