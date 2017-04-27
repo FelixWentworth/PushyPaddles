@@ -15,7 +15,7 @@ public class GameManager : NetworkBehaviour
     {
         if (isServer && !_gameStarted)
         {
-            if (NetworkServer.connections.Count(c => c != null && c.isReady) > 1)
+            if (NetworkServer.connections.Count(c => c != null && c.isReady) > 1 || Input.GetKeyDown(KeyCode.A))
             {
                 // Start game
                 _gameStarted = true;
