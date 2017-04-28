@@ -15,9 +15,10 @@ public class GameManager : NetworkBehaviour
     {
         if (isServer && !_gameStarted)
         {
-            if (NetworkServer.connections.Count(c => c != null && c.isReady) > 1 || Input.GetKeyDown(KeyCode.A))
+            if (NetworkServer.connections.Count(c => c != null && c.isReady) > 1 || Input.GetKeyDown(KeyCode.Space))
             {
                 // Start game
+                GameObject.Find("MenuManager").GetComponent<MenuManager>().CmdToggleMenu();
                 _gameStarted = true;
                 Debug.Log("Start Game");
                 StartGame();

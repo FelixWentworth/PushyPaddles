@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: b65d24ca9abc28d479f9cf1ecde17da7
+timeCreated: 1493369265
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: 'Shark in the Water '
+  fontNames:
+  - 'Shark in the Water '
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

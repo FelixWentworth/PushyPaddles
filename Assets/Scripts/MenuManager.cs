@@ -1,15 +1,21 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
-public class MenuManager : MonoBehaviour
+public class MenuManager : NetworkBehaviour
 {
-    private static bool _showRewards = false;
+    // Menu should be active at start
+    [SyncVar] private bool _showMenu = true;
+    // Explicitly state that the other menus menus should be disabled
+    [SyncVar] private bool _showRewards = false;
+
+    // Reward screen inputs
     private static bool _leftPressed;
     private static bool _rightPressed;
     private static bool _selectPressed;
 
-    private static bool _isMenuActive;
-
     public RewardScreenManager RewardScreenManager;
+    public GameObject TitleScreen;
+
 
     void Start()
     {
@@ -18,12 +24,19 @@ public class MenuManager : MonoBehaviour
 
     // Update is called once per frame
 	void Update () {
-	    if (_showRewards)
+	    if (_showMenu && !TitleScreen.activeSelf)
 	    {
-	        _showRewards = false;
+	        TitleScreen.SetActive(_showMenu);
+	    }
+        else if (!_showMenu && TitleScreen.activeSelf)
+	    {
+	        TitleScreen.SetActive(_showMenu);
+	    }
+        if (_showRewards && !RewardScreenManager.IsShowing)
+	    {
             RewardScreenManager.Show();
 	    }
-        
+
         // Check a menu is open
 	    if (RewardScreenManager.IsShowing)
 	    {
@@ -43,8 +56,6 @@ public class MenuManager : MonoBehaviour
                 RewardScreenManager.RewardsManager.Select();
             }
         }
-
-	    _isMenuActive = RewardScreenManager.IsShowing;
 	}
 
     private void HideScreens()
@@ -52,28 +63,33 @@ public class MenuManager : MonoBehaviour
         RewardScreenManager.Hide();
     }
 
-    public static void ShowRewards()
+    [Command]
+    public void CmdToggleMenu()
     {
-        _showRewards = true;
+        _showMenu = !_showMenu;
     }
 
-    public static void LeftPressed()
+    [Command]
+    public void CmdToggleRewards()
+    {
+        _showRewards = !_showRewards;
+    }
+
+    [Command]
+    public void CmdLeftPressed()
     {
         _leftPressed = true;
     }
 
-    public static void RightPressed()
+    [Command]
+    public void CmdRightPressed()
     {
         _rightPressed = true;
     }
 
-    public static void SelectPressed()
+    [Command]
+    public void CmdSelectPressed()
     {
         _selectPressed = true;
-    }
-
-    public static bool IsMenuActive()
-    {
-        return _isMenuActive;
     }
 }
