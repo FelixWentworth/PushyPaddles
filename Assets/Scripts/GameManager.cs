@@ -11,20 +11,35 @@ public class GameManager : NetworkBehaviour
     public GameObject PlayerPrefab;
     private List<Player> _players = new List<Player>();
 
+
     void Update()
     {
         if (isServer && !_gameStarted)
         {
+            var menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
             if (NetworkServer.connections.Count(c => c != null && c.isReady) > 1 || Input.GetKeyDown(KeyCode.Space))
             {
                 // Start game
-                GameObject.Find("MenuManager").GetComponent<MenuManager>().CmdToggleMenu();
+                
+                menu.CmdHideMenu();
                 _gameStarted = true;
                 Debug.Log("Start Game");
                 StartGame();
-
+                menu.CmdShowCharacterSelect();
             }
         }
+    }
+
+    public Player GetLocalPlayer()
+    {
+        foreach (var player in _players)
+        {
+            if (player.isLocalPlayer)
+            {
+                return player;
+            }
+        }
+        return null;
     }
 
     [Server]
@@ -44,11 +59,12 @@ public class GameManager : NetworkBehaviour
             }
         }
     }
-    
+
     [Server]
     private void SetPlayerRole(int playerIndex, Player player)
     {
         //only the 1st player should be able to ride the platform
+        player.PlayerID = playerIndex;
         player.PlayerRole = playerIndex == 0 ? Player.Role.Floater : Player.Role.Paddler;
     }
 

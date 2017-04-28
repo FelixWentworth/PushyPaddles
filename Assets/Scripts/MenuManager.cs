@@ -7,6 +7,7 @@ public class MenuManager : NetworkBehaviour
     [SyncVar] private bool _showMenu = true;
     // Explicitly state that the other menus menus should be disabled
     [SyncVar] private bool _showRewards = false;
+    [SyncVar] private bool _showCharacterSelection = false;
 
     // Reward screen inputs
     private static bool _leftPressed;
@@ -15,7 +16,7 @@ public class MenuManager : NetworkBehaviour
 
     public RewardScreenManager RewardScreenManager;
     public GameObject TitleScreen;
-
+    public GameObject CharacterSelectionScreen;
 
     void Start()
     {
@@ -24,11 +25,7 @@ public class MenuManager : NetworkBehaviour
 
     // Update is called once per frame
 	void Update () {
-	    if (_showMenu && !TitleScreen.activeSelf)
-	    {
-	        TitleScreen.SetActive(_showMenu);
-	    }
-        else if (!_showMenu && TitleScreen.activeSelf)
+	    if (TitleScreen.activeSelf != _showMenu)
 	    {
 	        TitleScreen.SetActive(_showMenu);
 	    }
@@ -64,9 +61,22 @@ public class MenuManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdToggleMenu()
+    public void CmdShowMenu()
     {
-        _showMenu = !_showMenu;
+        _showMenu = true;
+    }
+
+    [Command]
+    public void CmdHideMenu()
+    {
+        _showMenu = false;
+    }
+
+    [Command]
+    public void CmdShowCharacterSelect()
+    {
+        CharacterSelectionScreen.SetActive(true);
+        SetCharacterPlayer();
     }
 
     [Command]
@@ -91,5 +101,10 @@ public class MenuManager : NetworkBehaviour
     public void CmdSelectPressed()
     {
         _selectPressed = true;
+    }
+
+    private void SetCharacterPlayer()
+    {
+        GameObject.Find("CharacterSelection").GetComponent<CharacterSelection>().Set(GameObject.Find("GameManager").GetComponent<GameManager>().GetLocalPlayer());
     }
 }

@@ -38,6 +38,9 @@ public class Player : MovingObject
     private GameObject _holdingGameObject;
 
     [SyncVar] private bool _usePaddle;
+    [SyncVar] public int PlayerID;
+    private int _currentModel;
+    [SyncVar] private int _playerModel;
 
     public override void Start()
     {
@@ -51,6 +54,9 @@ public class Player : MovingObject
         _holdingGameObject = null;
 
         GetComponent<Rigidbody>().isKinematic = !isServer;
+
+        SetModel();
+        _currentModel = _playerModel;
     }
 
     public override void ResetObject()
@@ -68,6 +74,11 @@ public class Player : MovingObject
             _usePaddle = false;
             GetComponentInChildren<ParticleSystem>().Play();
             GameObject.Find("Water").GetComponent<WaterBehaviour>().PaddleUsed(this);
+        }
+        if (_playerModel != _currentModel)
+        {
+            SetModel();
+            _currentModel = _playerModel;
         }
 
         /////////////////////////
@@ -175,10 +186,16 @@ public class Player : MovingObject
     private void CmdUsePaddle()
     {
         // Check here if the right player as only the server knows the current roles
-        if (PlayerRole == Role.Paddle_Left || PlayerRole == Role.Paddle_Right)
+        if (PlayerRole == Role.Paddler)
         { 
             _usePaddle = true;
         }
+    }
+
+    [Command]
+    public void CmdSetModel(int model)
+    {
+        _playerModel = model;
     }
 
    
@@ -210,6 +227,22 @@ public class Player : MovingObject
         }
 
         _animationState = nextState;
+    }
+
+    private void SetModel()
+    {
+        // Disable all children
+        var child = transform.GetChild(0);
+        Debug.Log(child.gameObject.name);
+        var transforms = child.GetComponentsInChildren<Transform>();
+        foreach (var t in transforms)
+        {
+            if (t != child)
+            {
+                t.gameObject.SetActive(false);
+            }
+        }
+        transform.GetChild(0).GetChild(_playerModel).gameObject.SetActive(true);
     }
 
     void OnCollisionEnter(Collision other)
