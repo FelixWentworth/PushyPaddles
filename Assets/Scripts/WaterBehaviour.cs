@@ -94,15 +94,14 @@ public class WaterBehaviour : NetworkBehaviour
         }
     }
 
+    // Only allow the server to run this as to avoid players exploiting
+    [Server]
     public void PaddleUsed(Player player)
     {
         switch (player.PlayerRole)
         {
-            case Player.Role.Paddle_Left:
-                _paddleStrength = 1f;
-                break;
-            case Player.Role.Paddle_Right:
-                _paddleStrength = -1f;
+            case Player.Role.Paddler:
+                _paddleStrength = player.transform.position.x > 0f ? -1f : 1f;
                 break;
             case Player.Role.Unassigned:
             case Player.Role.Floater:

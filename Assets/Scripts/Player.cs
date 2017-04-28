@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -14,8 +15,7 @@ public class Player : MovingObject
     {
         Unassigned = 0,
         Floater,
-        Paddle_Left,
-        Paddle_Right
+        Paddler
     }
 
     public Role PlayerRole;
@@ -36,6 +36,8 @@ public class Player : MovingObject
     private float _direction = 0f;
 
     private GameObject _holdingGameObject;
+
+    [SyncVar] private bool _usePaddle;
 
     public override void Start()
     {
@@ -61,6 +63,17 @@ public class Player : MovingObject
     void FixedUpdate()
     {
         SetAnimation();
+        if (_usePaddle)
+        {
+            _usePaddle = false;
+            GetComponentInChildren<ParticleSystem>().Play();
+            GameObject.Find("Water").GetComponent<WaterBehaviour>().PaddleUsed(this);
+        }
+
+        /////////////////////////
+        // Local Player Controls
+        /////////////////////////
+
         if (!isLocalPlayer)
         {
             return;
@@ -82,7 +95,7 @@ public class Player : MovingObject
         {
             var platform = GameObject.FindGameObjectWithTag("Platform");
             var fp = platform.GetComponent<FloatingPlatform>();
-            
+
             if (fp.CanPickUp && fp.InRange(gameObject) && !HoldingPlatform)
             {
                 // Pickup Plaftorm
@@ -90,7 +103,7 @@ public class Player : MovingObject
             }
             else if (HoldingPlatform)
             {
-                if (fp.CanBePlacedInWater())
+                if (fp.CanBePlacedInWater() && PlayerRole == Role.Floater)
                 {
                     // Place in water
                     CmdDropPlatform(platform);
@@ -102,8 +115,16 @@ public class Player : MovingObject
                     CmdDropPlatform(platform);
                 }
             }
+            else
+            {
+                // Use paddle in water
+                CmdUsePaddle();
+            }
         }
 
+        /////////////////////////////
+        // End Local Player Controls
+        /////////////////////////////
     }
 
     [Command]
@@ -150,57 +171,17 @@ public class Player : MovingObject
         _animState = newState;
     }
 
-    public void Interact()
+    [Command]
+    private void CmdUsePaddle()
     {
-        var platform = GameObject.FindGameObjectWithTag("Platform").GetComponent<FloatingPlatform>();
-        var platformStart = GameObject.FindGameObjectWithTag("PlatformStart").gameObject;
-        switch (PlayerRole)
-        {
-            case Role.Floater:
-                if (platform.InRange(gameObject))
-                {
-                    if (_holdingGameObject == null)
-                    {
-                        _holdingGameObject = platform.gameObject;
-                        _holdingGameObject.transform.position = transform.position + new Vector3(0f, 1f, 0f);
-                    }
-                    else if (Vector3.Distance(platformStart.transform.position, transform.position) < 3f)
-                    {
-                        platform.ResetObject();
-                        _holdingGameObject.transform.position = platformStart.transform.position;
-
-                        _holdingGameObject = null;
-                        platform.PlaceOnWater(this);
-                    }
-                }
-                break;
-            case Role.Paddle_Left:
-            case Role.Paddle_Right:
-                if (platform.InRange(gameObject))
-                {
-                    if (_holdingGameObject == null)
-                    {
-                        _holdingGameObject = platform.gameObject;
-                        _holdingGameObject.transform.position = transform.position + new Vector3(0f, 1f, 0f);
-                    }
-                    else
-                    {
-                        _holdingGameObject.transform.position = new Vector3(_holdingGameObject.transform.position.x, 0.5f, _holdingGameObject.transform.position.z);
-                        _holdingGameObject = null;
-                    }
-                }
-                else
-                {
-                    GameObject.FindGameObjectWithTag("Water").GetComponent<WaterBehaviour>().PaddleUsed(this);
-                    GetComponentInChildren<ParticleSystem>().Play();
-                }
-                break;
-            case Role.Unassigned:
-            default:
-                throw new ArgumentOutOfRangeException();
+        // Check here if the right player as only the server knows the current roles
+        if (PlayerRole == Role.Paddle_Left || PlayerRole == Role.Paddle_Right)
+        { 
+            _usePaddle = true;
         }
     }
 
+   
     private void SetAnimation()
     {
         if ((int) _animationState == _animState)

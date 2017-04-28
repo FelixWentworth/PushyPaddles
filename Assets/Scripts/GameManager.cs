@@ -48,7 +48,8 @@ public class GameManager : NetworkBehaviour
     [Server]
     private void SetPlayerRole(int playerIndex, Player player)
     {
-        player.PlayerRole = (Player.Role) playerIndex +1;
+        //only the 1st player should be able to ride the platform
+        player.PlayerRole = playerIndex == 0 ? Player.Role.Floater : Player.Role.Paddler;
     }
 
 
