@@ -158,14 +158,18 @@ public class ObstacleGeneration : NetworkBehaviour
         }
     }
 
+    [Server]
     private void CreateObstacle(Vector3 position, Transform parent)
     {
         var rockNumber = Random.Range(0, RockGameObjects.Length);
         var yRotation = Random.Range(0, 4) * 90f;
 
         var go = Instantiate(RockGameObjects[rockNumber], position, Quaternion.identity);
+        
         go.transform.SetParent(parent, false);
         go.transform.eulerAngles = new Vector3(0f, yRotation, 0f);
+
+        NetworkServer.Spawn(go);
     }
 
     private void ClearChildren()
