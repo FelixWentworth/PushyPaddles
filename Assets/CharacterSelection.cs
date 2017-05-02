@@ -51,7 +51,7 @@ public class CharacterSelection : MonoBehaviour
     {
         _player.CmdSetModel(_currentModelIndex);
         DisableAll();
-        GameObject.Find("MenuManager").GetComponent<MenuManager>().CharacterSelectionScreen.SetActive(false);
+        GameObject.Find("MenuManager").GetComponent<MenuManager>().HideCharacterSelect();
     }
 
     private void DisableAll()

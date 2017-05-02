@@ -5,9 +5,13 @@ public class MenuManager : NetworkBehaviour
 {
     // Menu should be active at start
     [SyncVar] private bool _showMenu = true;
+    [SyncVar] private bool _hideMenu;
     // Explicitly state that the other menus menus should be disabled
     [SyncVar] private bool _showRewards = false;
+    [SyncVar] private bool _hideRewards = false;
     [SyncVar] private bool _showCharacterSelection = false;
+    // not synched as players can hide when they want
+    private bool _hideCharacterSelection = false;
 
     // Reward screen inputs
     private static bool _leftPressed;
@@ -24,24 +28,60 @@ public class MenuManager : NetworkBehaviour
     }
 
     // Update is called once per frame
-	void Update () {
-	    if (TitleScreen.activeSelf != _showMenu)
-	    {
-	        TitleScreen.SetActive(_showMenu);
-	    }
-        if (_showRewards && !RewardScreenManager.IsShowing)
-	    {
-            RewardScreenManager.Show();
-	    }
+	void FixedUpdate ()
+	{
+	    UpdateScreens();
+        HandleInput();   
+	}
 
-        // Check a menu is open
-	    if (RewardScreenManager.IsShowing)
-	    {
-	        if (_leftPressed)
-	        {
-	            _leftPressed = false;
+    /// <summary>
+    /// Update which screens which should be activated/deactivated as decided by the server
+    /// </summary>
+    private void UpdateScreens()
+    {
+        if (_showMenu && !TitleScreen.activeSelf)
+        {
+            _hideMenu = false;
+            TitleScreen.SetActive(true);
+        }
+        if (_hideMenu && TitleScreen.activeSelf)
+        {
+            _showMenu = false;
+            TitleScreen.SetActive(false);
+        }
+        if (_showRewards && !RewardScreenManager.IsShowing)
+        {
+            _hideRewards = false;
+            RewardScreenManager.Show();
+        }
+        if (_hideRewards && RewardScreenManager.IsShowing)
+        {
+            _showRewards = false;
+            RewardScreenManager.Hide();
+        }
+        if (!_hideCharacterSelection && _showCharacterSelection && !CharacterSelectionScreen.activeSelf)
+        {
+            _hideCharacterSelection = false;
+            CharacterSelectionScreen.SetActive(true);
+        }
+        if (_hideCharacterSelection && CharacterSelectionScreen.activeSelf)
+        {
+            CharacterSelectionScreen.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// Handle inputs on menus
+    /// </summary>
+    private void HandleInput()
+    {
+        if (RewardScreenManager.IsShowing)
+        {
+            if (_leftPressed)
+            {
+                _leftPressed = false;
                 RewardScreenManager.RewardsManager.Left();
-	        }
+            }
             if (_rightPressed)
             {
                 _rightPressed = false;
@@ -53,7 +93,7 @@ public class MenuManager : NetworkBehaviour
                 RewardScreenManager.RewardsManager.Select();
             }
         }
-	}
+    }
 
     private void HideScreens()
     {
@@ -69,20 +109,24 @@ public class MenuManager : NetworkBehaviour
     [Command]
     public void CmdHideMenu()
     {
-        _showMenu = false;
+        _hideMenu = true;
     }
 
     [Command]
     public void CmdShowCharacterSelect()
     {
-        CharacterSelectionScreen.SetActive(true);
-        SetCharacterPlayer();
+        _showCharacterSelection = true;
+    }
+
+    public void HideCharacterSelect()
+    {
+        _hideCharacterSelection = true;
     }
 
     [Command]
-    public void CmdToggleRewards()
+    public void CmdShowRewards()
     {
-        _showRewards = !_showRewards;
+        _showRewards = true;
     }
 
     [Command]
@@ -101,10 +145,5 @@ public class MenuManager : NetworkBehaviour
     public void CmdSelectPressed()
     {
         _selectPressed = true;
-    }
-
-    private void SetCharacterPlayer()
-    {
-        GameObject.Find("CharacterSelection").GetComponent<CharacterSelection>().Set(GameObject.Find("GameManager").GetComponent<GameManager>().GetLocalPlayer());
     }
 }

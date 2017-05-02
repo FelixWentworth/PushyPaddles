@@ -81,7 +81,7 @@ public class FloatingPlatform : MovingObject
 
 
             // Show the reward screen
-            GameObject.Find("MenuManager").GetComponent<MenuManager>().CmdToggleRewards();
+            GameObject.Find("MenuManager").GetComponent<MenuManager>().CmdShowRewards();
         }
     }
 

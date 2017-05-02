@@ -64,6 +64,10 @@ public class Player : MovingObject
 
     }
 
+    public override void OnStartLocalPlayer()
+    {
+        GameObject.Find("CharacterSelection").GetComponent<CharacterSelection>().Set(this);
+    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -114,11 +118,11 @@ public class Player : MovingObject
             }
             else if (HoldingPlatform)
             {
-                if (fp.CanBePlacedInWater() && PlayerRole == Role.Floater)
+                if (fp.CanBePlacedInWater())
                 {
                     // Place in water
                     CmdDropPlatform(platform);
-                    CmdPlacePlatformInWater(platform);
+                    CmdPlacePlatformInWater(platform, gameObject);
                 }
                 else
                 {
@@ -164,8 +168,14 @@ public class Player : MovingObject
     }
 
     [Command]
-    private void CmdPlacePlatformInWater(GameObject platform)
+    private void CmdPlacePlatformInWater(GameObject platform, GameObject go)
     {
+        var player = go.GetComponent<Player>();
+        if (player.PlayerRole != Role.Floater)
+        {
+            // only the server knows each player role, so do this check here
+            return;
+        }
         var start = GameObject.Find("PlatformStartPoint");
 
         platform.transform.position = start.transform.position;

@@ -17,7 +17,7 @@ public class GameManager : NetworkBehaviour
         if (isServer && !_gameStarted)
         {
             var menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
-            if (NetworkServer.connections.Count(c => c != null && c.isReady) > 1 || Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 // Start game
                 
@@ -51,6 +51,9 @@ public class GameManager : NetworkBehaviour
             if (conn != null)
             {
                 var playerObject = Instantiate(PlayerPrefab);
+                var xMultiplier = index % 2 == 0 ? 1f : -1f;
+                var zMultiplier = (index / 2) * 1.5f;
+                playerObject.transform.position = new Vector3(4.5f * xMultiplier, 0f, zMultiplier);
                 var player = playerObject.GetComponent<Player>();
                 SetPlayerRole(index, player);
                 _players.Add(player);
