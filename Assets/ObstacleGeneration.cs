@@ -106,11 +106,11 @@ public class ObstacleGeneration : NetworkBehaviour
             // allow for some space to move from the previous position to the new path position
             _levelLayout[previousPosition, j] = '+';
             _levelLayout[pathPosition, j] = '+';
-            
-            //// HACK allow game be completed solo
-            //_levelLayout[midpoint, j] = '+';
-            //_levelLayout[midpoint-1, j] = '+';
-            //// END HACK
+
+            // HACK allow game be completed solo
+            _levelLayout[midpoint, j] = '+';
+            _levelLayout[midpoint - 1, j] = '+';
+            // END HACK
 
             previousPosition = pathPosition;
         }

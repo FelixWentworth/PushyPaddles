@@ -18,7 +18,7 @@ public class UIScreen : MonoBehaviour {
         IsShowing = true;
     }
 
-    public void Hide()
+    public virtual void Hide()
     {
         if (CanvasGroup == null)
         {

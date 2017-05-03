@@ -499,6 +499,7 @@ PlayerSettings:
   additionalIl2CppArgs: 
   apiCompatibilityLevelPerPlatform:
     Standalone: 1
+    WebGL: 1
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: PushyPaddles

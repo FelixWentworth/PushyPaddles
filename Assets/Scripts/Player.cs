@@ -197,7 +197,7 @@ public class Player : MovingObject
 
         var fp = platform.GetComponent<FloatingPlatform>();
 
-        fp.CanPickUp = false;
+        fp.CanPickUp = true;
         fp.PlaceOnWater(this);
     }
 

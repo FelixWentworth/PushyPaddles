@@ -61,11 +61,8 @@ public class FloatingPlatform : MovingObject
             _playerOnPlatform.transform.position = new Vector3(transform.position.x, _playerOnPlatform.transform.position.y, transform.position.z);
             Water.TouchedWater(this);
         }
-        else
-        {
-            // Not on water
-            _mesh.enabled = CanPickUp;
-        }
+        // Not on water
+        _mesh.enabled = CanPickUp;
     }
 
     void OnCollisionEnter(Collision other)
@@ -83,8 +80,13 @@ public class FloatingPlatform : MovingObject
         else if (other.gameObject.tag == "Treasure")
         {
             // VICTORY CONDITION
+            if (_playerOnPlatform == null)
+            {
+                return;
+            }
 
             var victoryPosition = other.transform.FindChild("VicrtoryLocation").position;
+            
             _playerOnPlatform.transform.position = victoryPosition;
             _playerOnPlatform = null;
             CanFloat = false;

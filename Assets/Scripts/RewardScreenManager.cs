@@ -11,14 +11,18 @@ public class RewardScreenManager : UIScreen
 
     private GameManager _gameManager;
 
-    public void Show()
+    public override void Show()
     {
         base.Show();
+        if (_gameManager == null)
+        {
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        }
 
-        RewardsManager.ResetRewards();
+        RewardsManager.ResetRewards(_gameManager.GetPlayerCount());
     }
 
-    public void Hide()
+    public override void Hide()
     {
         base.Hide();
     }

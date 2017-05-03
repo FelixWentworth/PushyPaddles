@@ -42,6 +42,11 @@ public class GameManager : NetworkBehaviour
         return null;
     }
 
+    public int GetPlayerCount()
+    {
+        return _players.Count;
+    }
+
     [Server]
     public void StartGame()
     {
@@ -101,8 +106,26 @@ public class GameManager : NetworkBehaviour
         player.DirectionModifier *= modifier;
     }
 
-    public static void RestartGame()
+    [Command]
+    public void CmdChangeRoles()
     {
+        var floaterIndex = 0;
+        for (var i=0; i<_players.Count; i++)
+        {
+            if (_players[i].PlayerRole == Player.Role.Floater)
+            {
+                floaterIndex = i;
+            }
+            _players[i].PlayerRole = Player.Role.Paddler;
+        }
+        // increment to next player
+        floaterIndex = floaterIndex >= _players.Count - 1 ? 0 : floaterIndex + 1;
+        _players[floaterIndex].PlayerRole = Player.Role.Floater;
+    }
+
+    public void RestartGame()
+    {
+        CmdChangeRoles();
         // Reset Player Posititions
         var players = GameObject.FindGameObjectsWithTag("Player");
 
