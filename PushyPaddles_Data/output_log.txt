@@ -35,7 +35,7 @@ Platform assembly: C:\Users\Felix\Documents\Projects\GameJam\PushyPaddles\PushyP
 Loading C:\Users\Felix\Documents\Projects\GameJam\PushyPaddles\PushyPaddles_Data\Managed\System.Data.dll into Unity Child Domain
 Platform assembly: C:\Users\Felix\Documents\Projects\GameJam\PushyPaddles\PushyPaddles_Data\Managed\RSG.Promise.dll (this message is harmless)
 Loading C:\Users\Felix\Documents\Projects\GameJam\PushyPaddles\PushyPaddles_Data\Managed\RSG.Promise.dll into Unity Child Domain
-- Completed reload, in  0.025 seconds
+- Completed reload, in  0.020 seconds
 Platform assembly: C:\Users\Felix\Documents\Projects\GameJam\PushyPaddles\PushyPaddles_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Felix\Documents\Projects\GameJam\PushyPaddles\PushyPaddles_Data\Managed\System.dll (this message is harmless)
 <RI> Initializing input.
@@ -43,18 +43,16 @@ XInput1_3.dll not found. Trying XInput9_1_0.dll instead...
 <RI> Input initialized.
 desktop: 1920x1080 60Hz; virtual: 8640x2160 at 0,0
 <RI> Initialized touch support.
-UnloadTime: 1.328539 ms
+UnloadTime: 0.673081 ms
 DontDestroyOnLoad only work for root GameObjects or components on root GameObjects.
  
 (Filename:  Line: 462)
 
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: 5f60 -> priority: 1 
-  Thread -> id: 45bc -> priority: 1 
-Start Game
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
+  Thread -> id: 2980 -> priority: 1 
+  Thread -> id: 1810 -> priority: 1 
+Platform assembly: C:\Users\Felix\Documents\Projects\GameJam\PushyPaddles\PushyPaddles_Data\Managed\System.Configuration.dll (this message is harmless)
+Platform assembly: C:\Users\Felix\Documents\Projects\GameJam\PushyPaddles\PushyPaddles_Data\Managed\System.Xml.dll (this message is harmless)
 ClientScene::InternalAddPlayer: playerControllerId higher than expected: 0
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
@@ -63,19 +61,8 @@ SimplePeople_All
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
-SimplePeople_All
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
-SimplePeople_All
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
 reactor filed to acomplish request with code {1234}, bytesReceived {0}
 reactor filed to acomplish request with code {1234}, bytesReceived {0}
 reactor filed to acomplish request with code {1234}, bytesReceived {0}
-Log: connection {1} has been disconnected by timeout; address {::ffff:127.0.0.1:53365}
-ServerDisconnected due to error: Timeout
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
+reactor filed to acomplish request with code {1234}, bytesReceived {0}
+Log: connection {1} has been disconnected by timeout; address {::ffff:10.0.0.98:7777}

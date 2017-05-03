@@ -89,7 +89,6 @@ public class AlphaTransition : MonoBehaviour
                     SetMaterialAlpha();
                 }
             }
-            Debug.Log("YEYE");
         }
     }
 
