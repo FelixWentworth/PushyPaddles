@@ -21,18 +21,6 @@ public class CharacterSelection : MonoBehaviour
         transform.GetChild(0).GetComponent<Animator>().SetFloat("Speed_f", 1f);
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            PrevCharacter();
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            NextCharacter();
-        }
-    }
-
     public void NextCharacter()
     {
         AvailableCharacters[_currentModelIndex].SetActive(false);

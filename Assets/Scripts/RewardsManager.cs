@@ -22,22 +22,6 @@ public class RewardsManager : MonoBehaviour
         UpdateHighlighted();
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Left();
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            Right();
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            Select();
-        }
-    }
-
     public void Left()
     {
         if (_assignedRewards >= Rewards.Length)
@@ -108,7 +92,8 @@ public class RewardsManager : MonoBehaviour
 
     private void Complete()
     {
-        transform.parent.GetComponent<RewardScreenManager>().Hide();
+        // Notify the server that all rewards are given out
+        GameObject.Find("MenuManager").GetComponent<MenuManager>().CmdHideRewards();
         GameManager.RestartGame();
     }
 }

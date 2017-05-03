@@ -107,6 +107,11 @@ public class ObstacleGeneration : NetworkBehaviour
             _levelLayout[previousPosition, j] = '+';
             _levelLayout[pathPosition, j] = '+';
             
+            //// HACK allow game be completed solo
+            //_levelLayout[midpoint, j] = '+';
+            //_levelLayout[midpoint-1, j] = '+';
+            //// END HACK
+
             previousPosition = pathPosition;
         }
     }

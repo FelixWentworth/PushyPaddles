@@ -97,50 +97,86 @@ public class MenuManager : NetworkBehaviour
 
     private void HideScreens()
     {
+        // Make sure that the screens are hidden but ready to be used
+        RewardScreenManager.gameObject.SetActive(true);
         RewardScreenManager.Hide();
+        TitleScreen.SetActive(false);
+        CharacterSelectionScreen.SetActive(false);
     }
 
+    /// <summary>
+    /// Show menu for all players
+    /// </summary>
     [Command]
     public void CmdShowMenu()
     {
         _showMenu = true;
     }
 
+    /// <summary>
+    /// Hide the menu screen for all players
+    /// </summary>
     [Command]
     public void CmdHideMenu()
     {
         _hideMenu = true;
     }
 
+    /// <summary>
+    /// Show all players the character selection screen
+    /// </summary>
     [Command]
     public void CmdShowCharacterSelect()
     {
         _showCharacterSelection = true;
     }
 
+    /// <summary>
+    /// Hide character select screen for the current player
+    /// </summary>
     public void HideCharacterSelect()
     {
         _hideCharacterSelection = true;
     }
 
+    /// <summary>
+    /// Show all players the reward screen, only the player who reached the goal will be able to control this menu
+    /// </summary>
     [Command]
     public void CmdShowRewards()
     {
         _showRewards = true;
     }
+    /// <summary>
+    /// We can have a command to hide the rewards screen as only 1 player has control
+    /// </summary>
+    [Command]
+    public void CmdHideRewards()
+    {
+        _hideRewards = true;
+    }
 
+    /// <summary>
+    /// Left button Pressed
+    /// </summary>
     [Command]
     public void CmdLeftPressed()
     {
         _leftPressed = true;
     }
 
+    /// <summary>
+    /// Right Button Pressed
+    /// </summary>
     [Command]
     public void CmdRightPressed()
     {
         _rightPressed = true;
     }
 
+    /// <summary>
+    /// Select button Pressed
+    /// </summary>
     [Command]
     public void CmdSelectPressed()
     {

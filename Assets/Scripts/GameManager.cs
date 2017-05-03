@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,7 +11,6 @@ public class GameManager : NetworkBehaviour
 
     public GameObject PlayerPrefab;
     private List<Player> _players = new List<Player>();
-
 
     void Update()
     {
@@ -71,6 +71,35 @@ public class GameManager : NetworkBehaviour
         player.PlayerRole = playerIndex == 0 ? Player.Role.Floater : Player.Role.Paddler;
     }
 
+    [Command]
+    public void CmdAssignSpeedBoost(int playerNumber, float increment)
+    {
+        if (playerNumber >= _players.Count)
+        {
+            Debug.LogError(string.Format("Player number {0}, exceeds player count {1}", playerNumber, _players.Count));
+            return;
+        }
+        // Find the player
+        var player = _players[playerNumber];
+
+        // Assign the reward
+        player.SpeedModifier += increment;
+    }
+
+    [Command]
+    public void CmdAssignReverseControls(int playerNumber, float modifier) 
+    {
+        if (playerNumber >= _players.Count)
+        {
+            Debug.LogError(string.Format("Player number {0}, exceeds player count {1}", playerNumber, _players.Count));
+            return;
+        }
+        // Find the player
+        var player = _players[playerNumber];
+
+        // Assign the reward
+        player.DirectionModifier *= modifier;
+    }
 
     public static void RestartGame()
     {

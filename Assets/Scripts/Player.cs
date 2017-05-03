@@ -6,10 +6,13 @@ using UnityEngine.Networking;
 public class Player : MovingObject
 {
     public string Name;
-    public int DirectionModifier = 1;
-    public float SpeedModifier = 1f;
+    [SyncVar] public float DirectionModifier = 1;
+    [SyncVar] public float SpeedModifier = 1f;
 
     [SyncVar] public bool HoldingPlatform;
+
+    public GameObject Paddle;
+    public GameObject Platform;
 
     public enum Role
     {
@@ -18,7 +21,7 @@ public class Player : MovingObject
         Paddler
     }
 
-    public Role PlayerRole;
+    [SyncVar]public Role PlayerRole;
 
     private enum AnimationState{
         IDLE = 0,
@@ -73,6 +76,9 @@ public class Player : MovingObject
     void FixedUpdate()
     {
         SetAnimation();
+        SetPaddle();
+        SetPlatform();
+
         if (_usePaddle)
         {
             _usePaddle = false;
@@ -100,11 +106,17 @@ public class Player : MovingObject
         {
             // Move Player Command
             CmdMove(gameObject, x, z);
-            CmdChangeState((int) AnimationState.WALKING);
+            if (_animationState != AnimationState.WALKING)
+            {
+                CmdChangeState((int) AnimationState.WALKING);
+            }
         }
         else
         {
-            CmdChangeState((int) AnimationState.IDLE);
+            if (_animationState != AnimationState.IDLE)
+            {
+                CmdChangeState((int) AnimationState.IDLE);
+            }
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -145,7 +157,10 @@ public class Player : MovingObject
     [Command]
     private void CmdMove(GameObject go, float x, float z)
     {
-        go.transform.position += new Vector3(x * MovementSpeed, 0, z * MovementSpeed);
+        x *= MovementSpeed * SpeedModifier * DirectionModifier;
+        z *= MovementSpeed * SpeedModifier * DirectionModifier;
+
+        go.transform.position += new Vector3(x, 0, z);
         go.transform.LookAt(new Vector3(go.transform.localPosition.x + x, go.transform.localPosition.y, go.transform.localPosition.z + z));
     }
 
@@ -208,7 +223,26 @@ public class Player : MovingObject
         _playerModel = model;
     }
 
-   
+    private void SetPaddle()
+    {
+        if (PlayerRole == Role.Floater && Paddle.activeSelf)
+        {
+            Paddle.SetActive(false);
+        }
+        if (PlayerRole == Role.Paddler && !Paddle.activeSelf)
+        {
+            Paddle.SetActive(true);
+        }
+    }
+
+    private void SetPlatform()
+    {
+        if (HoldingPlatform != Platform.activeSelf)
+        {
+            Platform.SetActive(HoldingPlatform);
+        }
+    }
+
     private void SetAnimation()
     {
         if ((int) _animationState == _animState)
@@ -247,7 +281,7 @@ public class Player : MovingObject
         var transforms = child.GetComponentsInChildren<Transform>();
         foreach (var t in transforms)
         {
-            if (t != child)
+            if (t.gameObject.name.Contains("CH_"))
             {
                 t.gameObject.SetActive(false);
             }

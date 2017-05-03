@@ -3,47 +3,65 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RewardScreenManager : MonoBehaviour
+public class RewardScreenManager : UIScreen
 {
-    //public AirConsoleManager AirConsoleManager;
     public RewardsManager RewardsManager;
-    private CanvasGroup _canvasGroup;
+    private float _speedBoost = 0.05f;
+    private float _controlsModifier = -1f;
 
-    public bool IsShowing = false;
+    private GameManager _gameManager;
 
     public void Show()
     {
+        base.Show();
 
-        if (_canvasGroup == null)
-        {
-            _canvasGroup = this.GetComponent<CanvasGroup>();
-        }
         RewardsManager.ResetRewards();
-        _canvasGroup.alpha = 1f;
-        IsShowing = true;
     }
 
     public void Hide()
     {
-        if (_canvasGroup == null)
+        base.Hide();
+    }
+
+    void Update()
+    {
+        if (IsShowing)
         {
-            _canvasGroup = this.GetComponent<CanvasGroup>();
+            if (_gameManager == null)
+            {
+                _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+            }
+            // Determine if the local player has control
+            if (_gameManager.GetLocalPlayer().PlayerRole == Player.Role.Floater)
+            {
+                if (Input.GetKeyDown(KeyCode.A))
+                {
+                    RewardsManager.Left();
+                }
+                if (Input.GetKeyDown(KeyCode.D))
+                {
+                    RewardsManager.Right();
+                }
+                if (Input.GetKeyDown(KeyCode.S))
+                {
+                    RewardsManager.Select();
+                }
+            }
         }
-        _canvasGroup.alpha = 0f;
-        IsShowing = false;
     }
 
     public void SetReward(Reward.RewardType type, int playerIndex)
     {
+        var manager = GameObject.Find("GameManager").GetComponent<GameManager>();
         switch (type)
         {
             case Reward.RewardType.None:
                 break;
             case Reward.RewardType.SpeedBoost:
-                //AirConsoleManager.Players[playerIndex].SpeedModifier += 0.5f;
+                manager.CmdAssignSpeedBoost(playerIndex, _speedBoost);
                 break;
             case Reward.RewardType.ReverseControls:
-                //AirConsoleManager.Players[playerIndex].DirectionModifier *= -1;
+                manager.CmdAssignReverseControls(playerIndex, _controlsModifier);
                 break;
             default:
                 throw new ArgumentOutOfRangeException("type", type, null);

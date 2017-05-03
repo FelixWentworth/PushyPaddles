@@ -11,6 +11,8 @@ public class FloatingPlatform : MovingObject
 
     private Player _playerOnPlatform;
 
+    private MeshRenderer _mesh;
+
     public override void Start()
     {
         base.Start();
@@ -19,6 +21,8 @@ public class FloatingPlatform : MovingObject
         PlayerCanInteract = false;
         PlayerCanHit = true;
         CanRespawn = true;
+
+        _mesh = transform.GetChild(0).GetComponent<MeshRenderer>();
 
         RespawnLocation.Add(transform.position);
         var oppositeSide = new Vector3(transform.position.x * -1, transform.position.y, transform.position.z);
@@ -51,9 +55,16 @@ public class FloatingPlatform : MovingObject
     {
         if (_playerOnPlatform != null)
         {
+            // On Water
+            _mesh.enabled = true;
             _playerOnPlatform.GetComponent<Rigidbody>().useGravity = false;
             _playerOnPlatform.transform.position = new Vector3(transform.position.x, _playerOnPlatform.transform.position.y, transform.position.z);
             Water.TouchedWater(this);
+        }
+        else
+        {
+            // Not on water
+            _mesh.enabled = CanPickUp;
         }
     }
 

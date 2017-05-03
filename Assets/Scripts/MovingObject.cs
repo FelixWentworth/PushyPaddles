@@ -15,6 +15,8 @@ public class MovingObject : NetworkBehaviour
     public bool PlayerCanInteract;
     // If the player collides with this object
     public bool PlayerCanHit;
+    // If the object falls
+    public bool CanFall;
 
     public List<Vector3> RespawnLocation = new List<Vector3>();
     private Vector3 _initialRotation;
@@ -51,6 +53,8 @@ public class MovingObject : NetworkBehaviour
 
         var randomRespawn = Random.Range(0, RespawnLocation.Count);
         CmdRespawn(gameObject, RespawnLocation[randomRespawn]);
+        GetComponent<Rigidbody>().useGravity = CanFall;
+
     }
 
     [Command]
