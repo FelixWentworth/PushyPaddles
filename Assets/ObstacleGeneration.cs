@@ -26,7 +26,7 @@ public class ObstacleGeneration : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             SetLevelLayout();
-            CreateLevel(15);
+            CreateLevel(10);
         }
     }
     public void Setup()

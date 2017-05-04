@@ -70,9 +70,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1064902781124798}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -4.505, y: 0, z: 3.85}
-  m_LocalScale: {x: 1, y: 1, z: 0.1}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: 0.000000014901161, w: 0.70710677}
+  m_LocalPosition: {x: -4.505, y: -0, z: 3.85}
+  m_LocalScale: {x: 1, y: 1, z: 0.10000005}
   m_Children:
   - {fileID: 4133602824440270}
   m_Father: {fileID: 0}
@@ -179,7 +179,7 @@ MeshCollider:
   m_GameObject: {fileID: 1115771902570040}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Convex: 0
   m_InflateMesh: 0
@@ -195,7 +195,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.0000002, z: 1.0000002}
+  m_Size: {x: 0.7, y: 0.7, z: 0.7}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114444334771994850
 MonoBehaviour:
@@ -236,6 +236,7 @@ MonoBehaviour:
   CanRespawn: 0
   PlayerCanInteract: 0
   PlayerCanHit: 0
+  CanFall: 0
   RespawnLocation: []
   CanPickUp: 1
   Water: {fileID: 0}
@@ -251,7 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SceneId:
-    m_Value: 0
+    m_Value: 1
   m_AssetId:
     i0: 10
     i1: 36

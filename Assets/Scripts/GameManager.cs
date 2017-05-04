@@ -58,7 +58,7 @@ public class GameManager : NetworkBehaviour
                 var playerObject = Instantiate(PlayerPrefab);
                 var xMultiplier = index % 2 == 0 ? 1f : -1f;
                 var zMultiplier = (index / 2) * 1.5f;
-                playerObject.transform.position = new Vector3(4.5f * xMultiplier, 0f, zMultiplier);
+                playerObject.transform.position = new Vector3(4.5f * xMultiplier, -0.72f, zMultiplier);
                 var player = playerObject.GetComponent<Player>();
                 SetPlayerRole(index, player);
                 _players.Add(player);

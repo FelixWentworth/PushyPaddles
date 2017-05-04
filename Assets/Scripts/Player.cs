@@ -45,6 +45,10 @@ public class Player : MovingObject
     private int _currentModel;
     [SyncVar] private int _playerModel;
 
+    [SyncVar] private Vector3 _realPosition;
+    private float _elapsedTime;
+    private float _updateInterval = 0.11f; // 9 times a second
+
     public override void Start()
     {
         CanFloat = false;
@@ -72,6 +76,63 @@ public class Player : MovingObject
         GameObject.Find("CharacterSelection").GetComponent<CharacterSelection>().Set(this);
     }
 
+    void Update()
+    {
+        if (isLocalPlayer)
+        {
+            var x = Input.GetAxis("Horizontal");
+            var z = Input.GetAxis("Vertical");
+
+            if (x != 0 || z != 0)
+            {
+                // Move Player Command
+                //CmdMove(gameObject, x, z);
+                Move(gameObject, x, z);
+                if (_animationState != AnimationState.WALKING)
+                {
+                    CmdChangeState((int)AnimationState.WALKING);
+                }
+            }
+            else
+            {
+                // Stopped moving
+                if (_animationState != AnimationState.IDLE)
+                {
+                    CmdChangeState((int)AnimationState.IDLE);
+                }
+            }
+        }
+        else
+        {
+            // Lerp to real position
+            transform.position = Vector3.Lerp(transform.position, new Vector3(_realPosition.x, transform.position.y, _realPosition.z), 1f);
+            transform.LookAt(new Vector3(_realPosition.x, transform.position.y, _realPosition.z));
+
+        }
+
+        _elapsedTime += Time.deltaTime;
+        if (_elapsedTime > _updateInterval)
+        {
+            _elapsedTime = 0f;
+            CmdSyncMove(transform.position);
+        }
+    }
+
+    private void Move(GameObject go, float x, float z)
+    {
+        x *= MovementSpeed * SpeedModifier * DirectionModifier;
+        z *= MovementSpeed * SpeedModifier * DirectionModifier;
+
+        go.transform.position += new Vector3(x, 0, z);
+        go.transform.LookAt(new Vector3(go.transform.localPosition.x + x, go.transform.localPosition.y, go.transform.localPosition.z + z));
+    }
+
+    [Command]
+    private void CmdSyncMove(Vector3 position)
+    {
+        _realPosition = position;
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -95,30 +156,31 @@ public class Player : MovingObject
         // Local Player Controls
         /////////////////////////
 
-        if (!isLocalPlayer)
-        {
-            return;
-        }
-        var x = Input.GetAxis("Horizontal");
-        var z = Input.GetAxis("Vertical");
+        //if (!isLocalPlayer)
+        //{
+        //    return;
+        //}
+        //var x = Input.GetAxis("Horizontal");
+        //var z = Input.GetAxis("Vertical");
 
-        if (x != 0 || z != 0)
-        {
-            // Move Player Command
-            CmdMove(gameObject, x, z);
-            if (_animationState != AnimationState.WALKING)
-            {
-                CmdChangeState((int) AnimationState.WALKING);
-            }
-        }
-        else
-        {
-            if (_animationState != AnimationState.IDLE)
-            {
-                CmdChangeState((int) AnimationState.IDLE);
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
+        //if (x != 0 || z != 0)
+        //{
+        //    // Move Player Command
+        //    CmdMove(gameObject, x, z);
+        //    if (_animationState != AnimationState.WALKING)
+        //    {
+        //        CmdChangeState((int) AnimationState.WALKING);
+        //    }
+        //}
+        //else
+        //{
+        //    // Stopped moving
+        //    if (_animationState != AnimationState.IDLE)
+        //    {
+        //        CmdChangeState((int) AnimationState.IDLE);
+        //    }
+        //}
+        if (isLocalPlayer && Input.GetKeyDown(KeyCode.Space))
         {
             var platform = GameObject.FindGameObjectWithTag("Platform");
             var fp = platform.GetComponent<FloatingPlatform>();
