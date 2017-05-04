@@ -123,7 +123,11 @@ public class Player : MovingObject
         x *= MovementSpeed * SpeedModifier * DirectionModifier;
         z *= MovementSpeed * SpeedModifier * DirectionModifier;
 
-        go.transform.position += new Vector3(x, 0, z);
+        // HACK clamp position to stop running out of the world
+        var newX = Mathf.Clamp(go.transform.position.x + x, -5f, 5f);
+        var newZ = Mathf.Clamp(go.transform.position.z + z, -1f, 16f);
+
+        go.transform.position = new Vector3(newX, go.transform.position.y, newZ);
         go.transform.LookAt(new Vector3(go.transform.localPosition.x + x, go.transform.localPosition.y, go.transform.localPosition.z + z));
     }
 

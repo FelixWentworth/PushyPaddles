@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Networking;
 
 public class ObstacleGeneration : NetworkBehaviour
@@ -187,5 +188,38 @@ public class ObstacleGeneration : NetworkBehaviour
                 Destroy(child.gameObject);
             }
         }
+    }
+
+    public void GenerateNewLevel(int obstacles)
+    {
+        StartCoroutine(ChangeBlocks(obstacles, 0.8f));
+    }
+
+    private IEnumerator ChangeBlocks(int obstacles, float time)
+    {
+        var initialPos = transform.position;
+        var hiddenPos = new Vector3(transform.position.x, transform.position.y -2f, transform.position.z);
+
+        yield return Move(initialPos, hiddenPos, time);
+        
+        SetLevelLayout();
+        CreateLevel(obstacles);
+
+        yield return Move(hiddenPos, initialPos, time);
+
+
+    }
+
+    private IEnumerator Move(Vector3 from, Vector3 to, float time)
+    {
+        var elapsed = 0f;
+
+        while (elapsed < time)
+        {
+            transform.position = Vector3.Lerp(from, to, elapsed / time);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        transform.position = to;
     }
 }

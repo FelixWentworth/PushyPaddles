@@ -126,6 +126,10 @@ public class GameManager : NetworkBehaviour
     public void RestartGame()
     {
         CmdChangeRoles();
+
+        // Reset the obstacles
+        GameObject.Find("Level/Rocks").GetComponent<ObstacleGeneration>().GenerateNewLevel(10);
+
         // Reset Player Posititions
         var players = GameObject.FindGameObjectsWithTag("Player");
 
