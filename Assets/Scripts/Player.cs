@@ -46,6 +46,7 @@ public class Player : MovingObject
     [SyncVar] private int _playerModel;
 
     [SyncVar] private Vector3 _realPosition;
+    [SyncVar] private Vector3 _realRotation;
     private float _elapsedTime;
     private float _updateInterval = 0.11f; // 9 times a second
 
@@ -101,21 +102,22 @@ public class Player : MovingObject
                     CmdChangeState((int)AnimationState.IDLE);
                 }
             }
+            _elapsedTime += Time.deltaTime;
+            if (_elapsedTime > _updateInterval)
+            {
+                _elapsedTime = 0f;
+                CmdSyncMove(transform.position, transform.eulerAngles);
+            }
         }
         else
         {
             // Lerp to real position
             transform.position = Vector3.Lerp(transform.position, new Vector3(_realPosition.x, transform.position.y, _realPosition.z), 1f);
-            transform.LookAt(new Vector3(_realPosition.x, transform.position.y, _realPosition.z));
+            transform.eulerAngles = _realRotation;//(new Vector3(_realPosition.x, transform.position.y, _realPosition.z));
 
         }
 
-        _elapsedTime += Time.deltaTime;
-        if (_elapsedTime > _updateInterval)
-        {
-            _elapsedTime = 0f;
-            CmdSyncMove(transform.position);
-        }
+        
     }
 
     private void Move(GameObject go, float x, float z)
@@ -132,9 +134,10 @@ public class Player : MovingObject
     }
 
     [Command]
-    private void CmdSyncMove(Vector3 position)
+    private void CmdSyncMove(Vector3 position, Vector3 rotation)
     {
         _realPosition = position;
+        _realRotation = rotation;
     }
 
     // Update is called once per frame
