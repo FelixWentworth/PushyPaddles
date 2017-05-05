@@ -7,27 +7,53 @@ using UnityEngine.Networking;
 
 public class GameManager : NetworkBehaviour
 {
-    private bool _gameStarted = false;
+    [SyncVar] private bool _gameStarted = false;
 
     public GameObject PlayerPrefab;
     private List<Player> _players = new List<Player>();
+    private MenuManager _menu;
 
     void Update()
     {
-        if (isServer && !_gameStarted)
+        if (isServer)
         {
-            var menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                // Start game
-                
-                menu.CmdHideMenu();
-                _gameStarted = true;
-                Debug.Log("Start Game");
-                StartGame();
-                menu.CmdShowCharacterSelect();
-            }
+            NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
         }
+        //Debug.Log(_gameStarted);
+        //if (!_gameStarted && !isServer)
+        //{
+        //    if (_menu == null)
+        //    {
+        //        _menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+        //    }
+        //    if (Input.GetKey(KeyCode.Space))
+        //    {
+        //       // Start game
+        //        Debug.Log("Start");
+
+        //        _menu.CmdHideMenu();
+        //        _gameStarted = true;
+        //        CmdStartGame();
+        //        _menu.CmdShowCharacterSelect();
+        //    }
+        //}
+    }
+
+    [Server]
+    void OnConnected(NetworkMessage player)
+    {
+        if (_menu == null)
+        {
+            _menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+        }
+        _menu.HideMenu();
+        StartGame();
+        _menu.ShowCharacterSelect();
+    }
+
+    public bool GameStarted()
+    {
+        return _gameStarted;
     }
 
     public Player GetLocalPlayer()
@@ -47,10 +73,12 @@ public class GameManager : NetworkBehaviour
         return _players.Count;
     }
 
-    [Server]
+
     public void StartGame()
     {
-        var index = 0;
+        _gameStarted = true;
+        Debug.Log("Here");
+        var index = _players.Count;
         foreach (NetworkConnection conn in NetworkServer.connections)
         {
             if (conn != null)

@@ -116,18 +116,20 @@ public class MenuManager : NetworkBehaviour
     /// <summary>
     /// Hide the menu screen for all players
     /// </summary>
-    [Command]
-    public void CmdHideMenu()
+    public void HideMenu()
     {
+        Debug.Log("Hide");
+
         _hideMenu = true;
     }
 
     /// <summary>
     /// Show all players the character selection screen
     /// </summary>
-    [Command]
-    public void CmdShowCharacterSelect()
+    public void ShowCharacterSelect()
     {
+        Debug.Log("Here");
+
         _showCharacterSelection = true;
     }
 
