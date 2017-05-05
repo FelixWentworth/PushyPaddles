@@ -27,7 +27,7 @@ public class MovingObject : NetworkBehaviour
         _initialRotation = transform.eulerAngles;
     }
 
-    public virtual void ResetObject()
+    public virtual void ResetObject(Vector3 newPosition)
     {
         var rigidbody = GetComponent<Rigidbody>();
         rigidbody.Sleep();
@@ -49,10 +49,13 @@ public class MovingObject : NetworkBehaviour
     {
         yield return new WaitForSeconds(RespawnTime);
         GetComponent<BoxCollider>().enabled = true;
-        ResetObject();
+        
 
         var randomRespawn = Random.Range(0, RespawnLocation.Count);
         CmdRespawn(gameObject, RespawnLocation[randomRespawn]);
+
+        ResetObject(RespawnLocation[randomRespawn]);
+
         GetComponent<Rigidbody>().useGravity = CanFall;
 
     }

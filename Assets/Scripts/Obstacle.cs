@@ -12,9 +12,4 @@ public class Obstacle : MovingObject {
         PlayerCanHit = true;
         CanRespawn = false;
     }
-
-    public override void ResetObject()
-    {
-
-    }
 }

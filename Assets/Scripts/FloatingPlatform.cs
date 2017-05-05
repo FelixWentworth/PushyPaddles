@@ -30,9 +30,9 @@ public class FloatingPlatform : MovingObject
         RespawnLocation.Add(oppositeSide);
     }
 
-    public override void ResetObject()
+    public override void ResetObject(Vector3 newPosition)
     {
-        base.ResetObject();
+        base.ResetObject(newPosition);
 
         CanFloat = true;
         MovementSpeed = 0f;
@@ -60,6 +60,7 @@ public class FloatingPlatform : MovingObject
             _mesh.enabled = true;
             _playerOnPlatform.GetComponent<Rigidbody>().useGravity = false;
             _playerOnPlatform.transform.position = new Vector3(transform.position.x, _playerOnPlatform.transform.position.y, transform.position.z);
+            _playerOnPlatform.GetComponent<Player>().CmdSyncMove(new Vector3(transform.position.x, _playerOnPlatform.transform.position.y, transform.position.z), _playerOnPlatform.transform.eulerAngles);
             Water.TouchedWater(this);
         }
         // Not on water

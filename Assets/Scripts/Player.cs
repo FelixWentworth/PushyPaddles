@@ -48,7 +48,7 @@ public class Player : MovingObject
     [SyncVar] private Vector3 _realPosition;
     [SyncVar] private Vector3 _realRotation;
     private float _elapsedTime;
-    private float _updateInterval = 0.11f; // 9 times a second
+    private float _updateInterval = 0.05f; // 20 times a second
 
     public override void Start()
     {
@@ -61,15 +61,17 @@ public class Player : MovingObject
 
         _holdingGameObject = null;
 
-        GetComponent<Rigidbody>().isKinematic = !isServer;
+        //GetComponent<Rigidbody>().isKinematic = !isServer;
 
         SetModel();
         _currentModel = _playerModel;
     }
 
-    public override void ResetObject()
+    public override void ResetObject(Vector3 newPosition)
     {
+        base.ResetObject(newPosition);
 
+        CmdSyncRespawn(newPosition, transform.eulerAngles);
     }
 
     public override void OnStartLocalPlayer()
@@ -112,7 +114,7 @@ public class Player : MovingObject
         else
         {
             // Lerp to real position
-            transform.position = Vector3.Lerp(transform.position, new Vector3(_realPosition.x, transform.position.y, _realPosition.z), 1f);
+            transform.position = _realPosition;//Vector3.Lerp(transform.position, new Vector3(_realPosition.x, transform.position.y, _realPosition.z), 1f);
             transform.eulerAngles = _realRotation;//(new Vector3(_realPosition.x, transform.position.y, _realPosition.z));
 
         }
@@ -134,10 +136,29 @@ public class Player : MovingObject
     }
 
     [Command]
-    private void CmdSyncMove(Vector3 position, Vector3 rotation)
+    public void CmdSyncMove(Vector3 position, Vector3 rotation)
+    {
+        if (position.y < -10f)
+        {
+            return;
+        }
+        _realPosition = position;
+        _realRotation = rotation;
+    }
+    [Command]
+    private void CmdSyncRespawn(Vector3 position, Vector3 rotation)
     {
         _realPosition = position;
         _realRotation = rotation;
+
+        RpcRespawn(position, rotation);
+    }
+
+    [ClientRpc]
+    private void RpcRespawn(Vector3 position, Vector3 rotation)
+    {
+        transform.position = position;
+        transform.eulerAngles = rotation;
     }
 
     // Update is called once per frame
@@ -362,6 +383,7 @@ public class Player : MovingObject
     {
         if (other.gameObject.tag == "Water")
         {
+            Debug.Log(other.gameObject.name);
             other.gameObject.GetComponent<WaterBehaviour>().TouchedWater(this);       
         }
     }
