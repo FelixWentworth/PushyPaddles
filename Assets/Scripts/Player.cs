@@ -48,7 +48,7 @@ public class Player : MovingObject
     [SyncVar] private Vector3 _realPosition;
     [SyncVar] private Vector3 _realRotation;
     private float _elapsedTime;
-    private float _updateInterval = 0.05f; // 20 times a second
+    private float _updateInterval = 0.11f; // 9 times a second
 
     public override void Start()
     {

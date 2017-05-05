@@ -18,6 +18,7 @@ public class GameManager : NetworkBehaviour
         if (isServer)
         {
             NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
+            NetworkServer.RegisterHandler(MsgType.Disconnect, OnDisconnected);
         }
         //Debug.Log(_gameStarted);
         //if (!_gameStarted && !isServer)
@@ -40,15 +41,23 @@ public class GameManager : NetworkBehaviour
     }
 
     [Server]
-    void OnConnected(NetworkMessage player)
+    void OnConnected(NetworkMessage netMsg)
     {
         if (_menu == null)
         {
             _menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
         }
         _menu.HideMenu();
-        StartGame();
+        StartGame(NetworkServer.connections[NetworkServer.connections.Count-1]);
         _menu.ShowCharacterSelect();
+    }
+
+    [Server]
+    void OnDisconnected(NetworkMessage netMsg)
+    {
+        Debug.Log("Player Disconnected");
+
+        // Todo Assign New Roles
     }
 
     public bool GameStarted()
@@ -74,25 +83,21 @@ public class GameManager : NetworkBehaviour
     }
 
 
-    public void StartGame()
+    public void StartGame(NetworkConnection conn)
     {
         _gameStarted = true;
         Debug.Log("Here");
         var index = _players.Count;
-        foreach (NetworkConnection conn in NetworkServer.connections)
+        if (conn != null)
         {
-            if (conn != null)
-            {
-                var playerObject = Instantiate(PlayerPrefab);
-                var xMultiplier = index % 2 == 0 ? 1f : -1f;
-                var zMultiplier = (index / 2) * 1.5f;
-                playerObject.transform.position = new Vector3(4.5f * xMultiplier, -0.72f, zMultiplier);
-                var player = playerObject.GetComponent<Player>();
-                SetPlayerRole(index, player);
-                _players.Add(player);
-                NetworkServer.AddPlayerForConnection(conn, player.gameObject, 0);
-                index++;
-            }
+            var playerObject = Instantiate(PlayerPrefab);
+            var xMultiplier = index % 2 == 0 ? 1f : -1f;
+            var zMultiplier = (index / 2) * 1.5f;
+            playerObject.transform.position = new Vector3(4.5f * xMultiplier, -0.72f, zMultiplier);
+            var player = playerObject.GetComponent<Player>();
+            SetPlayerRole(index, player);
+            _players.Add(player);
+            NetworkServer.AddPlayerForConnection(conn, player.gameObject, 0);
         }
     }
 

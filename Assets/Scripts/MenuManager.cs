@@ -39,6 +39,7 @@ public class MenuManager : NetworkBehaviour
     /// </summary>
     private void UpdateScreens()
     {
+       
         if (_showMenu && !TitleScreen.activeSelf)
         {
             _hideMenu = false;
@@ -48,6 +49,10 @@ public class MenuManager : NetworkBehaviour
         {
             _showMenu = false;
             TitleScreen.SetActive(false);
+        }
+        if (isServer)
+        {
+            return;
         }
         if (_showRewards && !RewardScreenManager.IsShowing)
         {
