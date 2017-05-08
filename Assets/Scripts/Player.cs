@@ -33,7 +33,7 @@ public class Player : MovingObject
 
     private AnimationState _animationState;
 
-    [SyncVar] public int _animState = 0;
+    [SyncVar] public int _animState;
 
     private bool _moving = false;
     private float _direction = 0f;
@@ -45,10 +45,15 @@ public class Player : MovingObject
     private int _currentModel;
     [SyncVar] private int _playerModel;
 
-    [SyncVar] private Vector3 _realPosition;
-    [SyncVar] private Vector3 _realRotation;
+    [SyncVar] public Vector3 RealPosition;
+    [SyncVar] public Vector3 RealRotation;
     private float _elapsedTime;
     private float _updateInterval = 0.11f; // 9 times a second
+
+    [SyncVar] public bool OnPlatform;
+
+
+    private Rigidbody _rigidbody;
 
     public override void Start()
     {
@@ -62,6 +67,7 @@ public class Player : MovingObject
         _holdingGameObject = null;
 
         //GetComponent<Rigidbody>().isKinematic = !isServer;
+        _rigidbody = GetComponent<Rigidbody>();
 
         SetModel();
         _currentModel = _playerModel;
@@ -71,7 +77,12 @@ public class Player : MovingObject
     {
         base.ResetObject(newPosition);
 
-        CmdSyncRespawn(newPosition, transform.eulerAngles);
+        OnPlatform = false;
+
+        if (!isServer)
+        {
+            CmdSyncRespawn(newPosition, transform.eulerAngles);
+        }
     }
 
     public override void OnStartLocalPlayer()
@@ -81,8 +92,13 @@ public class Player : MovingObject
 
     void Update()
     {
-        if (isLocalPlayer)
+        if (isLocalPlayer && !OnPlatform)
         {
+            if (!_rigidbody.useGravity)
+            {
+                // when the player has full control, they should be affected by gravity
+                _rigidbody.useGravity = true;
+            }
             var x = Input.GetAxis("Horizontal");
             var z = Input.GetAxis("Vertical");
 
@@ -113,13 +129,15 @@ public class Player : MovingObject
         }
         else
         {
+            if (_rigidbody.useGravity)
+            {
+                // Don't override actual location using gravity, causes player jumping
+                _rigidbody.useGravity = false;
+            }
             // Lerp to real position
-            transform.position = _realPosition;//Vector3.Lerp(transform.position, new Vector3(_realPosition.x, transform.position.y, _realPosition.z), 1f);
-            transform.eulerAngles = _realRotation;//(new Vector3(_realPosition.x, transform.position.y, _realPosition.z));
-
-        }
-
-        
+            transform.position = RealPosition;
+            transform.eulerAngles = RealRotation;
+        }  
     }
 
     private void Move(GameObject go, float x, float z)
@@ -135,6 +153,17 @@ public class Player : MovingObject
         go.transform.LookAt(new Vector3(go.transform.localPosition.x + x, go.transform.localPosition.y, go.transform.localPosition.z + z));
     }
 
+    // Server moves the player and forces them to a position
+    [Server]
+    public void SyncForceMove(Vector3 position, Vector3 rotation)
+    {
+        transform.position = position;
+        transform.eulerAngles = rotation;
+
+        RealPosition = position;
+        RealRotation = rotation;
+    }
+
     [Command]
     public void CmdSyncMove(Vector3 position, Vector3 rotation)
     {
@@ -142,14 +171,14 @@ public class Player : MovingObject
         {
             return;
         }
-        _realPosition = position;
-        _realRotation = rotation;
+        RealPosition = position;
+        RealRotation = rotation;
     }
     [Command]
     private void CmdSyncRespawn(Vector3 position, Vector3 rotation)
     {
-        _realPosition = position;
-        _realRotation = rotation;
+        RealPosition = position;
+        RealRotation = rotation;
 
         RpcRespawn(position, rotation);
     }
@@ -183,31 +212,6 @@ public class Player : MovingObject
         /////////////////////////
         // Local Player Controls
         /////////////////////////
-
-        //if (!isLocalPlayer)
-        //{
-        //    return;
-        //}
-        //var x = Input.GetAxis("Horizontal");
-        //var z = Input.GetAxis("Vertical");
-
-        //if (x != 0 || z != 0)
-        //{
-        //    // Move Player Command
-        //    CmdMove(gameObject, x, z);
-        //    if (_animationState != AnimationState.WALKING)
-        //    {
-        //        CmdChangeState((int) AnimationState.WALKING);
-        //    }
-        //}
-        //else
-        //{
-        //    // Stopped moving
-        //    if (_animationState != AnimationState.IDLE)
-        //    {
-        //        CmdChangeState((int) AnimationState.IDLE);
-        //    }
-        //}
         if (isLocalPlayer && Input.GetKeyDown(KeyCode.Space))
         {
             var platform = GameObject.FindGameObjectWithTag("Platform");
@@ -276,6 +280,8 @@ public class Player : MovingObject
     private void CmdPlacePlatformInWater(GameObject platform, GameObject go)
     {
         var player = go.GetComponent<Player>();
+        player.OnPlatform = true;
+        
         if (player.PlayerRole != Role.Floater)
         {
             // only the server knows each player role, so do this check here
@@ -289,6 +295,7 @@ public class Player : MovingObject
 
         fp.CanPickUp = true;
         fp.PlaceOnWater(this);
+
     }
 
     [Command]

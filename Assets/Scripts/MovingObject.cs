@@ -34,6 +34,13 @@ public class MovingObject : NetworkBehaviour
         rigidbody.velocity = Vector3.zero;
         rigidbody.angularVelocity = Vector3.zero;
         transform.eulerAngles = _initialRotation;
+        SetPosition(newPosition);
+    }
+
+    [Server]
+    private void SetPosition(Vector3 position)
+    {
+        transform.position = position;
     }
 
     public virtual void Respawn()
@@ -52,8 +59,10 @@ public class MovingObject : NetworkBehaviour
         
 
         var randomRespawn = Random.Range(0, RespawnLocation.Count);
-        CmdRespawn(gameObject, RespawnLocation[randomRespawn]);
-
+        if (!isServer)
+        {
+            CmdRespawn(gameObject, RespawnLocation[randomRespawn]);
+        }
         ResetObject(RespawnLocation[randomRespawn]);
 
         GetComponent<Rigidbody>().useGravity = CanFall;

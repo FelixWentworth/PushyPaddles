@@ -94,7 +94,7 @@ public class RewardsManager : MonoBehaviour
     private void Complete()
     {
         // Notify the server that all rewards are given out
-        GameObject.Find("MenuManager").GetComponent<MenuManager>().CmdHideRewards();
+        GameObject.Find("MenuManager").GetComponent<MenuManager>().HideRewards();
         GameObject.Find("GameManager").GetComponent<GameManager>().RestartGame();
     }
 }

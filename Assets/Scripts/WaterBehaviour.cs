@@ -61,11 +61,11 @@ public class WaterBehaviour : NetworkBehaviour
             go.transform.position.z + _tideStrength
         );
 
-        CmdMoveFloatingObject(go.gameObject, newPosition);
+        MoveFloatingObject(go.gameObject, newPosition);
     }
 
-    [Command]
-    private void CmdMoveFloatingObject(GameObject go, Vector3 pos)
+    [Server]
+    private void MoveFloatingObject(GameObject go, Vector3 pos)
     {
         go.transform.position = pos;
         // Clamp the x axis

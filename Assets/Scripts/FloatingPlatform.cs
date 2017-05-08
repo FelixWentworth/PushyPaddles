@@ -41,26 +41,31 @@ public class FloatingPlatform : MovingObject
     public override void Respawn()
     {
         base.Respawn();
-        
-        _playerOnPlatform = null;
 
-        CmdReset();
+        _playerOnPlatform = null;
+        if (!isServer)
+        {
+            CmdReset();
+        }
     }
 
     public void PlaceOnWater(Player player)
     {
+        Debug.Log(player);
         _playerOnPlatform = player;
     }
 
     void FixedUpdate()
     {
-        if (_playerOnPlatform != null)
+        if (_playerOnPlatform != null && isServer)
         {
             // On Water
-            _mesh.enabled = true;
             _playerOnPlatform.GetComponent<Rigidbody>().useGravity = false;
             _playerOnPlatform.transform.position = new Vector3(transform.position.x, _playerOnPlatform.transform.position.y, transform.position.z);
-            _playerOnPlatform.GetComponent<Player>().CmdSyncMove(new Vector3(transform.position.x, _playerOnPlatform.transform.position.y, transform.position.z), _playerOnPlatform.transform.eulerAngles);
+
+            var player = _playerOnPlatform.GetComponent<Player>();
+            player.SyncForceMove(new Vector3(transform.position.x, _playerOnPlatform.transform.position.y, transform.position.z), _playerOnPlatform.transform.eulerAngles);
+
             Water.TouchedWater(this);
         }
         // Not on water
@@ -73,8 +78,10 @@ public class FloatingPlatform : MovingObject
         {
             if (_playerOnPlatform != null)
             {
+                _playerOnPlatform.GetComponent<Player>().OnPlatform = false;
                 _playerOnPlatform.GetComponent<Rigidbody>().useGravity = true;
                 _playerOnPlatform = null;
+
                 CanFloat = false;
                 Water.TouchedWater(this);
             }
@@ -87,16 +94,22 @@ public class FloatingPlatform : MovingObject
                 return;
             }
 
-            var victoryPosition = other.transform.FindChild("VicrtoryLocation").position;
-            
-            _playerOnPlatform.transform.position = victoryPosition;
+            var player = _playerOnPlatform.GetComponent<Player>();
             _playerOnPlatform = null;
+
+            player.OnPlatform = false;
+            if (isServer)
+            {
+                player.SyncForceMove(other.transform.FindChild("VicrtoryLocation").position,
+                    player.transform.eulerAngles);
+                Debug.Log("VICTORY");
+                // Show the reward screen
+                GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowRewards();
+            }
+
             CanFloat = false;
             Water.TouchedWater(this);
 
-
-            // Show the reward screen
-            GameObject.Find("MenuManager").GetComponent<MenuManager>().CmdShowRewards();
         }
     }
 

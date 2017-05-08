@@ -10,6 +10,7 @@ public class RewardScreenManager : UIScreen
     private float _controlsModifier = -1f;
 
     private GameManager _gameManager;
+    private Player _player;
 
     public override void Show()
     {
@@ -31,23 +32,31 @@ public class RewardScreenManager : UIScreen
     {
         if (IsShowing)
         {
+
             if (_gameManager == null)
             {
                 _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
             }
+            if (_player == null)
+            {
+                _player = _gameManager.GetLocalPlayer();
+            }
             // Determine if the local player has control
-            if (_gameManager.GetLocalPlayer().PlayerRole == Player.Role.Floater)
+            if (_player.PlayerRole == Player.Role.Floater)
             {
                 if (Input.GetKeyDown(KeyCode.A))
                 {
+                    Debug.Log("Left");
                     RewardsManager.Left();
                 }
                 if (Input.GetKeyDown(KeyCode.D))
                 {
+                    Debug.Log("Right");
                     RewardsManager.Right();
                 }
                 if (Input.GetKeyDown(KeyCode.S))
                 {
+                    Debug.Log("Select");
                     RewardsManager.Select();
                 }
             }

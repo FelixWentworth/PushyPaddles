@@ -24,11 +24,6 @@ public class ObstacleGeneration : NetworkBehaviour
         {
             Setup();
         }
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            SetLevelLayout();
-            CreateLevel(10);
-        }
     }
     public void Setup()
     {
@@ -58,15 +53,17 @@ public class ObstacleGeneration : NetworkBehaviour
         widthSpace += 1;
 
         var heightSpece = Mathf.RoundToInt(height/blockWidth);
-
-        _levelLayout = new char[widthSpace,heightSpece];
-
-        for (var i = 0; i < widthSpace; i++)
+        if (_levelLayout == null)
         {
-            for (var j = 0; j < heightSpece; j++)
+            _levelLayout = new char[widthSpace, heightSpece];
+
+            for (var i = 0; i < widthSpace; i++)
             {
-                // Set char to clear
-                _levelLayout[i, j] = 'c';
+                for (var j = 0; j < heightSpece; j++)
+                {
+                    // Set char to clear
+                    _levelLayout[i, j] = 'c';
+                }
             }
         }
         GeneratePath();
@@ -108,10 +105,10 @@ public class ObstacleGeneration : NetworkBehaviour
             _levelLayout[previousPosition, j] = '+';
             _levelLayout[pathPosition, j] = '+';
 
-            //// HACK allow game be completed solo
-            //_levelLayout[midpoint, j] = '+';
-            //_levelLayout[midpoint - 1, j] = '+';
-            //// END HACK
+            // HACK allow game be completed solo
+            _levelLayout[midpoint, j] = '+';
+            _levelLayout[midpoint - 1, j] = '+';
+            // END HACK
 
             previousPosition = pathPosition;
         }
@@ -202,8 +199,7 @@ public class ObstacleGeneration : NetworkBehaviour
 
         yield return Move(initialPos, hiddenPos, time);
         
-        SetLevelLayout();
-        CreateLevel(obstacles);
+        Setup();
 
         yield return Move(hiddenPos, initialPos, time);
 

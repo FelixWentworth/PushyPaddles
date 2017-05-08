@@ -149,17 +149,16 @@ public class MenuManager : NetworkBehaviour
     /// <summary>
     /// Show all players the reward screen, only the player who reached the goal will be able to control this menu
     /// </summary>
-    [Command]
-    public void CmdShowRewards()
+    public void ShowRewards()
     {
         _showRewards = true;
     }
     /// <summary>
     /// We can have a command to hide the rewards screen as only 1 player has control
     /// </summary>
-    [Command]
-    public void CmdHideRewards()
+    public void HideRewards()
     {
+        Debug.Log("hide");
         _hideRewards = true;
     }
 

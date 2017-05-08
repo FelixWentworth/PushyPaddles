@@ -58,6 +58,7 @@ public class GameManager : NetworkBehaviour
         Debug.Log("Player Disconnected");
 
         // Todo Assign New Roles
+
     }
 
     public bool GameStarted()
@@ -67,18 +68,31 @@ public class GameManager : NetworkBehaviour
 
     public Player GetLocalPlayer()
     {
-        foreach (var player in _players)
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var player in players)
         {
-            if (player.isLocalPlayer)
+            var _p = player.GetComponent<Player>();
+            if (_p.isLocalPlayer)
             {
-                return player;
+                return _p;
             }
         }
+
         return null;
     }
 
     public int GetPlayerCount()
     {
+        if (_players.Count == 0)
+        {
+            var players = GameObject.FindGameObjectsWithTag("Player");
+            foreach (var player in players)
+            {
+                _players.Add(player.GetComponent<Player>());
+            }
+        }
+
         return _players.Count;
     }
 
