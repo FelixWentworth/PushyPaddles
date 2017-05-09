@@ -97,7 +97,7 @@ public class RewardsManager : MonoBehaviour
         // Notify the server that all rewards are given out
         var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
-        gameManager.RestartGame();
+        gameManager.GetLocalPlayer().RestartGame();
         gameManager.HideRewards();
     }
 }

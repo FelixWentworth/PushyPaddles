@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -21,8 +22,13 @@ public class Player : MovingObject
         Paddler
     }
 
-    [SyncVar]public Role PlayerRole;
+    [SyncVar] public Role PlayerRole;
 
+    public void SetRole(Role role)
+    {
+        PlayerRole = role;
+    }
+    
     private enum AnimationState{
         IDLE = 0,
         
@@ -242,6 +248,10 @@ public class Player : MovingObject
                 CmdUsePaddle();
             }
         }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RestartGame();  
+        }
 
         /////////////////////////////
         // End Local Player Controls
@@ -383,6 +393,7 @@ public class Player : MovingObject
                 t.gameObject.SetActive(false);
             }
         }
+        
         transform.GetChild(0).GetChild(_playerModel).gameObject.SetActive(true);
     }
 
@@ -396,7 +407,76 @@ public class Player : MovingObject
         GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowRewards();
     }
 
+    public void RestartGame()
+    {
+        if (isLocalPlayer)
+        {
+            Debug.LogError("Restart Game");
 
+            CmdRestartGame();
+
+            //GameObject.Find("GameManager").GetComponent<GameManager>().CmdRestartGame();
+        }
+    }
+
+
+    [Command]
+    public void CmdRestartGame()
+    {
+        Debug.LogError("Restart Command");
+        Restart();
+    }
+
+    [Server]
+    public void Restart()
+    {
+
+        ChangeRoles();
+
+        // Reset the obstacles
+        GameObject.Find("Level/Rocks").GetComponent<ObstacleGeneration>().GenerateNewLevel(10);
+
+        // Reset Player Posititions
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        // Reset Platform Positions
+        var platforms = GameObject.FindGameObjectsWithTag("Platform");
+
+        foreach (var player in players)
+        {
+            player.GetComponent<Player>().Respawn();
+        }
+        foreach (var platform in platforms)
+        {
+            platform.GetComponent<FloatingPlatform>().Respawn();
+        }
+    }
+    [Server]
+    public void ChangeRoles()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        var _players = new List<Player>();
+        
+        foreach (var player in players)
+        {
+            _players.Add(player.GetComponent<Player>());
+        }
+
+        var floaterIndex = 0;
+        for (var i = 0; i < _players.Count; i++)
+        {
+            if (_players[i].PlayerRole == Player.Role.Floater)
+            {
+                floaterIndex = i;
+            }
+            _players[i].SetRole(Player.Role.Paddler);
+        }
+        // increment to next player
+        floaterIndex = floaterIndex >= _players.Count - 1 ? 0 : floaterIndex + 1;
+
+        _players[floaterIndex].SetRole(Player.Role.Floater);
+    }
 
     void OnCollisionEnter(Collision other)
     {

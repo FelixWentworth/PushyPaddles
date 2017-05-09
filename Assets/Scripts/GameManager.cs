@@ -47,7 +47,7 @@ public class GameManager : NetworkBehaviour
             _menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
         }
         _menu.HideMenu();
-        StartGame(NetworkServer.connections[NetworkServer.connections.Count-1]);
+        StartGame(NetworkServer.connections[NetworkServer.connections.Count - 1]);
         _menu.ShowCharacterSelect();
     }
 
@@ -57,7 +57,7 @@ public class GameManager : NetworkBehaviour
         Debug.Log("Player Disconnected");
 
         // Todo Assign New Roles
-
+            
     }
 
     public bool GameStarted()
@@ -118,7 +118,7 @@ public class GameManager : NetworkBehaviour
     {
         //only the 1st player should be able to ride the platform
         player.PlayerID = playerIndex;
-        player.PlayerRole = playerIndex == 0 ? Player.Role.Floater : Player.Role.Paddler;
+        player.SetRole(playerIndex == 0 ? Player.Role.Floater : Player.Role.Paddler);
     }
 
     [Command]
@@ -137,7 +137,7 @@ public class GameManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdAssignReverseControls(int playerNumber, float modifier) 
+    public void CmdAssignReverseControls(int playerNumber, float modifier)
     {
         if (playerNumber >= _players.Count)
         {
@@ -151,45 +151,8 @@ public class GameManager : NetworkBehaviour
         player.DirectionModifier *= modifier;
     }
 
-    [Command]
-    public void CmdChangeRoles()
-    {
-        var floaterIndex = 0;
-        for (var i=0; i<_players.Count; i++)
-        {
-            if (_players[i].PlayerRole == Player.Role.Floater)
-            {
-                floaterIndex = i;
-            }
-            _players[i].PlayerRole = Player.Role.Paddler;
-        }
-        // increment to next player
-        floaterIndex = floaterIndex >= _players.Count - 1 ? 0 : floaterIndex + 1;
-        _players[floaterIndex].PlayerRole = Player.Role.Floater;
-    }
 
-    public void RestartGame()
-    {
-        CmdChangeRoles();
-
-        // Reset the obstacles
-        GameObject.Find("Level/Rocks").GetComponent<ObstacleGeneration>().GenerateNewLevel(10);
-
-        // Reset Player Posititions
-        var players = GameObject.FindGameObjectsWithTag("Player");
-
-        // Reset Platform Positions
-        var platforms = GameObject.FindGameObjectsWithTag("Platform");
-
-        foreach (var player in players)
-        {
-            player.GetComponent<Player>().Respawn();
-        }
-        foreach (var platform in platforms)
-        {
-            platform.GetComponent<FloatingPlatform>().Respawn();
-        }
-    }
+   
 
     public void HideRewards()
     {
