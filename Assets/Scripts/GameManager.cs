@@ -151,9 +151,6 @@ public class GameManager : NetworkBehaviour
         player.DirectionModifier *= modifier;
     }
 
-
-   
-
     public void HideRewards()
     {
         if (_menu == null)

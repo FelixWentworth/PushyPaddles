@@ -384,11 +384,10 @@ public class Player : MovingObject
     {
         // Disable all children
         var child = transform.GetChild(0);
-        Debug.Log(child.gameObject.name);
         var transforms = child.GetComponentsInChildren<Transform>();
         foreach (var t in transforms)
         {
-            if (t.gameObject.name.Contains("CH_"))
+            if (t.gameObject.name.Contains("CH_")) // CH marks model
             {
                 t.gameObject.SetActive(false);
             }
@@ -414,8 +413,6 @@ public class Player : MovingObject
             Debug.LogError("Restart Game");
 
             CmdRestartGame();
-
-            //GameObject.Find("GameManager").GetComponent<GameManager>().CmdRestartGame();
         }
     }
 
@@ -423,7 +420,6 @@ public class Player : MovingObject
     [Command]
     public void CmdRestartGame()
     {
-        Debug.LogError("Restart Command");
         Restart();
     }
 
@@ -482,7 +478,6 @@ public class Player : MovingObject
     {
         if (other.gameObject.tag == "Water")
         {
-            Debug.Log(other.gameObject.name);
             other.gameObject.GetComponent<WaterBehaviour>().TouchedWater(this);       
         }
     }
