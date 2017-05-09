@@ -102,10 +102,10 @@ public class FloatingPlatform : MovingObject
             {
                 player.SyncForceMove(other.transform.FindChild("VicrtoryLocation").position,
                     player.transform.eulerAngles);
-                Debug.Log("VICTORY");
-                // Show the reward screen
-                GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowRewards();
+                
             }
+            // Notify the players that a reward has been reached
+            player.RpcGoalReached();
 
             CanFloat = false;
             Water.TouchedWater(this);

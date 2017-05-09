@@ -386,6 +386,18 @@ public class Player : MovingObject
         transform.GetChild(0).GetChild(_playerModel).gameObject.SetActive(true);
     }
 
+    [ClientRpc]
+    public void RpcGoalReached()
+    {
+        if (!isLocalPlayer)
+        { 
+            return;
+        }
+        GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowRewards();
+    }
+
+
+
     void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.tag == "Water")

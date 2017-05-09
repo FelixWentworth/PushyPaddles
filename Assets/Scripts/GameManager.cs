@@ -30,7 +30,6 @@ public class GameManager : NetworkBehaviour
         //    if (Input.GetKey(KeyCode.Space))
         //    {
         //       // Start game
-        //        Debug.Log("Start");
 
         //        _menu.CmdHideMenu();
         //        _gameStarted = true;
@@ -100,7 +99,6 @@ public class GameManager : NetworkBehaviour
     public void StartGame(NetworkConnection conn)
     {
         _gameStarted = true;
-        Debug.Log("Here");
         var index = _players.Count;
         if (conn != null)
         {
@@ -191,5 +189,14 @@ public class GameManager : NetworkBehaviour
         {
             platform.GetComponent<FloatingPlatform>().Respawn();
         }
+    }
+
+    public void HideRewards()
+    {
+        if (_menu == null)
+        {
+            _menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+        }
+        _menu.HideRewards();
     }
 }

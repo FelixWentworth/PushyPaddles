@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using UnityEngine;
 
 public class RewardScreenManager : UIScreen
@@ -37,26 +38,25 @@ public class RewardScreenManager : UIScreen
             {
                 _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
             }
+            _player = _gameManager.GetLocalPlayer();
             if (_player == null)
             {
-                _player = _gameManager.GetLocalPlayer();
+                // Should not be able to control
+                return;
             }
             // Determine if the local player has control
             if (_player.PlayerRole == Player.Role.Floater)
             {
                 if (Input.GetKeyDown(KeyCode.A))
                 {
-                    Debug.Log("Left");
                     RewardsManager.Left();
                 }
                 if (Input.GetKeyDown(KeyCode.D))
                 {
-                    Debug.Log("Right");
                     RewardsManager.Right();
                 }
                 if (Input.GetKeyDown(KeyCode.S))
                 {
-                    Debug.Log("Select");
                     RewardsManager.Select();
                 }
             }

@@ -5,7 +5,11 @@ using UnityEngine.Networking;
 
 public class UIScreen : MonoBehaviour {
 
-    public bool IsShowing { get; set; }
+    public bool IsShowing
+    {
+        get { return GetComponent<CanvasGroup>().alpha == 1f; }
+        set { IsShowing = value; }
+    }
 
     protected CanvasGroup CanvasGroup;
 
@@ -16,7 +20,6 @@ public class UIScreen : MonoBehaviour {
             CanvasGroup = this.GetComponent<CanvasGroup>();
         }
         CanvasGroup.alpha = 1f;
-        IsShowing = true;
     }
 
     public virtual void Hide()
@@ -26,6 +29,5 @@ public class UIScreen : MonoBehaviour {
             CanvasGroup = this.GetComponent<CanvasGroup>();
         }
         CanvasGroup.alpha = 0f;
-        IsShowing = false;
     }
 }

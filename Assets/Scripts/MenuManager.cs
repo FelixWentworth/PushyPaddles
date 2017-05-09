@@ -4,12 +4,10 @@ using UnityEngine.Networking;
 public class MenuManager : NetworkBehaviour
 {
     // Menu should be active at start
-    [SyncVar] private bool _showMenu = true;
-    [SyncVar] private bool _hideMenu;
-    // Explicitly state that the other menus menus should be disabled
-    [SyncVar] private bool _showRewards = false;
-    [SyncVar] private bool _hideRewards = false;
-    [SyncVar] private bool _showCharacterSelection = false;
+    [SyncVar] private bool _showMenuSync = true;
+    [SyncVar] private bool _hideMenuSync;
+    
+    [SyncVar] private bool _showCharacterSelectionSync = false;
     // not synched as players can hide when they want
     private bool _hideCharacterSelection = false;
 
@@ -40,31 +38,31 @@ public class MenuManager : NetworkBehaviour
     private void UpdateScreens()
     {
        
-        if (_showMenu && !TitleScreen.activeSelf)
+        if (_showMenuSync && !TitleScreen.activeSelf)
         {
-            _hideMenu = false;
+            _hideMenuSync = false;
             TitleScreen.SetActive(true);
         }
-        if (_hideMenu && TitleScreen.activeSelf)
+        if (_hideMenuSync && TitleScreen.activeSelf)
         {
-            _showMenu = false;
+            _showMenuSync = false;
             TitleScreen.SetActive(false);
         }
+        //if (_showRewards && !RewardScreenManager.IsShowing)
+        //{
+        //    //_hideRewards = false;
+        //    RewardScreenManager.Show();
+        //}
+        //if (_hideRewards && RewardScreenManager.IsShowing)
+        //{
+        //    _showRewards = false;
+        //    RewardScreenManager.Hide();
+        //}
         if (isServer)
         {
             return;
         }
-        if (_showRewards && !RewardScreenManager.IsShowing)
-        {
-            _hideRewards = false;
-            RewardScreenManager.Show();
-        }
-        if (_hideRewards && RewardScreenManager.IsShowing)
-        {
-            _showRewards = false;
-            RewardScreenManager.Hide();
-        }
-        if (!_hideCharacterSelection && _showCharacterSelection && !CharacterSelectionScreen.activeSelf)
+        if (!_hideCharacterSelection && _showCharacterSelectionSync && !CharacterSelectionScreen.activeSelf)
         {
             _hideCharacterSelection = false;
             CharacterSelectionScreen.SetActive(true);
@@ -115,7 +113,7 @@ public class MenuManager : NetworkBehaviour
     [Command]
     public void CmdShowMenu()
     {
-        _showMenu = true;
+        _showMenuSync = true;
     }
 
     /// <summary>
@@ -123,9 +121,7 @@ public class MenuManager : NetworkBehaviour
     /// </summary>
     public void HideMenu()
     {
-        Debug.Log("Hide");
-
-        _hideMenu = true;
+        _hideMenuSync = true;
     }
 
     /// <summary>
@@ -133,9 +129,7 @@ public class MenuManager : NetworkBehaviour
     /// </summary>
     public void ShowCharacterSelect()
     {
-        Debug.Log("Here");
-
-        _showCharacterSelection = true;
+        _showCharacterSelectionSync = true;
     }
 
     /// <summary>
@@ -151,15 +145,17 @@ public class MenuManager : NetworkBehaviour
     /// </summary>
     public void ShowRewards()
     {
-        _showRewards = true;
+        RewardScreenManager.Show();
+        //_showRewards = true;
     }
+    
     /// <summary>
-    /// We can have a command to hide the rewards screen as only 1 player has control
+    /// Hide the rewards screen for all users
     /// </summary>
     public void HideRewards()
     {
-        Debug.Log("hide");
-        _hideRewards = true;
+        RewardScreenManager.Hide();
+        //_hideRewards = true;
     }
 
     /// <summary>

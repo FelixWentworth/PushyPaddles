@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class RewardsManager : MonoBehaviour
 {
@@ -94,7 +95,9 @@ public class RewardsManager : MonoBehaviour
     private void Complete()
     {
         // Notify the server that all rewards are given out
-        GameObject.Find("MenuManager").GetComponent<MenuManager>().HideRewards();
-        GameObject.Find("GameManager").GetComponent<GameManager>().RestartGame();
+        var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        gameManager.RestartGame();
+        gameManager.HideRewards();
     }
 }
