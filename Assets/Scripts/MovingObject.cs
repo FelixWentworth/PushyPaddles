@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class MovingObject : MonoBehaviour
+public class MovingObject : NetworkBehaviour
 {
-    public float MovementSpeed;
+    [SyncVar] public float MovementSpeed;
+    [SyncVar] public float RotationSpeed;
     public float RespawnTime = 1f;
 
     public bool CanFloat;
@@ -13,6 +15,8 @@ public class MovingObject : MonoBehaviour
     public bool PlayerCanInteract;
     // If the player collides with this object
     public bool PlayerCanHit;
+    // If the object falls
+    public bool CanFall;
 
     public List<Vector3> RespawnLocation = new List<Vector3>();
     private Vector3 _initialRotation;
@@ -21,16 +25,22 @@ public class MovingObject : MonoBehaviour
     public virtual void Start()
     {
         _initialRotation = transform.eulerAngles;
-        Debug.Log(_initialRotation);
     }
 
-    public virtual void ResetObject()
+    public virtual void ResetObject(Vector3 newPosition)
     {
         var rigidbody = GetComponent<Rigidbody>();
         rigidbody.Sleep();
         rigidbody.velocity = Vector3.zero;
         rigidbody.angularVelocity = Vector3.zero;
         transform.eulerAngles = _initialRotation;
+        SetPosition(newPosition);
+    }
+
+    [Server]
+    private void SetPosition(Vector3 position)
+    {
+        transform.position = position;
     }
 
     public virtual void Respawn()
@@ -46,11 +56,22 @@ public class MovingObject : MonoBehaviour
     {
         yield return new WaitForSeconds(RespawnTime);
         GetComponent<BoxCollider>().enabled = true;
-        ResetObject();
+        
 
         var randomRespawn = Random.Range(0, RespawnLocation.Count);
-        transform.position = RespawnLocation[randomRespawn];
+        if (!isServer)
+        {
+            CmdRespawn(gameObject, RespawnLocation[randomRespawn]);
+        }
+        ResetObject(RespawnLocation[randomRespawn]);
+
+        GetComponent<Rigidbody>().useGravity = CanFall;
 
     }
 
+    [Command]
+    private void CmdRespawn(GameObject go, Vector3 pos)
+    {
+        go.transform.position = pos;
+    }
 }

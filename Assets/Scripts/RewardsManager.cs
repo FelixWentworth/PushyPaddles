@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class RewardsManager : MonoBehaviour
 {
@@ -10,8 +11,9 @@ public class RewardsManager : MonoBehaviour
 
     private int _currentlyHighlighting = 0;
     private int _assignedRewards = 0;
+    private int _playerCount;
 
-    public void ResetRewards()
+    public void ResetRewards(int playerCount)
     {
         _assignedRewards = 0;
         _currentlyHighlighting = 0;
@@ -20,22 +22,7 @@ public class RewardsManager : MonoBehaviour
             reward.SetAvailable(true);
         }
         UpdateHighlighted();
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Left();
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            Right();
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            Select();
-        }
+        _playerCount = playerCount;
     }
 
     public void Left()
@@ -78,9 +65,8 @@ public class RewardsManager : MonoBehaviour
 
         Rewards[_currentlyHighlighting].SetAvailable(false);
         _assignedRewards++;
-        if (_assignedRewards >= Rewards.Length)
+        if (_assignedRewards >= Rewards.Length || _assignedRewards >= _playerCount)
         {
-            // TODO Restart Level
             Complete();
         }
         else
@@ -108,7 +94,10 @@ public class RewardsManager : MonoBehaviour
 
     private void Complete()
     {
-        transform.parent.GetComponent<RewardScreenManager>().Hide();
-        GameManager.RestartGame();
+        // Notify the server that all rewards are given out
+        var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        gameManager.GetLocalPlayer().NextRound();
+        gameManager.HideRewards();
     }
 }

@@ -12,9 +12,4 @@ public class Chest : MovingObject {
         PlayerCanHit = true;
         CanRespawn = false;
     }
-
-    public override void ResetObject()
-    {
-
-    }
 }

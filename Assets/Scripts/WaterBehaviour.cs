@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class WaterBehaviour : MonoBehaviour
+public class WaterBehaviour : NetworkBehaviour
 {
 
-    [SerializeField] private float _tideStrength = 1f;
+    [SerializeField] private float _tideStrength = 0.01f;
     [SerializeField] private float _maxPaddleStrength = 1f;
     // The strength of paddle power from another player
     [Range(-1f, 1f)] private float _paddleStrength = 0f;
@@ -63,14 +61,13 @@ public class WaterBehaviour : MonoBehaviour
             go.transform.position.z + _tideStrength
         );
 
-        go.GetComponent<Rigidbody>().velocity = newPosition * Time.fixedDeltaTime;
+        MoveFloatingObject(go.gameObject, newPosition);
+    }
 
-        if (go.transform.position.z >= _respawnZPos)
-        {
-            go.Respawn();
-            return;
-        }
-
+    [Server]
+    private void MoveFloatingObject(GameObject go, Vector3 pos)
+    {
+        go.transform.position = pos;
         // Clamp the x axis
         ClampX(go.gameObject);
     }
@@ -97,15 +94,14 @@ public class WaterBehaviour : MonoBehaviour
         }
     }
 
+    // Only allow the server to run this as to avoid players exploiting
+    [Server]
     public void PaddleUsed(Player player)
     {
         switch (player.PlayerRole)
         {
-            case Player.Role.Paddle_Left:
-                _paddleStrength = 1f;
-                break;
-            case Player.Role.Paddle_Right:
-                _paddleStrength = -1f;
+            case Player.Role.Paddler:
+                _paddleStrength = player.transform.position.x > 0f ? -1f : 1f;
                 break;
             case Player.Role.Unassigned:
             case Player.Role.Floater:

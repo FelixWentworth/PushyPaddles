@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.IMGUI.Controls;
-using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine;
 
 public class Reward : MonoBehaviour
 {
@@ -30,7 +25,6 @@ public class Reward : MonoBehaviour
 
     public void SetHighlight(bool highlight)
     {
-        Debug.Log("Set Highlight" + highlight);
         if (!IsAvailable)
         {
             return;
