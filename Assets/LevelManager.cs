@@ -18,7 +18,6 @@ public class LevelManager : NetworkBehaviour
         get { return _timeRemaining <= 0f; }
     }
 
-
     private float _timeLimit = 120f;
 
     void Start()

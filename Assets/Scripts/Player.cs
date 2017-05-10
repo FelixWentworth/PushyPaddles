@@ -59,6 +59,7 @@ public class Player : MovingObject
     [SyncVar] public bool OnPlatform;
     
     private Rigidbody _rigidbody;
+    private TextMesh _playerText;
 
     public override void Start()
     {
@@ -73,6 +74,8 @@ public class Player : MovingObject
 
         //GetComponent<Rigidbody>().isKinematic = !isServer;
         _rigidbody = GetComponent<Rigidbody>();
+        _playerText = GetComponentInChildren<TextMesh>();
+        _playerText.text = "Player " + (PlayerID + 1);
 
         SetModel();
         _currentModel = _playerModel;

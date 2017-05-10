@@ -52,6 +52,7 @@ public class GameManager : NetworkBehaviour
         //}
     }
 
+
     [Server]
     void OnConnected(NetworkMessage netMsg)
     {
@@ -230,5 +231,11 @@ public class GameManager : NetworkBehaviour
             _menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
         }
         _menu.HideRewards();
+    }
+
+
+    void OnGUI()
+    {
+        GUI.Label(new Rect(10, 10, 100, 20), Mathf.RoundToInt(1 / Time.deltaTime).ToString());
     }
 }
