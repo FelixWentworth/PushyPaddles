@@ -6,6 +6,7 @@ public class LevelManager : NetworkBehaviour
 {
     public Text RoundText;
     public Text TimeRemainingText;
+    public Text PlayerText;
 
     [SyncVar] private float _timeRemaining;
     [SyncVar] private int _roundNumber;
@@ -23,6 +24,15 @@ public class LevelManager : NetworkBehaviour
     void Start()
     {
         Reset();
+        if (isServer)
+        {
+            PlayerText.text = "Server";
+        }
+        else
+        {
+            PlayerText.text = "Player " +
+                              (GameObject.Find("GameManager").GetComponent<GameManager>().GetLocalPlayer().PlayerID + 1); 
+        }
     }
 
     [Server]
