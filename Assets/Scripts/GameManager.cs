@@ -11,6 +11,7 @@ public class GameManager : NetworkBehaviour
     [SyncVar] private bool _gameStarted = false;
 
     public GameObject PlayerPrefab;
+    public GameObject PlatformPrefab;
     private List<Player> _players = new List<Player>();
     private MenuManager _menu;
     private LevelManager _level;
