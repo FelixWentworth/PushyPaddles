@@ -57,8 +57,7 @@ public class Player : MovingObject
     private float _updateInterval = 0.11f; // 9 times a second
 
     [SyncVar] public bool OnPlatform;
-
-
+    
     private Rigidbody _rigidbody;
 
     public override void Start()
@@ -416,62 +415,10 @@ public class Player : MovingObject
         }
     }
 
-
     [Command]
     public void CmdRestartGame()
     {
-        Restart();
-    }
-
-    [Server]
-    public void Restart()
-    {
-
-        ChangeRoles();
-
-        // Reset the obstacles
-        GameObject.Find("Level/Rocks").GetComponent<ObstacleGeneration>().GenerateNewLevel(10);
-
-        // Reset Player Posititions
-        var players = GameObject.FindGameObjectsWithTag("Player");
-
-        // Reset Platform Positions
-        var platforms = GameObject.FindGameObjectsWithTag("Platform");
-
-        foreach (var player in players)
-        {
-            player.GetComponent<Player>().Respawn();
-        }
-        foreach (var platform in platforms)
-        {
-            platform.GetComponent<FloatingPlatform>().Respawn();
-        }
-    }
-    [Server]
-    public void ChangeRoles()
-    {
-        var players = GameObject.FindGameObjectsWithTag("Player");
-
-        var _players = new List<Player>();
-        
-        foreach (var player in players)
-        {
-            _players.Add(player.GetComponent<Player>());
-        }
-
-        var floaterIndex = 0;
-        for (var i = 0; i < _players.Count; i++)
-        {
-            if (_players[i].PlayerRole == Player.Role.Floater)
-            {
-                floaterIndex = i;
-            }
-            _players[i].SetRole(Player.Role.Paddler);
-        }
-        // increment to next player
-        floaterIndex = floaterIndex >= _players.Count - 1 ? 0 : floaterIndex + 1;
-
-        _players[floaterIndex].SetRole(Player.Role.Floater);
+        GameObject.Find("GameManager").GetComponent<GameManager>().Restart();
     }
 
     void OnCollisionEnter(Collision other)

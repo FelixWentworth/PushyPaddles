@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -12,6 +13,7 @@ public class GameManager : NetworkBehaviour
     public GameObject PlayerPrefab;
     private List<Player> _players = new List<Player>();
     private MenuManager _menu;
+    private LevelManager _level;
 
     void Update()
     {
@@ -19,6 +21,17 @@ public class GameManager : NetworkBehaviour
         {
             NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
             NetworkServer.RegisterHandler(MsgType.Disconnect, OnDisconnected);
+
+            if (_level == null)
+            {
+                _level = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+            }
+            if (_level.IsGameOver)
+            {
+                Debug.LogError("GameLost");
+                _level.Reset();
+                Restart();
+            }
         }
         //Debug.Log(_gameStarted);
         //if (!_gameStarted && !isServer)
@@ -45,6 +58,10 @@ public class GameManager : NetworkBehaviour
         if (_menu == null)
         {
             _menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+        }
+        if (_level == null)
+        {
+            _level = GameObject.Find("LevelManager").GetComponent<LevelManager>();
         }
         _menu.HideMenu();
         StartGame(NetworkServer.connections[NetworkServer.connections.Count - 1]);
@@ -111,6 +128,7 @@ public class GameManager : NetworkBehaviour
             _players.Add(player);
             NetworkServer.AddPlayerForConnection(conn, player.gameObject, 0);
         }
+        StartTimer();
     }
 
     [Server]
@@ -151,6 +169,60 @@ public class GameManager : NetworkBehaviour
         player.DirectionModifier *= modifier;
     }
 
+    [Server]
+    private void StartTimer()
+    {
+        _level.StartRound();
+    }
+
+    [Server]
+    public void Restart()
+    {
+        ChangeRoles();
+        // Reset the obstacles
+        GameObject.Find("LevelColliders/Rocks").GetComponent<ObstacleGeneration>().GenerateNewLevel(10);
+
+        // Reset Player Posititions
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        // Reset Platform Positions
+        var platforms = GameObject.FindGameObjectsWithTag("Platform");
+
+        foreach (var player in players)
+        {
+            player.GetComponent<Player>().Respawn();
+        }
+        foreach (var platform in platforms)
+        {
+            platform.GetComponent<FloatingPlatform>().Respawn();
+        }
+    }
+    [Server]
+    public void ChangeRoles()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        var _players = new List<Player>();
+
+        foreach (var player in players)
+        {
+            _players.Add(player.GetComponent<Player>());
+        }
+
+        var floaterIndex = 0;
+        for (var i = 0; i < _players.Count; i++)
+        {
+            if (_players[i].PlayerRole == Player.Role.Floater)
+            {
+                floaterIndex = i;
+            }
+            _players[i].SetRole(Player.Role.Paddler);
+        }
+        // increment to next player
+        floaterIndex = floaterIndex >= _players.Count - 1 ? 0 : floaterIndex + 1;
+
+        _players[floaterIndex].SetRole(Player.Role.Floater);
+    }
     public void HideRewards()
     {
         if (_menu == null)

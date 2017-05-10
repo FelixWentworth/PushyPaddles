@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.MemoryProfiler;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 
@@ -25,11 +22,11 @@ public class LevelManager : NetworkBehaviour
 
     void Start()
     {
-        Setup();
+        Reset();
     }
 
     [Server]
-    public void Setup()
+    public void Reset()
     {
         ResetAll();
         UpdateUI();
@@ -57,14 +54,27 @@ public class LevelManager : NetworkBehaviour
                 UpdateTimer(Time.deltaTime);
             }
         }
+    }
+
+    void Update()
+    {
         UpdateUI();
     }
 
-    [Server]
     private void UpdateUI()
     {
         RoundText.text = "ROUND: " + _roundNumber;
-        TimeRemainingText.text = Mathf.RoundToInt(_timeRemaining) + "s";
+
+        var totalTime = Mathf.RoundToInt(_timeRemaining);
+        if (totalTime < 0)
+        {
+            // Round is over
+            return;
+        }
+        var minute = totalTime / 60;
+        var second = totalTime % 60;
+
+        TimeRemainingText.text = minute + ":" + second.ToString("00");
     }
 
     [Server]
