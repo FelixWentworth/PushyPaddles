@@ -22,10 +22,10 @@ public class ObstacleGeneration : NetworkBehaviour
     {
         if (isServer && ObstacleParent.transform.childCount == 0)
         {
-            Setup();
+            Setup(2);
         }
     }
-    public void Setup()
+    public void Setup(int numObstacles)
     {
         _spawnArea = transform.FindChild("SpawnArea").gameObject;
 
@@ -35,7 +35,7 @@ public class ObstacleGeneration : NetworkBehaviour
         _maxZ = _spawnArea.transform.FindChild("TopRight").position.z;
 
         SetLevelLayout();
-        CreateLevel(15);
+        CreateLevel(numObstacles);
     }
 
     private void SetLevelLayout()
@@ -105,10 +105,10 @@ public class ObstacleGeneration : NetworkBehaviour
             _levelLayout[previousPosition, j] = '+';
             _levelLayout[pathPosition, j] = '+';
 
-            // HACK allow game be completed solo
-            _levelLayout[midpoint, j] = '+';
-            _levelLayout[midpoint - 1, j] = '+';
-            // END HACK
+            //// HACK allow game be completed solo
+            //_levelLayout[midpoint, j] = '+';
+            //_levelLayout[midpoint - 1, j] = '+';
+            //// END HACK
 
             previousPosition = pathPosition;
         }
@@ -199,7 +199,7 @@ public class ObstacleGeneration : NetworkBehaviour
 
         yield return Move(initialPos, hiddenPos, time);
         
-        Setup();
+        Setup(obstacles);
 
         yield return Move(hiddenPos, initialPos, time);
 

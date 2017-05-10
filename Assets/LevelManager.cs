@@ -9,7 +9,7 @@ public class LevelManager : NetworkBehaviour
     public Text PlayerText;
 
     [SyncVar] private float _timeRemaining;
-    [SyncVar] private int _roundNumber;
+    [SyncVar] public int RoundNumber;
 
     [SyncVar] private bool _roundStarted;
 
@@ -18,11 +18,11 @@ public class LevelManager : NetworkBehaviour
         get { return _timeRemaining <= 0f; }
     }
 
-    private float _timeLimit = 120f;
+    private float _timeLimit = 300;
 
     void Start()
     {
-        Reset();
+        ResetRound();
         if (isServer)
         {
             PlayerText.text = "Server";
@@ -35,7 +35,7 @@ public class LevelManager : NetworkBehaviour
     }
 
     [Server]
-    public void Reset()
+    public void ResetRound()
     {
         ResetAll();
         UpdateUI();
@@ -50,7 +50,7 @@ public class LevelManager : NetworkBehaviour
     [Server]
     public void NextRound()
     {
-        _roundNumber += 1;
+        RoundNumber += 1;
         ResetTimer();
     }
 
@@ -72,7 +72,7 @@ public class LevelManager : NetworkBehaviour
 
     private void UpdateUI()
     {
-        RoundText.text = "ROUND: " + _roundNumber;
+        RoundText.text = "ROUND: " + RoundNumber;
 
         var totalTime = Mathf.RoundToInt(_timeRemaining);
         if (totalTime < 0)
@@ -102,7 +102,7 @@ public class LevelManager : NetworkBehaviour
     [Server]
     private void ResetRounds()
     {
-        _roundNumber = 1;
+        RoundNumber = 1;
     }
 
     [Server]

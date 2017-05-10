@@ -30,7 +30,7 @@ public class GameManager : NetworkBehaviour
             if (_level.IsGameOver)
             {
                 Debug.LogError("GameLost");
-                _level.Reset();
+                _level.ResetRound();
                 Restart();
             }
         }
@@ -178,11 +178,19 @@ public class GameManager : NetworkBehaviour
     }
 
     [Server]
+    public void NextRound()
+    {
+        _level.NextRound();
+        Restart();
+        
+    }
+
+    [Server]
     public void Restart()
     {
         ChangeRoles();
         // Reset the obstacles
-        GameObject.Find("LevelColliders/Rocks").GetComponent<ObstacleGeneration>().GenerateNewLevel(10);
+        GameObject.Find("LevelColliders/Rocks").GetComponent<ObstacleGeneration>().GenerateNewLevel(_level.RoundNumber * 2);
 
         // Reset Player Posititions
         var players = GameObject.FindGameObjectsWithTag("Player");

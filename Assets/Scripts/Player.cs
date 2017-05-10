@@ -424,6 +424,22 @@ public class Player : MovingObject
         GameObject.Find("GameManager").GetComponent<GameManager>().Restart();
     }
 
+    public void NextRound()
+    {
+        if (isLocalPlayer)
+        {
+            Debug.LogError("Round Complete");
+
+            CmdNextRound();
+        }
+    }
+
+    [Command]
+    public void CmdNextRound()
+    {
+        GameObject.Find("GameManager").GetComponent<GameManager>().NextRound();
+    }
+
     void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.tag == "Water")
