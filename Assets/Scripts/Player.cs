@@ -143,7 +143,7 @@ public class Player : MovingObject
                 _rigidbody.useGravity = false;
             }
             // Lerp to real position
-            transform.position = RealPosition;
+            transform.position = Vector3.Lerp(transform.position, RealPosition, 0.5f);
             transform.eulerAngles = RealRotation;
         }  
     }
