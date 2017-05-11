@@ -284,6 +284,8 @@ public class Player : MovingObject
     [Command]
     private void CmdPickupPlatform(GameObject platform)
     {
+        if (OnPlatform)
+            return;
         HoldingPlatform = true;
         platform.GetComponent<FloatingPlatform>().CanPickUp = !HoldingPlatform;
         platform.transform.SetParent(this.transform, true);

@@ -22,7 +22,7 @@ public class ObstacleGeneration : NetworkBehaviour
     {
         if (isServer && ObstacleParent.transform.childCount == 0)
         {
-            Setup(2);
+            Setup(3);
         }
     }
     public void Setup(int numObstacles)
@@ -189,7 +189,14 @@ public class ObstacleGeneration : NetworkBehaviour
 
     public void GenerateNewLevel(int obstacles)
     {
-        StartCoroutine(ChangeBlocks(obstacles, 0.8f));
+        //StartCoroutine(ChangeBlocks(obstacles, 0.8f));
+
+        ChangeBlocksImmediate(obstacles);
+    }
+
+    private void ChangeBlocksImmediate(int obstacles)
+    {
+        Setup(obstacles);
     }
 
     private IEnumerator ChangeBlocks(int obstacles, float time)

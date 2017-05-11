@@ -232,7 +232,7 @@ public class GameManager : NetworkBehaviour
     {
         ChangeRoles();
         // Reset the obstacles
-        GameObject.Find("LevelColliders/Rocks").GetComponent<ObstacleGeneration>().GenerateNewLevel(_level.RoundNumber * 2);
+        GameObject.Find("LevelColliders/Rocks").GetComponent<ObstacleGeneration>().GenerateNewLevel(_level.RoundNumber * 3);
 
         // Reset Player Posititions
         var players = GameObject.FindGameObjectsWithTag("Player");
