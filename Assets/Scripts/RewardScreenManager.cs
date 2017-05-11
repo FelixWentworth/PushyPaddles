@@ -31,7 +31,7 @@ public class RewardScreenManager : UIScreen
 
     void Update()
     {
-        if (IsShowing)
+        if (IsShowing && _gameManager.GamePlaying())
         {
 
             if (_gameManager == null)

@@ -61,6 +61,8 @@ public class Player : MovingObject
     private Rigidbody _rigidbody;
     private TextMesh _playerText;
 
+    private GameManager _gameManager;
+
     public override void Start()
     {
         CanFloat = false;
@@ -102,6 +104,15 @@ public class Player : MovingObject
     {
         if (isLocalPlayer && !OnPlatform)
         {
+            if (_gameManager == null)
+            {
+                _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+            }
+            if (!_gameManager.GamePlaying())
+            {
+                // Game Paused, Cannot move
+                return;
+            }
             if (!_rigidbody.useGravity)
             {
                 // when the player has full control, they should be affected by gravity

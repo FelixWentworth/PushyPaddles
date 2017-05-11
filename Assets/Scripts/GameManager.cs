@@ -5,16 +5,25 @@ using System.Linq;
 using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class GameManager : NetworkBehaviour
 {
-    [SyncVar] private bool _gameStarted = false;
+    [SyncVar] private bool _gamePlaying = false;
+
+    public GameObject Platform;
+    public GameObject PauseScreen;
 
     public GameObject PlayerPrefab;
-    public GameObject PlatformPrefab;
     private List<Player> _players = new List<Player>();
     private MenuManager _menu;
     private LevelManager _level;
+
+    void Start()
+    {
+        Platform.SetActive(false);
+        PauseScreen.SetActive(false);
+    }
 
     void Update()
     {
@@ -34,23 +43,11 @@ public class GameManager : NetworkBehaviour
                 Restart();
             }
         }
-        //Debug.Log(_gameStarted);
-        //if (!_gameStarted && !isServer)
-        //{
-        //    if (_menu == null)
-        //    {
-        //        _menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
-        //    }
-        //    if (Input.GetKey(KeyCode.Space))
-        //    {
-        //       // Start game
+#if USE_PROSOCIAL_EVENTS
+        PauseScreen.SetActive(!_gamePlaying);
+#else
 
-        //        _menu.CmdHideMenu();
-        //        _gameStarted = true;
-        //        CmdStartGame();
-        //        _menu.CmdShowCharacterSelect();
-        //    }
-        //}
+#endif
     }
 
 
@@ -76,12 +73,12 @@ public class GameManager : NetworkBehaviour
         Debug.Log("Player Disconnected");
 
         // Todo Assign New Roles
-            
+        
     }
 
-    public bool GameStarted()
+    public bool GamePlaying()
     {
-        return _gameStarted;
+        return _gamePlaying;
     }
 
     public Player GetLocalPlayer()
@@ -117,7 +114,6 @@ public class GameManager : NetworkBehaviour
 
     public void StartGame(NetworkConnection conn)
     {
-        _gameStarted = true;
         var index = _players.Count;
         if (conn != null)
         {
@@ -130,6 +126,23 @@ public class GameManager : NetworkBehaviour
             _players.Add(player);
             NetworkServer.AddPlayerForConnection(conn, player.gameObject, 0);
         }
+#if !USE_PROSOCIAL_EVENTS
+        StartGameTimer();
+#endif
+    }
+
+    /// <summary>
+    /// Called by ProSocial event listener to start the actual game
+    /// </summary>
+
+    [Server]
+    public void StartGameTimer()
+    {
+        // Place the platform in the scene
+        Platform.SetActive(true);
+        NetworkServer.Spawn(Platform);
+
+        // Start the game timer
         StartTimer();
     }
 
@@ -174,7 +187,32 @@ public class GameManager : NetworkBehaviour
     [Server]
     private void StartTimer()
     {
+        _gamePlaying = true;
+
         _level.StartRound();
+    }
+
+    [Server]
+    public void PauseGame()
+    {
+        _level.PauseTimer();
+
+        _gamePlaying = false;
+    }
+
+    [Server]
+    public void ResumeGame()
+    {
+        _level.ResumeTimer();
+
+        _gamePlaying = true;
+    }
+
+    [Server]
+    public void StopGame()
+    {
+        // End the game
+        _gamePlaying = false;
     }
 
     [Server]
@@ -182,7 +220,6 @@ public class GameManager : NetworkBehaviour
     {
         _level.NextRound();
         Restart();
-        
     }
 
     [Server]

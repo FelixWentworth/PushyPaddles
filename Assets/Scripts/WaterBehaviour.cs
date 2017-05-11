@@ -24,6 +24,8 @@ public class WaterBehaviour : NetworkBehaviour
 
     public Material Material;
 
+    private GameManager _gameManager;
+
     void Awake()
     {
         _respawnZPos = transform.position.z + (transform.localScale.y / 2f);
@@ -36,6 +38,15 @@ public class WaterBehaviour : NetworkBehaviour
 
     public void TouchedWater(MovingObject movingObject)
     {
+        if (_gameManager == null)
+        {
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        }
+        if (!_gameManager.GamePlaying())
+        {
+            // Nothing should move
+            return;
+        }
         // Detect if this object floats
         if (movingObject.CanFloat)
         {
