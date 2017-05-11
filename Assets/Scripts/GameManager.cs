@@ -189,6 +189,7 @@ public class GameManager : NetworkBehaviour
     {
         _gamePlaying = true;
 
+        _level.ResetRound();
         _level.StartRound();
     }
 
@@ -213,6 +214,26 @@ public class GameManager : NetworkBehaviour
     {
         // End the game
         _gamePlaying = false;
+
+        RpcStopGame();
+
+        ClearPlayerObjects();
+    }
+
+    [ClientRpc]
+    private void RpcStopGame()
+    {
+        NetworkManager.singleton.StopClient();
+    }
+
+    [Server]
+    private void ClearPlayerObjects()
+    {
+        foreach (var player in _players)
+        {
+            Destroy(player.gameObject);
+        }
+        _players.Clear();
     }
 
     [Server]
