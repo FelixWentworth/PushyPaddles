@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.SceneManagement;
 
 public class GameManager : NetworkBehaviour
 {
@@ -38,7 +33,6 @@ public class GameManager : NetworkBehaviour
             }
             if (_level.IsGameOver)
             {
-                Debug.LogError("GameLost");
                 _level.ResetRound();
                 Restart();
             }
@@ -89,6 +83,22 @@ public class GameManager : NetworkBehaviour
         {
             var _p = player.GetComponent<Player>();
             if (_p.isLocalPlayer)
+            {
+                return _p;
+            }
+        }
+
+        return null;
+    }
+
+    public Player GetPlayer(int id)
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var player in players)
+        {
+            var _p = player.GetComponent<Player>();
+            if (_p.PlayerID == id)
             {
                 return _p;
             }
@@ -154,35 +164,9 @@ public class GameManager : NetworkBehaviour
         player.SetRole(playerIndex == 0 ? Player.Role.Floater : Player.Role.Paddler);
     }
 
-    [Command]
-    public void CmdAssignSpeedBoost(int playerNumber, float increment)
-    {
-        if (playerNumber >= _players.Count)
-        {
-            Debug.LogError(string.Format("Player number {0}, exceeds player count {1}", playerNumber, _players.Count));
-            return;
-        }
-        // Find the player
-        var player = _players[playerNumber];
+    
 
-        // Assign the reward
-        player.SpeedModifier += increment;
-    }
-
-    [Command]
-    public void CmdAssignReverseControls(int playerNumber, float modifier)
-    {
-        if (playerNumber >= _players.Count)
-        {
-            Debug.LogError(string.Format("Player number {0}, exceeds player count {1}", playerNumber, _players.Count));
-            return;
-        }
-        // Find the player
-        var player = _players[playerNumber];
-
-        // Assign the reward
-        player.DirectionModifier *= modifier;
-    }
+    
 
     [Server]
     private void StartTimer()

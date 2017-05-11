@@ -243,7 +243,7 @@ public class Player : MovingObject
             }
             else if (HoldingPlatform)
             {
-                if (fp.CanBePlacedInWater())
+                if (fp.CanBePlacedInWater() && PlayerRole == Role.Floater)
                 {
                     // Place in water
                     CmdDropPlatform(platform);
@@ -449,6 +449,48 @@ public class Player : MovingObject
     public void CmdNextRound()
     {
         GameObject.Find("GameManager").GetComponent<GameManager>().NextRound();
+    }
+
+    public void AssignSpeedBoost(int playerIndex, float speedIncrement)
+    {
+        if (isLocalPlayer)
+        {
+            CmdAssignSpeedBoost(playerIndex, speedIncrement);
+        }
+    }
+
+    [Command]
+    public void CmdAssignSpeedBoost(int playerNumber, float increment)
+    {
+        if (_gameManager == null)
+        {
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        }
+        var player = _gameManager.GetPlayer(playerNumber);
+
+        // Assign the reward
+        player.SpeedModifier += increment;
+    }
+
+    public void AssignReverseControls(int playerIndex, float modifier)
+    {
+        if (isLocalPlayer)
+        {
+            CmdAssignReverseControls(playerIndex, modifier);
+        }
+    }
+
+    [Command]
+    public void CmdAssignReverseControls(int playerNumber, float modifier)
+    {
+        if (_gameManager == null)
+        {
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        }
+        var player = _gameManager.GetPlayer(playerNumber);
+
+        // Assign the reward
+        player.DirectionModifier *= modifier;
     }
 
     void OnCollisionEnter(Collision other)

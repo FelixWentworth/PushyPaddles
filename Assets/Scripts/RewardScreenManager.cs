@@ -66,15 +66,18 @@ public class RewardScreenManager : UIScreen
     public void SetReward(Reward.RewardType type, int playerIndex)
     {
         var manager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        var player = manager.GetLocalPlayer();
+
         switch (type)
         {
             case Reward.RewardType.None:
                 break;
-            case Reward.RewardType.SpeedBoost:
-                manager.CmdAssignSpeedBoost(playerIndex, _speedBoost);
+            case Reward.RewardType.SpeedBoost:  
+                player.AssignSpeedBoost(playerIndex, _speedBoost);
                 break;
             case Reward.RewardType.ReverseControls:
-                manager.CmdAssignReverseControls(playerIndex, _controlsModifier);
+                player.AssignReverseControls(playerIndex, _controlsModifier);
                 break;
             default:
                 throw new ArgumentOutOfRangeException("type", type, null);
