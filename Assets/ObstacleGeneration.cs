@@ -36,7 +36,6 @@ public class ObstacleGeneration : NetworkBehaviour
     public void NewSetup(int numObstacles)
     {
         GeneratePath();
-
         CreateLevel(numObstacles);
     }
 
@@ -141,10 +140,14 @@ public class ObstacleGeneration : NetworkBehaviour
         return arrayString;
     }
 
+    [Server]
     public void CreateLevel(int numObstacles)
     {
+        Debug.Log("Clear Level");
         // Clear the current level
         ClearChildren();
+
+
 
         for (var i = 0; i < numObstacles; i++)
         {
@@ -183,6 +186,7 @@ public class ObstacleGeneration : NetworkBehaviour
         NetworkServer.Spawn(go);
     }
 
+    [Server]
     private void ClearChildren()
     {
         var children = ObstacleParent.GetComponentsInChildren<Transform>();
@@ -198,7 +202,6 @@ public class ObstacleGeneration : NetworkBehaviour
     public void GenerateNewLevel(int obstacles)
     {
         //StartCoroutine(ChangeBlocks(obstacles, 0.8f));
-
         ChangeBlocksImmediate(obstacles);
     }
 

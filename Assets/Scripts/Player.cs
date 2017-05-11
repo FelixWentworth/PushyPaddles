@@ -156,7 +156,12 @@ public class Player : MovingObject
             // Lerp to real position
             transform.position = Vector3.Lerp(transform.position, RealPosition, 0.5f);
             transform.eulerAngles = RealRotation;
-        }  
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Debug.LogError("Restart Game Pressed");
+            RestartGame();
+        }
     }
 
     private void Move(GameObject go, float x, float z)
@@ -260,10 +265,6 @@ public class Player : MovingObject
                 // Use paddle in water
                 CmdUsePaddle();
             }
-        }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            RestartGame();  
         }
 
         /////////////////////////////
@@ -423,8 +424,12 @@ public class Player : MovingObject
 
     public void RestartGame()
     {
+        Debug.Log("-1");
+
         if (isLocalPlayer)
         {
+            Debug.Log("0");
+
             CmdRestartGame();
         }
     }
@@ -432,10 +437,13 @@ public class Player : MovingObject
     [Command]
     public void CmdRestartGame()
     {
+        Debug.Log("1");
         if (_gameManager == null)
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
+        Debug.Log("2");
+
         _gameManager.Restart();
     }
 
