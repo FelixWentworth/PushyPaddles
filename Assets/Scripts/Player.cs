@@ -425,8 +425,6 @@ public class Player : MovingObject
     {
         if (isLocalPlayer)
         {
-            Debug.LogError("Restart Game");
-
             CmdRestartGame();
         }
     }
@@ -434,7 +432,11 @@ public class Player : MovingObject
     [Command]
     public void CmdRestartGame()
     {
-        GameObject.Find("GameManager").GetComponent<GameManager>().Restart();
+        if (_gameManager == null)
+        {
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        }
+        _gameManager.Restart();
     }
 
     public void NextRound()

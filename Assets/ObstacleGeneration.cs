@@ -12,19 +12,14 @@ public class ObstacleGeneration : NetworkBehaviour
 
     private char[,] _levelLayout;
 
+    private char[,] _emptyLevelLayout;
+
     // Our boundaries, set using the GameObject positions in scene
     private float _minX;
     private float _minZ;
     private float _maxX;
     private float _maxZ;
 
-    void FixedUpdate()
-    {
-        if (isServer && ObstacleParent.transform.childCount == 0)
-        {
-            Setup(3);
-        }
-    }
     public void Setup(int numObstacles)
     {
         _spawnArea = transform.FindChild("SpawnArea").gameObject;
@@ -35,6 +30,13 @@ public class ObstacleGeneration : NetworkBehaviour
         _maxZ = _spawnArea.transform.FindChild("TopRight").position.z;
 
         SetLevelLayout();
+        CreateLevel(numObstacles);
+    }
+
+    public void NewSetup(int numObstacles)
+    {
+        GeneratePath();
+
         CreateLevel(numObstacles);
     }
 
@@ -66,6 +68,9 @@ public class ObstacleGeneration : NetworkBehaviour
                 }
             }
         }
+
+        _emptyLevelLayout = _levelLayout;
+
         GeneratePath();
     }
 
@@ -73,7 +78,9 @@ public class ObstacleGeneration : NetworkBehaviour
     /// Generate a path that the players can follow from start to finish
     /// </summary>
     private void GeneratePath()
-    {
+    {   
+        _levelLayout = _emptyLevelLayout;
+
         // Set the start and end positions
         var width = _levelLayout.GetLength(0);
         var midpoint = (width / 2);
@@ -88,7 +95,7 @@ public class ObstacleGeneration : NetworkBehaviour
 
         var previousPosition = midpoint;
 
-        
+
         // Iterate through the array to create a path
         for (var j = 1; j < _levelLayout.GetLength(1); j++)
         {
@@ -112,6 +119,7 @@ public class ObstacleGeneration : NetworkBehaviour
 
             previousPosition = pathPosition;
         }
+
     }
 
     private string GetArrayString()
@@ -196,7 +204,7 @@ public class ObstacleGeneration : NetworkBehaviour
 
     private void ChangeBlocksImmediate(int obstacles)
     {
-        Setup(obstacles);
+       NewSetup(obstacles);
     }
 
     private IEnumerator ChangeBlocks(int obstacles, float time)
@@ -206,7 +214,7 @@ public class ObstacleGeneration : NetworkBehaviour
 
         yield return Move(initialPos, hiddenPos, time);
         
-        Setup(obstacles);
+        NewSetup(obstacles);
 
         yield return Move(hiddenPos, initialPos, time);
 

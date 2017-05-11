@@ -14,6 +14,8 @@ public class GameManager : NetworkBehaviour
     private MenuManager _menu;
     private LevelManager _level;
 
+    private bool _generatingLevel;
+
     void Start()
     {
         Platform.SetActive(false);
@@ -152,6 +154,9 @@ public class GameManager : NetworkBehaviour
         Platform.SetActive(true);
         NetworkServer.Spawn(Platform);
 
+        // Generate Obstacles
+        GameObject.Find("LevelColliders/Rocks").GetComponent<ObstacleGeneration>().Setup(3);
+
         // Start the game timer
         StartTimer();
     }
@@ -230,23 +235,31 @@ public class GameManager : NetworkBehaviour
     [Server]
     public void Restart()
     {
-        ChangeRoles();
-        // Reset the obstacles
-        GameObject.Find("LevelColliders/Rocks").GetComponent<ObstacleGeneration>().GenerateNewLevel(_level.RoundNumber * 3);
-
-        // Reset Player Posititions
-        var players = GameObject.FindGameObjectsWithTag("Player");
-
-        // Reset Platform Positions
-        var platforms = GameObject.FindGameObjectsWithTag("Platform");
-
-        foreach (var player in players)
+        if (!_generatingLevel)
         {
-            player.GetComponent<Player>().Respawn();
-        }
-        foreach (var platform in platforms)
-        {
-            platform.GetComponent<FloatingPlatform>().Respawn();
+            _generatingLevel = true;
+            // Reset the obstacles
+            GameObject.Find("LevelColliders/Rocks")
+                .GetComponent<ObstacleGeneration>()
+                .GenerateNewLevel(_level.RoundNumber * 3);
+
+            ChangeRoles();
+
+            // Reset Player Posititions
+            var players = GameObject.FindGameObjectsWithTag("Player");
+
+            // Reset Platform Positions
+            var platforms = GameObject.FindGameObjectsWithTag("Platform");
+
+            foreach (var player in players)
+            {
+                player.GetComponent<Player>().Respawn();
+            }
+            foreach (var platform in platforms)
+            {
+                platform.GetComponent<FloatingPlatform>().Respawn();
+            }
+            _generatingLevel = false;
         }
     }
     [Server]
