@@ -49,7 +49,6 @@ public class FloatingPlatform : MovingObject
 
     public void PlaceOnWater(Player player)
     {
-        Debug.Log(player);
         _playerOnPlatform = player;
     }
 

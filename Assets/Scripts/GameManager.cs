@@ -18,7 +18,9 @@ public class GameManager : NetworkBehaviour
 
     void Start()
     {
+#if USE_PROSOCIAL_EVENTS
         Platform.SetActive(false);
+#endif
         PauseScreen.SetActive(false);
     }
 

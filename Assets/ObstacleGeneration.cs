@@ -58,27 +58,30 @@ public class ObstacleGeneration : NetworkBehaviour
         {
             _levelLayout = new char[widthSpace, heightSpece];
 
-            for (var i = 0; i < widthSpace; i++)
-            {
-                for (var j = 0; j < heightSpece; j++)
-                {
-                    // Set char to clear
-                    _levelLayout[i, j] = 'c';
-                }
-            }
+            ResetLevelArray(widthSpace, heightSpece);
         }
-
-        _emptyLevelLayout = _levelLayout;
 
         GeneratePath();
     }
 
+    private void ResetLevelArray(int width, int height)
+    {
+        for (var i = 0; i < width; i++)
+        {
+            for (var j = 0; j < height; j++)
+            {
+                // Set char to clear
+                _levelLayout[i, j] = 'c';
+            }
+        }
+    }
+    
     /// <summary>
     /// Generate a path that the players can follow from start to finish
     /// </summary>
     private void GeneratePath()
     {   
-        _levelLayout = _emptyLevelLayout;
+        ResetLevelArray(_levelLayout.GetLength(0), _levelLayout.GetLength(1));
 
         // Set the start and end positions
         var width = _levelLayout.GetLength(0);
@@ -143,11 +146,8 @@ public class ObstacleGeneration : NetworkBehaviour
     [Server]
     public void CreateLevel(int numObstacles)
     {
-        Debug.Log("Clear Level");
         // Clear the current level
         ClearChildren();
-
-
 
         for (var i = 0; i < numObstacles; i++)
         {
@@ -158,6 +158,7 @@ public class ObstacleGeneration : NetworkBehaviour
             {
                 x = Random.Range(0, _levelLayout.GetLength(0));
                 z = Random.Range(0, _levelLayout.GetLength(1));
+
             } while (_levelLayout[x, z] != 'c');
 
             // Mark the position as used
@@ -183,6 +184,7 @@ public class ObstacleGeneration : NetworkBehaviour
         go.transform.SetParent(parent, false);
         go.transform.eulerAngles = new Vector3(0f, yRotation, 0f);
 
+
         NetworkServer.Spawn(go);
     }
 
@@ -192,8 +194,12 @@ public class ObstacleGeneration : NetworkBehaviour
         var children = ObstacleParent.GetComponentsInChildren<Transform>();
         foreach (var child in children)
         {
+            if (child.GetComponent<NetworkIdentity>() == null)
+                continue;
+
             if (child != ObstacleParent.transform)
             {
+                NetworkServer.UnSpawn(child.gameObject);
                 Destroy(child.gameObject);
             }
         }
