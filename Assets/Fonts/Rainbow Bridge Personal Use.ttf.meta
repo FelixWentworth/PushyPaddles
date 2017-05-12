@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 260974b7caf2a5a45ab04f4d0c7b48c6
-timeCreated: 1492680152
+guid: 8d8bcb003faf3ad40b68a3411ff53254
+timeCreated: 1494604369
 licenseType: Free
 TrueTypeFontImporter:
   serializedVersion: 4
@@ -9,9 +9,9 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: bleedingwatercolor
+  fontName: Rainbow Bridge Personal Use
   fontNames:
-  - bleedingwatercolor
+  - Rainbow Bridge Personal Use
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
