@@ -123,11 +123,6 @@ public class Player : MovingObject
                 }
                 else
                 {
-
-                    if (_gameManager == null)
-                    {
-                        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-                    }
                     if (!_gameManager.GamePlaying())
                     {
                         // Game Paused, Cannot move
@@ -144,7 +139,6 @@ public class Player : MovingObject
                     if (x != 0 || z != 0)
                     {
                         // Move Player Command
-                        //CmdMove(gameObject, x, z);
                         Move(gameObject, x, z);
                         if (_animationState != AnimationState.WALKING)
                         {
@@ -173,10 +167,6 @@ public class Player : MovingObject
                 UpdatePlayerPosition();
             }
         }
-        //else
-        //{
-        //    transform.position = RealPosition;
-        //}
         if (Input.GetKeyDown(KeyCode.R))
         {
             RestartGame();

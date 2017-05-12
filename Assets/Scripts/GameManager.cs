@@ -72,6 +72,7 @@ public class GameManager : NetworkBehaviour
         Debug.Log("Player Disconnected");
 
         // Todo Assign New Roles
+        //Restart();
         
     }
 
