@@ -4,6 +4,7 @@ using UnityEngine.Networking;
 
 public class GameManager : NetworkBehaviour
 {
+    [SyncVar] public bool DistributingRewards;
     [SyncVar] private bool _gamePlaying = false;
 
     public GameObject Platform;

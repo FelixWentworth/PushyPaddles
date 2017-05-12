@@ -149,8 +149,16 @@ public class ObstacleGeneration : NetworkBehaviour
         // Clear the current level
         ClearChildren();
 
+        var availablePlaces = GetAvailableSpaces();
+        if (numObstacles > availablePlaces)
+        {
+            numObstacles = availablePlaces;
+        }
+
+        
         for (var i = 0; i < numObstacles; i++)
         {
+            
             // Decide the location
             var x = 0;
             var z = 0;
@@ -171,6 +179,21 @@ public class ObstacleGeneration : NetworkBehaviour
             // Create the object
             CreateObstacle(location, ObstacleParent.transform);
         }
+    }
+
+    private int GetAvailableSpaces()
+    {
+        var available = 0;
+        foreach (var c in _levelLayout)
+        {
+            if (c == 'c')
+            {
+                // Clear position
+                available++;
+            }
+        }
+
+        return available;
     }
 
     [Server]

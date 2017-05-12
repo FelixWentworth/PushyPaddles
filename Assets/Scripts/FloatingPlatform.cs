@@ -61,8 +61,11 @@ public class FloatingPlatform : MovingObject
             _playerOnPlatform.transform.position = new Vector3(transform.position.x, _playerOnPlatform.transform.position.y, transform.position.z);
 
             var player = _playerOnPlatform.GetComponent<Player>();
-            player.SyncForceMove(new Vector3(transform.position.x, _playerOnPlatform.transform.position.y, transform.position.z), _playerOnPlatform.transform.eulerAngles);
 
+            player.SyncForceMove(
+                new Vector3(transform.position.x, _playerOnPlatform.transform.position.y, transform.position.z),
+                _playerOnPlatform.transform.eulerAngles);
+            
             Water.TouchedWater(this);
         }
         // Not on water
@@ -92,21 +95,22 @@ public class FloatingPlatform : MovingObject
             }
 
             var player = _playerOnPlatform.GetComponent<Player>();
-            _playerOnPlatform = null;
+            
 
-            player.OnPlatform = false;
             if (isServer)
             {
+                player.SetGoalReached(false);
                 player.SyncForceMove(other.transform.FindChild("VicrtoryLocation").position,
                     player.transform.eulerAngles);
-                
             }
+
+            _playerOnPlatform = null;
+            
             // Notify the players that a reward has been reached
             player.RpcGoalReached();
 
             CanFloat = false;
             Water.TouchedWater(this);
-
         }
     }
 

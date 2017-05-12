@@ -33,6 +33,7 @@ public class Player : MovingObject
         IDLE = 0,
         
         WALKING,
+        ONPLATFORM,
         HOLDING,
         FALLING
     }
@@ -87,8 +88,6 @@ public class Player : MovingObject
     {
         base.ResetObject(newPosition);
 
-        OnPlatform = false;
-
         if (!isServer)
         {
             CmdSyncRespawn(newPosition, transform.eulerAngles);
@@ -102,67 +101,83 @@ public class Player : MovingObject
 
     void Update()
     {
-        if (isLocalPlayer && !OnPlatform)
+        // Don't allow players to move whilst rewards are being distributed
+        if (_gameManager == null)
         {
-            if (_gameManager == null)
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        }
+        if (!_gameManager.DistributingRewards)
+        {
+            if (isLocalPlayer)
             {
-                _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-            }
-            if (!_gameManager.GamePlaying())
-            {
-                // Game Paused, Cannot move
-                return;
-            }
-            if (!_rigidbody.useGravity)
-            {
-                // when the player has full control, they should be affected by gravity
-                _rigidbody.useGravity = true;
-            }
-            var x = Input.GetAxis("Horizontal");
-            var z = Input.GetAxis("Vertical");
-
-            if (x != 0 || z != 0)
-            {
-                // Move Player Command
-                //CmdMove(gameObject, x, z);
-                Move(gameObject, x, z);
-                if (_animationState != AnimationState.WALKING)
+                if (OnPlatform)
                 {
-                    CmdChangeState((int)AnimationState.WALKING);
+                    // Stopped moving
+                    if (_animationState != AnimationState.ONPLATFORM)
+                    {
+                        CmdChangeState((int) AnimationState.ONPLATFORM);
+                    }
+
+                    UpdatePlayerPosition();
+                }
+                else
+                {
+
+                    if (_gameManager == null)
+                    {
+                        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+                    }
+                    if (!_gameManager.GamePlaying())
+                    {
+                        // Game Paused, Cannot move
+                        return;
+                    }
+                    if (!_rigidbody.useGravity)
+                    {
+                        // when the player has full control, they should be affected by gravity
+                        _rigidbody.useGravity = true;
+                    }
+                    var x = Input.GetAxis("Horizontal");
+                    var z = Input.GetAxis("Vertical");
+
+                    if (x != 0 || z != 0)
+                    {
+                        // Move Player Command
+                        //CmdMove(gameObject, x, z);
+                        Move(gameObject, x, z);
+                        if (_animationState != AnimationState.WALKING)
+                        {
+                            CmdChangeState((int) AnimationState.WALKING);
+                        }
+                    }
+                    else
+                    {
+                        // Stopped moving
+                        if (_animationState != AnimationState.IDLE)
+                        {
+                            CmdChangeState((int) AnimationState.IDLE);
+                        }
+                    }
+                    _elapsedTime += Time.deltaTime;
+                    if (_elapsedTime > _updateInterval)
+                    {
+                        _elapsedTime = 0f;
+                        CmdSyncMove(transform.position, transform.eulerAngles);
+                    }
                 }
             }
+
             else
             {
-                // Stopped moving
-                if (_animationState != AnimationState.IDLE)
-                {
-                    CmdChangeState((int)AnimationState.IDLE);
-                }
+                UpdatePlayerPosition();
             }
-            _elapsedTime += Time.deltaTime;
-            if (_elapsedTime > _updateInterval)
-            {
-                _elapsedTime = 0f;
-                CmdSyncMove(transform.position, transform.eulerAngles);
-            }
-        }
-        else
-        {
-            if (_rigidbody.useGravity)
-            {
-                // Don't override actual location using gravity, causes player jumping
-                _rigidbody.useGravity = false;
-            }
-            // Lerp to real position
-            transform.position = Vector3.Lerp(transform.position, RealPosition, 0.5f);
-            transform.eulerAngles = RealRotation;
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
             RestartGame();
         }
     }
-
+        
     private void Move(GameObject go, float x, float z)
     {
         x *= MovementSpeed * SpeedModifier * DirectionModifier;
@@ -176,6 +191,18 @@ public class Player : MovingObject
         go.transform.LookAt(new Vector3(go.transform.localPosition.x + x, go.transform.localPosition.y, go.transform.localPosition.z + z));
     }
 
+    private void UpdatePlayerPosition()
+    {
+        if (_rigidbody.useGravity)
+        {
+            // Don't override actual location using gravity, causes player jumping
+            _rigidbody.useGravity = false;
+        }
+        // Lerp to real position
+        transform.position = Vector3.Lerp(transform.position, RealPosition, 0.5f);
+        transform.eulerAngles = RealRotation;
+    }
+    
     // Server moves the player and forces them to a position
     [Server]
     public void SyncForceMove(Vector3 position, Vector3 rotation)
@@ -185,6 +212,13 @@ public class Player : MovingObject
 
         RealPosition = position;
         RealRotation = rotation;
+    }
+
+    [Server]
+    public void SetGoalReached(bool onPlatform)
+    {
+        _gameManager.DistributingRewards = true;
+        OnPlatform = onPlatform;
     }
 
     [Command]
@@ -380,9 +414,16 @@ public class Player : MovingObject
             case AnimationState.IDLE:
                 // Set speed to 0f;
                 anim.SetFloat("Speed_f", 0f);
+                anim.SetInteger("Animation_int", 0);
                 break;
             case AnimationState.WALKING:
                 anim.SetFloat("Speed_f", 1f);
+                anim.SetInteger("Animation_int", 0);
+                break;
+            case AnimationState.ONPLATFORM:
+                anim.SetFloat("Speed_f", 0f);
+                //anim.SetBool("Crouch_b", true);
+                anim.SetInteger("Animation_int", 9);
                 break;
             case AnimationState.HOLDING:
                 break;
@@ -452,7 +493,12 @@ public class Player : MovingObject
     [Command]
     public void CmdNextRound()
     {
-        GameObject.Find("GameManager").GetComponent<GameManager>().NextRound();
+        if (_gameManager == null)
+        {
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        }
+        _gameManager.DistributingRewards = false;
+        _gameManager.NextRound();
     }
 
     public void AssignSpeedBoost(int playerIndex, float speedIncrement)
