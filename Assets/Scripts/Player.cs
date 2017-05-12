@@ -279,7 +279,7 @@ public class Player : MovingObject
             var platform = GameObject.FindGameObjectWithTag("Platform");
             var fp = platform.GetComponent<FloatingPlatform>();
 
-            if (fp.CanPickUp && fp.InRange(gameObject) && !HoldingPlatform)
+            if (fp.CanPickUp && !fp.OnWater && fp.InRange(gameObject) && !HoldingPlatform)
             {
                 // Pickup Plaftorm
                 CmdPickupPlatform(platform);

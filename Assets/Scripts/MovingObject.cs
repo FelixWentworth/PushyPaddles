@@ -56,7 +56,6 @@ public class MovingObject : NetworkBehaviour
     {
         yield return new WaitForSeconds(RespawnTime);
         GetComponent<BoxCollider>().enabled = true;
-        
 
         var randomRespawn = Random.Range(0, RespawnLocation.Count);
         if (!isServer)

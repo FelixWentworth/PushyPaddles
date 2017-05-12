@@ -1196,7 +1196,7 @@ Transform:
   m_GameObject: {fileID: 34}
   m_LocalRotation: {x: 0.7071068, y: -0, z: 0.000000029802322, w: 0.70710677}
   m_LocalPosition: {x: 0.53, y: 1.72, z: 0.37}
-  m_LocalScale: {x: 16, y: 0.12222914, z: 5.44}
+  m_LocalScale: {x: 20, y: 0.12222914, z: 5.44}
   m_Children: []
   m_Father: {fileID: 268}
   m_RootOrder: 0
@@ -1405,7 +1405,7 @@ Transform:
   m_GameObject: {fileID: 104}
   m_LocalRotation: {x: 0.7071068, y: -0, z: 0.000000029802322, w: 0.70710677}
   m_LocalPosition: {x: 0.53, y: 1.72, z: -0.21}
-  m_LocalScale: {x: 16.000013, y: 0.12222999, z: 5.44}
+  m_LocalScale: {x: 20, y: 0.12222999, z: 5.44}
   m_Children: []
   m_Father: {fileID: 233}
   m_RootOrder: 0
@@ -3771,6 +3771,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1c273f4d27946845b6913f511b136a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DistributingRewards: 0
   Platform: {fileID: 1259765940}
   PauseScreen: {fileID: 623998854}
   PlayerPrefab: {fileID: 1251393430884152, guid: 6adecbdfe50ef4e47963cbde440143d3,

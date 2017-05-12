@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class FloatingPlatform : MovingObject
 {
     [SyncVar] public bool CanPickUp = true;
+    [SyncVar] public bool OnWater;
 
     public WaterBehaviour Water;
 
@@ -44,12 +45,13 @@ public class FloatingPlatform : MovingObject
 
         _playerOnPlatform = null;
         CanPickUp = true;
-
+        OnWater = false;
     }
 
     public void PlaceOnWater(Player player)
     {
         _playerOnPlatform = player;
+        OnWater = true;
     }
 
     void FixedUpdate()
