@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class Player : MovingObject
 {
@@ -172,10 +173,15 @@ public class Player : MovingObject
                 UpdatePlayerPosition();
             }
         }
+        //else
+        //{
+        //    transform.position = RealPosition;
+        //}
         if (Input.GetKeyDown(KeyCode.R))
         {
             RestartGame();
         }
+
     }
         
     private void Move(GameObject go, float x, float z)
@@ -234,8 +240,7 @@ public class Player : MovingObject
     [Command]
     private void CmdSyncRespawn(Vector3 position, Vector3 rotation)
     {
-        RealPosition = position;
-        RealRotation = rotation;
+        SyncForceMove(position, rotation);
 
         RpcRespawn(position, rotation);
     }
