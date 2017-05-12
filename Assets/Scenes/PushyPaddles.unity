@@ -1084,7 +1084,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 172}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1901d47e6da727f43ad43cde91246bef, type: 3}
   m_Name: 
@@ -1629,13 +1629,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 172}
-  m_LocalRotation: {x: -0.48296347, y: 0.22414342, z: 0.12940946, w: 0.83651614}
+  m_LocalRotation: {x: 0.15002757, y: 0.2556777, z: -0.04019967, w: 0.95420367}
   m_LocalPosition: {x: -5.68, y: 5.98, z: -1.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -780, y: 30.000002, z: 0}
+  m_LocalEulerAnglesHint: {x: -702.129, y: 30.000002, z: 0}
 --- !u!4 &357
 Transform:
   m_ObjectHideFlags: 0

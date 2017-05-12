@@ -18,6 +18,8 @@ public class MovingObject : NetworkBehaviour
     // If the object falls
     public bool CanFall;
 
+    public bool Respawning;
+
     public List<Vector3> RespawnLocation = new List<Vector3>();
     private Vector3 _initialRotation;
 
@@ -54,6 +56,7 @@ public class MovingObject : NetworkBehaviour
 
     private IEnumerator WaitToRespawn()
     {
+        Respawning = true;
         yield return new WaitForSeconds(RespawnTime);
         GetComponent<BoxCollider>().enabled = true;
 
@@ -65,7 +68,7 @@ public class MovingObject : NetworkBehaviour
         ResetObject(RespawnLocation[randomRespawn]);
 
         GetComponent<Rigidbody>().useGravity = CanFall;
-
+        Respawning = false;
     }
 
     [Command]

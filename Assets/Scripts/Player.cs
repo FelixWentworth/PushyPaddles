@@ -274,7 +274,7 @@ public class Player : MovingObject
         /////////////////////////
         // Local Player Controls
         /////////////////////////
-        if (isLocalPlayer && Input.GetKeyDown(KeyCode.Space))
+        if (isLocalPlayer && !Respawning && Input.GetKeyDown(KeyCode.Space))
         {
             var platform = GameObject.FindGameObjectWithTag("Platform");
             var fp = platform.GetComponent<FloatingPlatform>();

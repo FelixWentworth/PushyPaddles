@@ -9,8 +9,8 @@ public class Rotate : MonoBehaviour
     public float RotateYSpeed;
     public float RotateZSpeed;
 
-    void Update()
+    void FixedUpdate()
     {
-        transform.Rotate(new Vector3(RotateXSpeed, RotateYSpeed, RotateZSpeed) * Time.deltaTime);
+        transform.Rotate(new Vector3(RotateXSpeed, RotateYSpeed, RotateZSpeed) * Time.fixedDeltaTime);
     }
 }
