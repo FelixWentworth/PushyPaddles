@@ -6,10 +6,6 @@ public class MenuManager : NetworkBehaviour
     // Menu should be active at start
     [SyncVar] private bool _showMenuSync = true;
     [SyncVar] private bool _hideMenuSync;
-    
-    [SyncVar] private bool _showCharacterSelectionSync = false;
-    // not synched as players can hide when they want
-    private bool _hideCharacterSelection = false;
 
     // Reward screen inputs
     private static bool _leftPressed;
@@ -47,29 +43,6 @@ public class MenuManager : NetworkBehaviour
         {
             _showMenuSync = false;
             TitleScreen.SetActive(false);
-        }
-        //if (_showRewards && !RewardScreenManager.IsShowing)
-        //{
-        //    //_hideRewards = false;
-        //    RewardScreenManager.Show();
-        //}
-        //if (_hideRewards && RewardScreenManager.IsShowing)
-        //{
-        //    _showRewards = false;
-        //    RewardScreenManager.Hide();
-        //}
-        if (isServer)
-        {
-            return;
-        }
-        if (!_hideCharacterSelection && _showCharacterSelectionSync && !CharacterSelectionScreen.activeSelf)
-        {
-            _hideCharacterSelection = false;
-            CharacterSelectionScreen.SetActive(true);
-        }
-        if (_hideCharacterSelection && CharacterSelectionScreen.activeSelf)
-        {
-            CharacterSelectionScreen.SetActive(false);
         }
     }
 
@@ -125,11 +98,11 @@ public class MenuManager : NetworkBehaviour
     }
 
     /// <summary>
-    /// Show all players the character selection screen
+    /// Show player the character selection screen
     /// </summary>
     public void ShowCharacterSelect()
     {
-        _showCharacterSelectionSync = true;
+        CharacterSelectionScreen.SetActive(true);
     }
 
     /// <summary>
@@ -137,7 +110,7 @@ public class MenuManager : NetworkBehaviour
     /// </summary>
     public void HideCharacterSelect()
     {
-        _hideCharacterSelection = true;
+        CharacterSelectionScreen.SetActive(false);
     }
 
     /// <summary>

@@ -50,6 +50,7 @@ public class Player : MovingObject
 
     [SyncVar] private bool _usePaddle;
     [SyncVar] public int PlayerID;
+    [SyncVar] public int ConnectionId;
     private int _currentModel;
     [SyncVar] private int _playerModel;
 
@@ -83,6 +84,11 @@ public class Player : MovingObject
 
         SetModel();
         _currentModel = _playerModel;
+
+        if (!isServer)
+        {
+            GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowCharacterSelect();
+        }
     }
 
     public override void ResetObject(Vector3 newPosition)
@@ -100,6 +106,7 @@ public class Player : MovingObject
         GameObject.Find("CharacterSelection").GetComponent<CharacterSelection>().Set(this);
     }
 
+    
     void Update()
     {
         // Don't allow players to move whilst rewards are being distributed

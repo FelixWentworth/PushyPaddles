@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Security.Policy;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Networking.NetworkSystem;
 
 public class GameManager : NetworkBehaviour
 {
@@ -53,6 +56,8 @@ public class GameManager : NetworkBehaviour
     [Server]
     void OnConnected(NetworkMessage netMsg)
     {
+        Debug.Log("Player Connected");
+
         if (_menu == null)
         {
             _menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
@@ -63,7 +68,6 @@ public class GameManager : NetworkBehaviour
         }
         _menu.HideMenu();
         StartGame(NetworkServer.connections[NetworkServer.connections.Count - 1]);
-        _menu.ShowCharacterSelect();
     }
 
     [Server]
@@ -71,9 +75,19 @@ public class GameManager : NetworkBehaviour
     {
         Debug.Log("Player Disconnected");
 
+        var player = _players.Find(p => p.ConnectionId == netMsg.conn.connectionId);
+
+        // Remove player from the list
+        _players.Remove(player);
+
+
+        // Destroy player game object
+        DestroyImmediate(player.gameObject);
+
+        netMsg.conn.Disconnect();
+
         // Todo Assign New Roles
-        //Restart();
-        
+        ChangeRoles();
     }
 
     public bool GamePlaying()
@@ -97,6 +111,11 @@ public class GameManager : NetworkBehaviour
         return null;
     }
 
+    private void RemovePlayer(Player player)
+    {
+        Debug.Log("Remove Player");
+    }
+
     public Player GetPlayer(int id)
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
@@ -112,6 +131,8 @@ public class GameManager : NetworkBehaviour
 
         return null;
     }
+
+
 
     public int GetPlayerCount()
     {
@@ -137,14 +158,20 @@ public class GameManager : NetworkBehaviour
             var xMultiplier = index % 2 == 0 ? 1f : -1f;
             var zMultiplier = (index / 2) * 1.5f;
             playerObject.transform.position = new Vector3(4.5f * xMultiplier, -0.72f, zMultiplier);
+
             var player = playerObject.GetComponent<Player>();
             SetPlayerRole(index, player);
+
+            player.ConnectionId = conn.connectionId;
+
             _players.Add(player);
             NetworkServer.AddPlayerForConnection(conn, player.gameObject, 0);
         }
 #if !USE_PROSOCIAL_EVENTS
         StartGameTimer();
 #endif
+
+
     }
 
     /// <summary>
@@ -276,6 +303,11 @@ public class GameManager : NetworkBehaviour
         foreach (var player in players)
         {
             _players.Add(player.GetComponent<Player>());
+        }
+
+        if (_players.Count == 0)
+        {
+            return;
         }
 
         var floaterIndex = 0;
