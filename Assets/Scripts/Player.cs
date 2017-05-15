@@ -337,6 +337,15 @@ public class Player : MovingObject
         platform.GetComponent<FloatingPlatform>().CanPickUp = !HoldingPlatform;
     }
 
+    [Server]
+    public void DropPlatform(GameObject platform)
+    {
+        platform.transform.position = new Vector3(transform.position.x, -0.6f, transform.position.z);
+        platform.transform.SetParent(null, true);
+        HoldingPlatform = false;
+        platform.GetComponent<FloatingPlatform>().CanPickUp = !HoldingPlatform;
+    }
+
     [Command]
     private void CmdPlacePlatformInWater(GameObject platform, GameObject go)
     {

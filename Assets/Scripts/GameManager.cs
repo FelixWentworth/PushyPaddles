@@ -56,8 +56,6 @@ public class GameManager : NetworkBehaviour
     [Server]
     void OnConnected(NetworkMessage netMsg)
     {
-        Debug.Log("Player Connected");
-
         if (_menu == null)
         {
             _menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
@@ -72,14 +70,22 @@ public class GameManager : NetworkBehaviour
 
     [Server]
     void OnDisconnected(NetworkMessage netMsg)
-    {
-        Debug.Log("Player Disconnected");
-
+    { 
         var player = _players.Find(p => p.ConnectionId == netMsg.conn.connectionId);
 
         // Remove player from the list
         _players.Remove(player);
 
+        if (player.HoldingPlatform)
+        {
+            var platform = GameObject.FindGameObjectWithTag("Platform");
+            player.DropPlatform(platform);
+        }
+        if (player.OnPlatform)
+        {
+            GameObject.FindGameObjectWithTag("Platform").GetComponent<FloatingPlatform>().Respawn();
+            
+        }
 
         // Destroy player game object
         DestroyImmediate(player.gameObject);
