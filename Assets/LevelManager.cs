@@ -11,7 +11,7 @@ public class LevelManager : NetworkBehaviour
     [SyncVar] private float _timeRemaining;
     [SyncVar] public int RoundNumber;
 
-    [SyncVar] private bool _roundStarted;
+    [SyncVar] public bool RoundStarted;
 
     public bool IsGameOver
     {
@@ -41,13 +41,13 @@ public class LevelManager : NetworkBehaviour
     {
         ResetAll();
         UpdateUI();
-        _roundStarted = false;
+        RoundStarted = false;
     }
 
     [Server]
     public void StartRound()
     {
-        _roundStarted = true;
+        RoundStarted = true;
     }
 
     [Server]
@@ -73,7 +73,7 @@ public class LevelManager : NetworkBehaviour
     {
         if (isServer && !TimerPaused)
         {
-            if (_roundStarted)
+            if (RoundStarted)
             {
                 UpdateTimer(Time.deltaTime);
             }

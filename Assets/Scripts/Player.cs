@@ -85,7 +85,7 @@ public class Player : MovingObject
         SetModel();
         _currentModel = _playerModel;
 
-        if (!isServer)
+        if (!isServer && isLocalPlayer)
         {
             GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowCharacterSelect();
         }

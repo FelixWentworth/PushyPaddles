@@ -197,15 +197,20 @@ public class GameManager : NetworkBehaviour
     [Server]
     public void StartGameTimer()
     {
-        // Place the platform in the scene
-        Platform.SetActive(true);
-        NetworkServer.Spawn(Platform);
+        if (_level.RoundStarted)
+        {
+            return;
+        }
 
         // Generate Obstacles
         GameObject.Find("LevelColliders/Rocks").GetComponent<ObstacleGeneration>().Setup(3);
 
         // Start the game timer
         StartTimer();
+
+        // Place the platform in the scene
+        Platform.SetActive(true);
+        NetworkServer.Spawn(Platform);
     }
 
     [Server]
