@@ -18,7 +18,7 @@ public class LevelManager : NetworkBehaviour
         get { return _timeRemaining <= 0f; }
     }
 
-    private float _timeLimit = 60;
+    private float _timeLimit = 600;
 
     public bool TimerPaused { get; private set; }
 

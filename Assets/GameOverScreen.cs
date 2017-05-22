@@ -13,7 +13,7 @@ public class GameOverScreen : UIScreen
         base.Show();
 
         // TODO Set the number of rounds text
-        var rounds = 0;
+        var rounds = GameObject.Find("LevelManager").GetComponent<LevelManager>().RoundNumber;
 
         RoundsText.text = "Rounds Complete: " + rounds;
     }
