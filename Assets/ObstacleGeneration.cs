@@ -22,12 +22,12 @@ public class ObstacleGeneration : NetworkBehaviour
 
     public void Setup(int numObstacles)
     {
-        _spawnArea = transform.FindChild("SpawnArea").gameObject;
+        _spawnArea = transform.Find("SpawnArea").gameObject;
 
-        _minX = _spawnArea.transform.FindChild("BottomLeft").position.x;
-        _minZ = _spawnArea.transform.FindChild("BottomLeft").position.z;
-        _maxX = _spawnArea.transform.FindChild("TopRight").position.x;
-        _maxZ = _spawnArea.transform.FindChild("TopRight").position.z;
+        _minX = _spawnArea.transform.Find("BottomLeft").position.x;
+        _minZ = _spawnArea.transform.Find("BottomLeft").position.z;
+        _maxX = _spawnArea.transform.Find("TopRight").position.x;
+        _maxZ = _spawnArea.transform.Find("TopRight").position.z;
 
         SetLevelLayout();
         CreateLevel(numObstacles);

@@ -18,7 +18,7 @@ public class LevelManager : NetworkBehaviour
         get { return _timeRemaining <= 0f; }
     }
 
-    private float _timeLimit = 450;
+    private float _timeLimit = 60;
 
     public bool TimerPaused { get; private set; }
 
@@ -41,6 +41,7 @@ public class LevelManager : NetworkBehaviour
     {
         ResetAll();
         UpdateUI();
+        _roundStarted = false;
     }
 
     [Server]
@@ -53,7 +54,6 @@ public class LevelManager : NetworkBehaviour
     public void NextRound()
     {
         RoundNumber += 1;
-        //ResetTimer();
     }
 
     [Server]

@@ -512,6 +512,20 @@ public class Player : MovingObject
         _gameManager.NextRound();
     }
 
+    public void StartTimer()
+    {
+        if (isLocalPlayer)
+        {
+            CmdStartRoundTimer();
+        }
+    }
+
+    [Command]
+    public void CmdStartRoundTimer()
+    {
+        _gameManager.StartTimer();
+    }
+
     public void AssignSpeedBoost(int playerIndex, float speedIncrement)
     {
         if (isLocalPlayer)

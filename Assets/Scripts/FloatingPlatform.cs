@@ -102,7 +102,7 @@ public class FloatingPlatform : MovingObject
             if (isServer)
             {
                 player.SetGoalReached(false);
-                player.SyncForceMove(other.transform.FindChild("VicrtoryLocation").position,
+                player.SyncForceMove(other.transform.Find("VicrtoryLocation").position,
                     player.transform.eulerAngles);
             }
 

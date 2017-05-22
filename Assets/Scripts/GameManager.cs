@@ -39,10 +39,14 @@ public class GameManager : NetworkBehaviour
             {
                 _level = GameObject.Find("LevelManager").GetComponent<LevelManager>();
             }
+            if (_menu == null)
+            {
+                _menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+            }
             if (_level.IsGameOver)
             {
-                _level.ResetRound();
-                Restart();
+                _menu.ShowGameOver();
+                RestartGame();
             }
         }
 #if USE_PROSOCIAL_EVENTS
@@ -52,6 +56,12 @@ public class GameManager : NetworkBehaviour
 #endif
     }
 
+    [Server]
+    void RestartGame()
+    {
+        _level.ResetRound();
+        Restart();
+    }
 
     [Server]
     void OnConnected(NetworkMessage netMsg)
@@ -206,12 +216,10 @@ public class GameManager : NetworkBehaviour
         player.SetRole(playerIndex == 0 ? Player.Role.Floater : Player.Role.Paddler);
     }
 
-    
 
-    
 
     [Server]
-    private void StartTimer()
+    public void StartTimer()
     {
         _gamePlaying = true;
 

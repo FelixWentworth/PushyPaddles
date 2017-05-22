@@ -13,12 +13,15 @@ public class MenuManager : NetworkBehaviour
     private static bool _selectPressed;
 
     public RewardScreenManager RewardScreenManager;
+    public GameOverScreen GameOverScreen;
     public GameObject TitleScreen;
     public GameObject CharacterSelectionScreen;
+    public GameObject Objective;
+    public GameObject LevelInfo;
 
     void Start()
     {
-        HideScreens();
+        SetupScreens();
     }
 
     // Update is called once per frame
@@ -71,13 +74,22 @@ public class MenuManager : NetworkBehaviour
         }
     }
 
-    private void HideScreens()
+    /// <summary>
+    /// Setup screens and put them in their default state
+    /// </summary>
+    private void SetupScreens()
     {
         // Make sure that the screens are hidden but ready to be used
         RewardScreenManager.gameObject.SetActive(true);
         RewardScreenManager.Hide();
+        GameOverScreen.gameObject.SetActive(true);
+        GameOverScreen.Hide();
+
         TitleScreen.SetActive(false);
         CharacterSelectionScreen.SetActive(false);
+
+        LevelInfo.SetActive(true);
+        Objective.SetActive(true);
     }
 
     /// <summary>
@@ -119,7 +131,6 @@ public class MenuManager : NetworkBehaviour
     public void ShowRewards()
     {
         RewardScreenManager.Show();
-        //_showRewards = true;
     }
     
     /// <summary>
@@ -128,7 +139,32 @@ public class MenuManager : NetworkBehaviour
     public void HideRewards()
     {
         RewardScreenManager.Hide();
-        //_hideRewards = true;
+    }
+
+    /// <summary>
+    /// Notify the server to show game over for all clients
+    /// </summary>
+    [Server]
+    public void ShowGameOver()
+    {
+        RpcShowGameOver();
+    }
+
+    /// <summary>
+    /// Notify clients from the server that they should be showing the game over screen
+    /// </summary>
+    [ClientRpc]
+    private void RpcShowGameOver()
+    {
+        GameOverScreen.Show();
+    }
+
+    /// <summary>
+    /// Hide the game over screen
+    /// </summary>
+    public void HideGameOver()
+    {
+        GameOverScreen.Hide();
     }
 
     /// <summary>

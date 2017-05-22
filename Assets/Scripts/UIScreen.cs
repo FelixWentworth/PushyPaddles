@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Reflection.Emit;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class UIScreen : MonoBehaviour {
 
@@ -20,6 +18,7 @@ public class UIScreen : MonoBehaviour {
             CanvasGroup = this.GetComponent<CanvasGroup>();
         }
         CanvasGroup.alpha = 1f;
+        CanvasGroup.blocksRaycasts = true;
     }
 
     public virtual void Hide()
@@ -29,5 +28,6 @@ public class UIScreen : MonoBehaviour {
             CanvasGroup = this.GetComponent<CanvasGroup>();
         }
         CanvasGroup.alpha = 0f;
+        CanvasGroup.blocksRaycasts = false;
     }
 }
