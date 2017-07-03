@@ -120,6 +120,9 @@ public class FloatingPlatform : MovingObject
 
             PickupValue += operation;
             _operations.Add(operation);
+
+            other.collider.enabled = false;
+
             StartCoroutine(DisableCollider(other));
         }
     }
@@ -140,6 +143,8 @@ public class FloatingPlatform : MovingObject
         var total = levelManager.Evaluate(_pickupText.text);
         if (isServer)
         {
+            GameObject.Find("SpawnedObjects").GetComponent<CollectibleGeneration>().ResetColliders();
+
             RpcShowTotal(_pickupText.text, total.ToString(), total.ToString() == levelManager.Target);
         }
         

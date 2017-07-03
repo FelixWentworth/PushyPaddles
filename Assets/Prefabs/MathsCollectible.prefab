@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114796704203461734}
   - component: {fileID: 114097811764103360}
   - component: {fileID: 114807889723783004}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: MathsCollectible
   m_TagString: Collectible
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 33617840372073698}
   - component: {fileID: 65826417037035844}
   - component: {fileID: 23603916406982864}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224747951262377966}
   - component: {fileID: 223763662676946138}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,7 +75,7 @@ GameObject:
   - component: {fileID: 224062614011626136}
   - component: {fileID: 222638564450668448}
   - component: {fileID: 114864441641682352}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}

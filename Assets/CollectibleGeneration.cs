@@ -52,6 +52,16 @@ public class CollectibleGeneration : LevelLayout
     }
 
     [Server]
+    public void ResetColliders()
+    {
+        var colliders = ObstacleParent.GetComponentsInChildren<Collider>();
+        foreach (var collider1 in colliders)
+        {
+            collider1.enabled = true;
+        }
+    }
+
+    [Server]
     public void CreateLevel(string[] challengeInfo, char validPosition)
     {
         var depth = GeneratedLevelLayout.GetLength(1);

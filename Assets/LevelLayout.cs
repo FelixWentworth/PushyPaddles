@@ -176,6 +176,8 @@ public class LevelLayout : NetworkBehaviour {
         }
     }
 
+   
+
     public void GenerateNewLevel(int obstacles)
     {
         //StartCoroutine(ChangeBlocks(obstacles, 0.8f));
