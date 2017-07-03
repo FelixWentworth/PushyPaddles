@@ -120,8 +120,17 @@ public class FloatingPlatform : MovingObject
 
             PickupValue += operation;
             _operations.Add(operation);
-            Destroy(other.gameObject);
+            StartCoroutine(DisableCollider(other));
         }
+    }
+
+    private IEnumerator DisableCollider(Collision other)
+    {
+        other.collider.enabled = false;
+
+        yield return new WaitForSeconds(2f);
+
+        other.collider.enabled = true;
     }
 
     public IEnumerator GoalReached(GameObject other)

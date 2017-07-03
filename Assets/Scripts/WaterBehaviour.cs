@@ -59,7 +59,7 @@ public class WaterBehaviour : NetworkBehaviour
         else
         {
             movingObject.GetComponent<BoxCollider>().enabled = false;
-            movingObject.Respawn();    
+            movingObject.Respawn();
         }
     }
 

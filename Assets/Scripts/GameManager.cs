@@ -338,6 +338,7 @@ public class GameManager : NetworkBehaviour
             _generatingLevel = false;
         }
     }
+
     [Server]
     public void ChangeRoles()
     {
