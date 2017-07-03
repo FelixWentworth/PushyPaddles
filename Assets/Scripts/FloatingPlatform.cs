@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
@@ -9,6 +10,7 @@ public class FloatingPlatform : MovingObject
     [SyncVar] public bool CanPickUp = true;
     [SyncVar] public bool OnWater;
     [SyncVar] public string PickupValue;
+    private List<string> _operations = new List<string>();
 
     public WaterBehaviour Water;
 
@@ -16,6 +18,7 @@ public class FloatingPlatform : MovingObject
 
     private MeshRenderer _mesh;
 
+    
     private Text _pickupText;
 
     public override void Start()
@@ -36,6 +39,7 @@ public class FloatingPlatform : MovingObject
 
         _pickupText = GetComponentInChildren<Text>();
         PickupValue = "";
+        _operations = new List<string>();
     }
 
     public override void ResetObject(Vector3 newPosition)
@@ -45,6 +49,7 @@ public class FloatingPlatform : MovingObject
         CanFloat = true;
         MovementSpeed = 0f;
         PickupValue = "";
+        _operations = new List<string>();
     }
 
     public override void Respawn()
@@ -102,9 +107,44 @@ public class FloatingPlatform : MovingObject
         }
         else if (other.gameObject.tag == "Treasure")
         {
-            
+            StartCoroutine(GoalReached(other.gameObject));
+        }
+        else if (other.gameObject.tag == "Collectible")
+        {
+            var operation = other.gameObject.GetComponent<MathsCollectible>().Operation;
+
+            if (_operations.Count == 0 && (operation.Contains("+") || operation.Contains("/") || operation.Contains("x")))
+            {
+                operation = operation.Substring(1, operation.Length-1);
+            }
+
+            PickupValue += operation;
+            _operations.Add(operation);
+            Destroy(other.gameObject);
+        }
+    }
+
+    public IEnumerator GoalReached(GameObject other)
+    {
+        var levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+
+        var total = levelManager.Evaluate(_pickupText.text);
+        if (isServer)
+        {
+            RpcShowTotal(_pickupText.text, total.ToString(), total.ToString() == levelManager.Target);
+        }
+        
+        yield return new WaitForSeconds(levelManager.TotalUI.AnimLength());
+
+        if (isServer)
+        {
+            RpcDisableTotal();
+        }
+
+        if (total.ToString() == levelManager.Target)
+        {
             var player = _playerOnPlatform.GetComponent<Player>();
-            
+
             if (isServer)
             {
                 player.SetGoalReached(false);
@@ -113,19 +153,41 @@ public class FloatingPlatform : MovingObject
             }
 
             _playerOnPlatform = null;
-            
+
             // Notify the players that a reward has been reached
             player.RpcGoalReached();
 
             CanFloat = false;
             Water.TouchedWater(this);
-        }
-        else if (other.gameObject.tag == "Collectible")
-        {
 
-            PickupValue += other.gameObject.GetComponent<MathsCollectible>().Operation;
-            Destroy(other.gameObject);
         }
+        else
+        {
+            // Behave as if hit object
+            _playerOnPlatform.GetComponent<Player>().OnPlatform = false;
+            _playerOnPlatform.GetComponent<Rigidbody>().useGravity = true;
+            _playerOnPlatform = null;
+
+            CanFloat = false;
+            Water.TouchedWater(this);
+        }
+    }
+
+    [ClientRpc]
+    private void RpcShowTotal (string expression, string total, bool victory)
+    {
+        var levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+
+        levelManager.TotalUI.GetComponent<RectTransform>().localScale = Vector3.zero;
+        levelManager.TotalUI.gameObject.SetActive(true);
+        levelManager.TotalUI.Show(expression + " =", total, victory );
+    }
+
+    [ClientRpc]
+    private void RpcDisableTotal()
+    {
+        var levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+        levelManager.TotalUI.gameObject.SetActive(false);
     }
 
     public bool InRange(GameObject other)

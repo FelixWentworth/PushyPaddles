@@ -8,6 +8,8 @@ public class LevelManager : NetworkBehaviour
     public Text TimeRemainingText;
     public Text PlayerText;
     public Text TargetText;
+        
+    public GameTotal TotalUI;
 
     [SyncVar] private float _timeRemaining;
     [SyncVar] public int RoundNumber;
@@ -27,6 +29,7 @@ public class LevelManager : NetworkBehaviour
 
     void Start()
     {
+        TotalUI.gameObject.SetActive(false);
         ResetRound();
         if (isServer)
         {
@@ -129,5 +132,15 @@ public class LevelManager : NetworkBehaviour
     private void ResetTimer()
     {
         _timeRemaining = _timeLimit;
+    }
+
+    // From https://stackoverflow.com/questions/6052640/in-c-sharp-is-there-an-eval-function
+    public double Evaluate(string expression)
+    {
+        System.Data.DataTable table = new System.Data.DataTable();
+        table.Columns.Add("expression", string.Empty.GetType(), expression);
+        System.Data.DataRow row = table.NewRow();
+        table.Rows.Add(row);
+        return double.Parse((string)row["expression"]);
     }
 }
