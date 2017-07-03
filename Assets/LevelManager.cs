@@ -7,11 +7,14 @@ public class LevelManager : NetworkBehaviour
     public Text RoundText;
     public Text TimeRemainingText;
     public Text PlayerText;
+    public Text TargetText;
 
     [SyncVar] private float _timeRemaining;
     [SyncVar] public int RoundNumber;
 
     [SyncVar] public bool RoundStarted;
+
+    [SyncVar] public string Target = "";
 
     public bool IsGameOver
     {
@@ -99,6 +102,8 @@ public class LevelManager : NetworkBehaviour
         var second = totalTime % 60;
 
         TimeRemainingText.text = minute + ":" + second.ToString("00");
+
+        TargetText.text = Target != "" ? "Target: " + Target : "";
     }
 
     [Server]

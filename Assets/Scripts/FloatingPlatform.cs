@@ -1,18 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 
 public class FloatingPlatform : MovingObject
 {
     [SyncVar] public bool CanPickUp = true;
     [SyncVar] public bool OnWater;
+    [SyncVar] public string PickupValue;
 
     public WaterBehaviour Water;
 
     private Player _playerOnPlatform;
 
     private MeshRenderer _mesh;
+
+    private Text _pickupText;
 
     public override void Start()
     {
@@ -29,6 +33,9 @@ public class FloatingPlatform : MovingObject
         var oppositeSide = new Vector3(transform.position.x * -1, transform.position.y, transform.position.z);
 
         RespawnLocation.Add(oppositeSide);
+
+        _pickupText = GetComponentInChildren<Text>();
+        PickupValue = "";
     }
 
     public override void ResetObject(Vector3 newPosition)
@@ -37,6 +44,7 @@ public class FloatingPlatform : MovingObject
 
         CanFloat = true;
         MovementSpeed = 0f;
+        PickupValue = "";
     }
 
     public override void Respawn()
@@ -72,33 +80,31 @@ public class FloatingPlatform : MovingObject
         }
         // Not on water
         _mesh.enabled = CanPickUp;
+        _pickupText.text = PickupValue;
     }
 
     void OnCollisionEnter(Collision other)
     {
+        // VICTORY CONDITION
+        if (_playerOnPlatform == null)
+        {
+            return;
+        }
+
         if (other.gameObject.tag == "Obstacle")
         {
-            if (_playerOnPlatform != null)
-            {
-                _playerOnPlatform.GetComponent<Player>().OnPlatform = false;
-                _playerOnPlatform.GetComponent<Rigidbody>().useGravity = true;
-                _playerOnPlatform = null;
+            _playerOnPlatform.GetComponent<Player>().OnPlatform = false;
+            _playerOnPlatform.GetComponent<Rigidbody>().useGravity = true;
+            _playerOnPlatform = null;
 
-                CanFloat = false;
-                Water.TouchedWater(this);
-            }
+            CanFloat = false;
+            Water.TouchedWater(this);
         }
         else if (other.gameObject.tag == "Treasure")
         {
-            // VICTORY CONDITION
-            if (_playerOnPlatform == null)
-            {
-                return;
-            }
-
+            
             var player = _playerOnPlatform.GetComponent<Player>();
             
-
             if (isServer)
             {
                 player.SetGoalReached(false);
@@ -113,6 +119,12 @@ public class FloatingPlatform : MovingObject
 
             CanFloat = false;
             Water.TouchedWater(this);
+        }
+        else if (other.gameObject.tag == "Collectible")
+        {
+
+            PickupValue += other.gameObject.GetComponent<MathsCollectible>().Operation;
+            Destroy(other.gameObject);
         }
     }
 

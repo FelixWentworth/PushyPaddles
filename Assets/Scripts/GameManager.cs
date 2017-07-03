@@ -13,10 +13,13 @@ public class GameManager : NetworkBehaviour
     public GameObject Platform;
     public GameObject PauseScreen;
 
+    public bool GenerateRocks;
+
     public GameObject PlayerPrefab;
     private List<Player> _players = new List<Player>();
     private MenuManager _menu;
     private LevelManager _level;
+    private Curriculum _curriculum;
 
     private bool _generatingLevel;
 
@@ -42,6 +45,10 @@ public class GameManager : NetworkBehaviour
             if (_menu == null)
             {
                 _menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+            }
+            if (_curriculum == null)
+            {
+                _curriculum = GameObject.Find("CurriculumManager").GetComponent<Curriculum>();
             }
             if (_level.IsGameOver)
             {
@@ -202,8 +209,17 @@ public class GameManager : NetworkBehaviour
             return;
         }
 
+
         // Generate Obstacles
-        GameObject.Find("LevelColliders/Rocks").GetComponent<ObstacleGeneration>().Setup(3);
+        if (GenerateRocks)
+        {        
+            GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<ObstacleGeneration>().Setup(3, "");
+        }
+        else
+        {
+            var challenge = _curriculum.GetNewChallenge(1);
+            GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
+        }
 
         // Start the game timer
         StartTimer();
@@ -289,9 +305,19 @@ public class GameManager : NetworkBehaviour
         {
             _generatingLevel = true;
             // Reset the obstacles
-            GameObject.Find("LevelColliders/Rocks")
-                .GetComponent<ObstacleGeneration>()
-                .GenerateNewLevel(_level.RoundNumber * 3);
+
+            if (GenerateRocks)
+            {
+                GameObject.Find("LevelColliders/SpawnedObjects")
+                        .GetComponent<ObstacleGeneration>().GenerateNewLevel(_level.RoundNumber * 3);
+            }
+            else
+            {
+                var challenge = _curriculum.GetNewChallenge(1);
+                GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
+            }
+
+            
 
             ChangeRoles();
 
