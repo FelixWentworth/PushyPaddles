@@ -137,6 +137,9 @@ public class LevelManager : NetworkBehaviour
     // From https://stackoverflow.com/questions/6052640/in-c-sharp-is-there-an-eval-function
     public double Evaluate(string expression)
     {
+        expression = expression.Replace('x', '*');
+        expression = expression.Replace('÷', '/');
+
         System.Data.DataTable table = new System.Data.DataTable();
         table.Columns.Add("expression", string.Empty.GetType(), expression);
         System.Data.DataRow row = table.NewRow();

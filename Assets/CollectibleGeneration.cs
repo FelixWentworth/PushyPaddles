@@ -67,6 +67,8 @@ public class CollectibleGeneration : LevelLayout
         var depth = GeneratedLevelLayout.GetLength(1);
         var startDepth = 0;
 
+        Debug.Log(GetArrayString());
+
         for (var i = 0; i < challengeInfo.Length; i++)
         {
             // Decide the location
@@ -89,7 +91,7 @@ public class CollectibleGeneration : LevelLayout
             // Create the object
             CreateCollectible(location, ObstacleParent.transform, challengeInfo[i]);
 
-            startDepth += (depth - z) / challengeInfo.Length;
+            startDepth += (depth - z) / (challengeInfo.Length-i);
         }
     }
 

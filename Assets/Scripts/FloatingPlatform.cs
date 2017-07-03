@@ -121,20 +121,10 @@ public class FloatingPlatform : MovingObject
             PickupValue += operation;
             _operations.Add(operation);
 
-            other.collider.enabled = false;
-
-            StartCoroutine(DisableCollider(other));
+            other.collider.enabled = false;;
         }
     }
 
-    private IEnumerator DisableCollider(Collision other)
-    {
-        other.collider.enabled = false;
-
-        yield return new WaitForSeconds(2.5f);
-
-        other.collider.enabled = true;
-    }
 
     public IEnumerator GoalReached(GameObject other)
     {
@@ -144,7 +134,7 @@ public class FloatingPlatform : MovingObject
         if (isServer)
         {
             GameObject.Find("SpawnedObjects").GetComponent<CollectibleGeneration>().ResetColliders();
-
+                
             RpcShowTotal(_pickupText.text, total.ToString(), total.ToString() == levelManager.Target);
         }
         
