@@ -1,17 +1,17 @@
 [
   {
-     "Level": 1,
-     "Target": 10,
-     "RequiredOperations": [
-       "+1",
-       "+4",
-       "+5"
-     ],
-     "ExtraOperations": [
-       "+2",
-       "+6",
-       "+9"
-     ]
+    "Level": 1,
+    "Target": 10,
+    "RequiredOperations": [
+      "+1",
+      "+4",
+      "+5"
+    ],
+    "ExtraOperations": [
+      "+2",
+      "+6",
+      "+9"
+    ]
   },
   {
     "Level": 1,
@@ -22,6 +22,21 @@
     ],
     "ExtraOperations": [
       "+1",
+      "+6"
+    ]
+  },
+  {
+    "Level": 1,
+    "Target": 3,
+    "RequiredOperations": [
+      "+2",
+      "+1"
+    ],
+    "ExtraOperations": [
+      "+4",
+      "-1",
+      "-5",
+      "+4",
       "+6"
     ]
   }
