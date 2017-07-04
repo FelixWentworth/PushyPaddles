@@ -21,6 +21,10 @@ public class GameManager : NetworkBehaviour
     private LevelManager _level;
     private Curriculum _curriculum;
 
+    public GameObject PlayerOneSpawn;
+    public GameObject PlayerTwoSpawn;
+    public GameObject PlayerThreeSpawn;
+
     private bool _generatingLevel;
 
     void Start()
@@ -178,9 +182,7 @@ public class GameManager : NetworkBehaviour
         if (conn != null)
         {
             var playerObject = Instantiate(PlayerPrefab);
-            var xMultiplier = index % 2 == 0 ? 1f : -1f;
-            var zMultiplier = (index / 2) * 1.5f;
-            playerObject.transform.position = new Vector3(4.5f * xMultiplier, -0.72f, zMultiplier);
+            playerObject.transform.position = GetPlayerRespawn(index);
 
             var player = playerObject.GetComponent<Player>();
             SetPlayerRole(index, player);
@@ -195,6 +197,23 @@ public class GameManager : NetworkBehaviour
 #endif
 
 
+    }
+
+    public Vector3 GetPlayerRespawn(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return PlayerOneSpawn.transform.position;
+            case 1:
+                return PlayerTwoSpawn.transform.position;
+            case 2:
+                return PlayerThreeSpawn.transform.position;
+            default:
+                var xMultiplier = index % 2 == 0 ? 1f : -1f;
+                var zMultiplier = (index / 2) * 1.5f;
+                return new Vector3(xMultiplier, -0.72f, zMultiplier);
+        }
     }
 
     /// <summary>
@@ -317,8 +336,6 @@ public class GameManager : NetworkBehaviour
                 GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
             }
 
-            
-
             ChangeRoles();
 
             // Reset Player Posititions
@@ -369,7 +386,31 @@ public class GameManager : NetworkBehaviour
         floaterIndex = floaterIndex >= _players.Count - 1 ? 0 : floaterIndex + 1;
 
         _players[floaterIndex].SetRole(Player.Role.Floater);
+
+        SetNewPlayerNum(floaterIndex);
+
+        RespawnPlayers();
     }
+
+    [Server]
+    public void SetNewPlayerNum(int floater)
+    {
+        for (var i = 0; i < _players.Count; i++)
+        {
+            _players[floater].playerNum = i;
+            floater = floater == _players.Count - 1 ? 0 : floater += 1;
+        }        
+    }
+
+    [Server]
+    public void RespawnPlayers()
+    {
+        foreach (var player in _players)
+        {
+            player.SyncForceMove(GetPlayerRespawn(player.playerNum), player.transform.eulerAngles);
+        }
+    }
+
     public void HideRewards()
     {
         if (_menu == null)

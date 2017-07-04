@@ -13,6 +13,8 @@ public class Player : MovingObject
 
     [SyncVar] public bool HoldingPlatform;
 
+    [SyncVar] public int playerNum;
+
     public GameObject Paddle;
     public GameObject Platform;
 
@@ -97,7 +99,7 @@ public class Player : MovingObject
 
         if (!isServer)
         {
-            CmdSyncRespawn(newPosition, transform.eulerAngles);
+            CmdSyncRespawn(transform.eulerAngles);
         }
     }
 
@@ -215,6 +217,8 @@ public class Player : MovingObject
 
         RealPosition = position;
         RealRotation = rotation;
+
+        RpcRespawn(_gameManager.GetPlayerRespawn(playerNum), rotation);
     }
 
     [Server]
@@ -235,11 +239,9 @@ public class Player : MovingObject
         RealRotation = rotation;
     }
     [Command]
-    private void CmdSyncRespawn(Vector3 position, Vector3 rotation)
+    private void CmdSyncRespawn(Vector3 rotation)
     {
-        SyncForceMove(position, rotation);
-
-        RpcRespawn(position, rotation);
+        SyncForceMove(_gameManager.GetPlayerRespawn(playerNum), rotation);
     }
 
     [ClientRpc]
