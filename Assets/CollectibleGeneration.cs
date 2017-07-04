@@ -67,8 +67,6 @@ public class CollectibleGeneration : LevelLayout
         var depth = GeneratedLevelLayout.GetLength(1);
         var startDepth = 0;
 
-        Debug.Log(GetArrayString());
-
         for (var i = 0; i < challengeInfo.Length; i++)
         {
             // Decide the location

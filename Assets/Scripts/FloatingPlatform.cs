@@ -18,6 +18,7 @@ public class FloatingPlatform : MovingObject
 
     private MeshRenderer _mesh;
 
+    private LevelManager _levelManager;
     
     private Text _pickupText;
 
@@ -113,13 +114,24 @@ public class FloatingPlatform : MovingObject
         {
             var operation = other.gameObject.GetComponent<MathsCollectible>().Operation;
 
-            if (_operations.Count == 0 && (operation.Contains("+") || operation.Contains("/") || operation.Contains("x")))
+
+            if (_operations.Count == 0 &&
+                (operation.Contains("+") || operation.Contains("/") || operation.Contains("x")))
             {
-                operation = operation.Substring(1, operation.Length-1);
+                operation = operation.Substring(1, operation.Length - 1);
+                PickupValue = operation;
+            }
+            else
+            {
+                if (_levelManager == null)
+                {
+                    _levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+                }
+                PickupValue = _levelManager.Evaluate(PickupValue + operation).ToString();
             }
 
-            PickupValue += operation;
             _operations.Add(operation);
+
 
             other.collider.enabled = false;;
         }
@@ -130,12 +142,11 @@ public class FloatingPlatform : MovingObject
     {
         var levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
 
-        var total = levelManager.Evaluate(_pickupText.text);
         if (isServer)
         {
             GameObject.Find("SpawnedObjects").GetComponent<CollectibleGeneration>().ResetColliders();
                 
-            RpcShowTotal(_pickupText.text, total.ToString(), total.ToString() == levelManager.Target);
+            RpcShowTotal(PickupValue == levelManager.Target);
         }
         
         yield return new WaitForSeconds(levelManager.TotalUI.AnimLength());
@@ -145,7 +156,7 @@ public class FloatingPlatform : MovingObject
             RpcDisableTotal();
         }
 
-        if (total.ToString() == levelManager.Target)
+        if (PickupValue == levelManager.Target)
         {
             var player = _playerOnPlatform.GetComponent<Player>();
 
@@ -178,13 +189,13 @@ public class FloatingPlatform : MovingObject
     }
 
     [ClientRpc]
-    private void RpcShowTotal (string expression, string total, bool victory)
+    private void RpcShowTotal (bool victory)
     {
         var levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
 
         levelManager.TotalUI.GetComponent<RectTransform>().localScale = Vector3.zero;
         levelManager.TotalUI.gameObject.SetActive(true);
-        levelManager.TotalUI.Show(expression + " =", total, victory );
+        levelManager.TotalUI.Show("Total =", PickupValue, victory );
     }
 
     [ClientRpc]
