@@ -186,6 +186,7 @@ public class GameManager : NetworkBehaviour
 
             var player = playerObject.GetComponent<Player>();
             SetPlayerRole(index, player);
+            player.PlayerNum = index;
 
             player.ConnectionId = conn.connectionId;
 
@@ -397,7 +398,7 @@ public class GameManager : NetworkBehaviour
     {
         for (var i = 0; i < _players.Count; i++)
         {
-            _players[floater].playerNum = i;
+            _players[floater].PlayerNum = i;
             floater = floater == _players.Count - 1 ? 0 : floater += 1;
         }        
     }
@@ -407,7 +408,7 @@ public class GameManager : NetworkBehaviour
     {
         foreach (var player in _players)
         {
-            player.SyncForceMove(GetPlayerRespawn(player.playerNum), player.transform.eulerAngles);
+            player.SyncRespawn(player.transform.eulerAngles);
         }
     }
 
