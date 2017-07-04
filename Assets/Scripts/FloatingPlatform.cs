@@ -195,7 +195,7 @@ public class FloatingPlatform : MovingObject
 
         levelManager.TotalUI.GetComponent<RectTransform>().localScale = Vector3.zero;
         levelManager.TotalUI.gameObject.SetActive(true);
-        levelManager.TotalUI.Show("Total =", PickupValue, victory );
+        levelManager.TotalUI.Show("Total", PickupValue, victory );
     }
 
     [ClientRpc]
