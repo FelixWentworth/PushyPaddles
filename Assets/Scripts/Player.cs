@@ -89,7 +89,7 @@ public class Player : MovingObject
 
         if (!isServer && isLocalPlayer)
         {
-            GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowCharacterSelect();
+            GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowHowToPlay();
         }
     }
 

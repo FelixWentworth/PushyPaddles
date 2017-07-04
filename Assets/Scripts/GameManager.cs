@@ -60,6 +60,18 @@ public class GameManager : NetworkBehaviour
                 RestartGame();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            if (isServer)
+            {
+                GameObject.Find("NetworkManager").GetComponent<NetworkManager>().StartServer();  
+            }
+            else
+            {
+                GameObject.Find("NetworkManager").GetComponent<NetworkManager>().StopClient();
+            }
+        }
 #if USE_PROSOCIAL_EVENTS
         PauseScreen.SetActive(!_gamePlaying);
 #else
@@ -93,7 +105,10 @@ public class GameManager : NetworkBehaviour
     void OnDisconnected(NetworkMessage netMsg)
     { 
         var player = _players.Find(p => p.ConnectionId == netMsg.conn.connectionId);
-
+        if (player == null)
+        {
+            return;
+        }
         // Remove player from the list
         _players.Remove(player);
 

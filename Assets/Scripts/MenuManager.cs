@@ -4,8 +4,8 @@ using UnityEngine.Networking;
 public class MenuManager : NetworkBehaviour
 {
     // Menu should be active at start
-    [SyncVar] private bool _showMenuSync = true;
-    [SyncVar] private bool _hideMenuSync;
+    private bool _showMenu = true;
+    private bool _hideMenu;
 
     // Reward screen inputs
     private static bool _leftPressed;
@@ -18,6 +18,7 @@ public class MenuManager : NetworkBehaviour
     public GameObject CharacterSelectionScreen;
     public GameObject Objective;
     public GameObject LevelInfo;
+    public GameObject HowToPlayScreen;
 
     void Start()
     {
@@ -37,14 +38,14 @@ public class MenuManager : NetworkBehaviour
     private void UpdateScreens()
     {
        
-        if (_showMenuSync && !TitleScreen.activeSelf)
+        if (_showMenu && !TitleScreen.activeSelf)
         {
-            _hideMenuSync = false;
+            _hideMenu = false;
             TitleScreen.SetActive(true);
         }
-        if (_hideMenuSync && TitleScreen.activeSelf)
+        if (_hideMenu && TitleScreen.activeSelf)
         {
-            _showMenuSync = false;
+            _showMenu = false;
             TitleScreen.SetActive(false);
         }
     }
@@ -85,20 +86,13 @@ public class MenuManager : NetworkBehaviour
         GameOverScreen.gameObject.SetActive(true);
         GameOverScreen.Hide();
 
-        TitleScreen.SetActive(false);
         CharacterSelectionScreen.SetActive(false);
+        HowToPlayScreen.SetActive(false);
 
         LevelInfo.SetActive(true);
         Objective.SetActive(true);
-    }
 
-    /// <summary>
-    /// Show menu for all players
-    /// </summary>
-    [Command]
-    public void CmdShowMenu()
-    {
-        _showMenuSync = true;
+        TitleScreen.SetActive(false);
     }
 
     /// <summary>
@@ -106,7 +100,19 @@ public class MenuManager : NetworkBehaviour
     /// </summary>
     public void HideMenu()
     {
-        _hideMenuSync = true;
+        _showMenu = false;
+        _hideMenu = true;
+    }
+
+    public void ShowHowToPlay()
+    {
+        HowToPlayScreen.SetActive(true);
+    }
+
+    public void HideHowToPlay()
+    {
+        HowToPlayScreen.SetActive(false);
+        ShowCharacterSelect();
     }
 
     /// <summary>
