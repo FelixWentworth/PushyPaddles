@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using System;
+using PlayGen.Unity.Utilities.Localization;
 
 public class MainMenu : MonoBehaviour
 {
