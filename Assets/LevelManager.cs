@@ -108,6 +108,7 @@ public class LevelManager : NetworkBehaviour
         TimeRemainingText.text = minute + ":" + second.ToString("00");
 
         TargetText.text = Target != "" ? string.Format(Localization.Get("FORMATTED_UI_GAME_TARGET"), Target): "";
+
     }
 
     [Server]
