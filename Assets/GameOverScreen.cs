@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using PlayGen.Unity.Utilities.Localization;
+using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.Video;
@@ -15,7 +16,7 @@ public class GameOverScreen : UIScreen
         // TODO Set the number of rounds text
         var rounds = GameObject.Find("LevelManager").GetComponent<LevelManager>().RoundNumber;
 
-        RoundsText.text = "Rounds Complete: " + rounds;
+        RoundsText.text = string.Format(Localization.Get("FORMATTED_UI_END_ROUNDS_COMPLETED"), rounds);
     }
 
     public override void Hide()

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
@@ -195,7 +196,7 @@ public class FloatingPlatform : MovingObject
 
         levelManager.TotalUI.GetComponent<RectTransform>().localScale = Vector3.zero;
         levelManager.TotalUI.gameObject.SetActive(true);
-        levelManager.TotalUI.Show("Total", PickupValue, victory );
+        levelManager.TotalUI.Show(Localization.Get("UI_GAME_TOTAL"), PickupValue, victory );
     }
 
     [ClientRpc]

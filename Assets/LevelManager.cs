@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using PlayGen.Unity.Utilities.Localization;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 
@@ -33,11 +34,11 @@ public class LevelManager : NetworkBehaviour
         ResetRound();
         if (isServer)
         {
-            PlayerText.text = "Server";
+            PlayerText.text = Localization.Get("UI_GAME_SERVER");
         }
         else
         {
-            PlayerText.text = "Player " +
+            PlayerText.text = Localization.Get("UI_GAME_PLAYER") + " " +
                               (GameObject.Find("GameManager").GetComponent<GameManager>().GetLocalPlayer().PlayerID + 1); 
         }
     }
@@ -93,7 +94,7 @@ public class LevelManager : NetworkBehaviour
 
     private void UpdateUI()
     {
-        RoundText.text = "ROUND: " + RoundNumber;
+        RoundText.text = string.Format(Localization.Get("FORMATTED_UI_GAME_ROUND"), RoundNumber);
 
         var totalTime = Mathf.RoundToInt(_timeRemaining);
         if (totalTime < 0)
@@ -106,7 +107,7 @@ public class LevelManager : NetworkBehaviour
 
         TimeRemainingText.text = minute + ":" + second.ToString("00");
 
-        TargetText.text = Target != "" ? "Target: " + Target : "";
+        TargetText.text = Target != "" ? string.Format(Localization.Get("FORMATTED_UI_GAME_TARGET"), Target): "";
     }
 
     [Server]

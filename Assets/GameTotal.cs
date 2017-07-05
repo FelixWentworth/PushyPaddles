@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,7 +17,7 @@ public class GameTotal : MonoBehaviour
     {
         _expression.text = expression;
         _total.text = total;
-        _condition.text = victory ? "You Win" : "Try Again";
+        _condition.text = victory ? Localization.Get("UI_GAME_VICTORY") : Localization.Get("UI_GAME_TRY_AGAIN");
 
         _animation.Play();
 

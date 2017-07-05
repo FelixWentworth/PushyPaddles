@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -82,7 +83,7 @@ public class Player : MovingObject
         //GetComponent<Rigidbody>().isKinematic = !isServer;
         _rigidbody = GetComponent<Rigidbody>();
         _playerText = GetComponentInChildren<TextMesh>();
-        _playerText.text = "Player " + (PlayerID + 1);
+        _playerText.text = string.Format(Localization.Get("FORMATTED_UI_GAME_PLAYER"),PlayerID + 1);
 
         SetModel();
         _currentModel = _playerModel;
