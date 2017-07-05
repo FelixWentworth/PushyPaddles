@@ -133,6 +133,10 @@ public class FloatingPlatform : MovingObject
 
             _operations.Add(operation);
 
+            if (isServer)
+            {
+                GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Pickup");
+            }
 
             other.collider.enabled = false;;
         }
@@ -197,6 +201,16 @@ public class FloatingPlatform : MovingObject
         levelManager.TotalUI.GetComponent<RectTransform>().localScale = Vector3.zero;
         levelManager.TotalUI.gameObject.SetActive(true);
         levelManager.TotalUI.Show(Localization.Get("UI_GAME_TOTAL"), PickupValue, victory );
+
+        if (victory)
+        {
+            AudioManager.Instance.Play("Victory");
+        }
+        else
+        {
+            AudioManager.Instance.Play("Failure");
+        }
+
     }
 
     [ClientRpc]

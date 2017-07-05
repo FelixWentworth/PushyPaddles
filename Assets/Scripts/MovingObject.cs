@@ -54,6 +54,20 @@ public class MovingObject : NetworkBehaviour
         StartCoroutine(WaitToRespawn());
     }
 
+    public virtual void FellInWater()
+    {
+        if (!isServer)
+        {
+            CmdFellInWater();
+        }
+    }
+
+    [Command]
+    private void CmdFellInWater()
+    {
+        GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Splash");
+    }
+
     private IEnumerator WaitToRespawn()
     {
         Respawning = true;

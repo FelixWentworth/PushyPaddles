@@ -109,7 +109,6 @@ public class Player : MovingObject
         GameObject.Find("CharacterSelection").GetComponent<CharacterSelection>().Set(this);
     }
 
-    
     void Update()
     {
         // Don't allow players to move whilst rewards are being distributed
@@ -393,6 +392,8 @@ public class Player : MovingObject
         { 
             _usePaddle = true;
         }
+        GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Paddle");
+
     }
 
     [Command]
