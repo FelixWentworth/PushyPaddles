@@ -1581,6 +1581,7 @@ Transform:
   - {fileID: 433650797}
   - {fileID: 919061267}
   - {fileID: 718505758}
+  - {fileID: 1731402094}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4769,7 +4770,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2155929
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13132,6 +13133,91 @@ MonoBehaviour:
   Key: GAME_NAME
   ToUpper: 1
   LanguageOverride: 
+--- !u!1 &1731402093
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1731402094}
+  - component: {fileID: 1731402095}
+  - component: {fileID: 1731402096}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1731402094
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1731402093}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 297}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1731402095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1731402093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8397f65dd2a7be946908ba78ad70cd69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioClips:
+  - Name: Backgriound
+    Clip: {fileID: 8300000, guid: d9ced655c31d9904c8a632dffd4ee870, type: 3}
+    Volume: 0.6
+    AutoPlay: 1
+    Loop: 1
+  - Name: Splash
+    Clip: {fileID: 8300000, guid: 1c2f71f47777488438167efd9645e499, type: 3}
+    Volume: 0.4
+    AutoPlay: 0
+    Loop: 0
+  - Name: Paddle
+    Clip: {fileID: 8300000, guid: cadd89f2c58402f47953033263b23667, type: 3}
+    Volume: 1
+    AutoPlay: 0
+    Loop: 0
+  - Name: Pickup
+    Clip: {fileID: 8300000, guid: 7ae06f8e36d856e4690c20aa2b69c57d, type: 3}
+    Volume: 1
+    AutoPlay: 0
+    Loop: 0
+  - Name: Victory
+    Clip: {fileID: 8300000, guid: 9432e6fe0ad6de44a83015a0c436a827, type: 3}
+    Volume: 1
+    AutoPlay: 0
+    Loop: 0
+  - Name: Failure
+    Clip: {fileID: 8300000, guid: c29dbd6617b023441a3d51d55c6cf19a, type: 3}
+    Volume: 1
+    AutoPlay: 0
+    Loop: 0
+--- !u!114 &1731402096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1731402093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdb75fa9baa7707428e0d3d1a2348053, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  Test: 0
 --- !u!1 &1741657614 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1147741637126082, guid: 0065b6e2471dcf74c9bbe36ba11bae3c,
