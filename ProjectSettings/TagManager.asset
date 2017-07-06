@@ -9,6 +9,7 @@ TagManager:
   - Obstacle
   - Treasure
   - PlatformStart
+  - Collectible
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - Player
   - Platform
   - Terrain
-  - 
+  - Collectible
   - 
   - 
   - 
