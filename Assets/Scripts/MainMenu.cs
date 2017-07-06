@@ -17,8 +17,12 @@ public class MainMenu : MonoBehaviour
     public InputField IpAddress;
     public InputField Port;
 
+    public LoadingScreen LoadingScreen;
+
     void Awake()
     {
+        LoadingScreen.gameObject.SetActive(true);
+
         if (_useDefault)
         {
             IpAddress.text = _networkManager.networkAddress;
@@ -42,6 +46,40 @@ public class MainMenu : MonoBehaviour
 
         _networkManager.StartServer();
         _menuManager.HideMenu();
+    }
+
+    void Update()
+    {
+        bool noConnection = (_networkManager.client == null || _networkManager.client.connection == null ||
+                             _networkManager.client.connection.connectionId == -1);
+
+        if (!_networkManager.IsClientConnected() && !NetworkServer.active && _networkManager.matchMaker == null)
+        {
+            if (noConnection)
+            {
+                if (LoadingScreen.IsShowing)
+                {
+                    LoadingScreen.Hide();
+                }
+            }
+            else
+            {
+                if (!LoadingScreen.IsShowing)
+                    {
+                        LoadingScreen.ShowScreen("Connecting to: " + _networkManager.networkAddress + ":" + _networkManager.networkPort, CancelClient);
+                    }
+
+            }
+        }
+        else if (LoadingScreen.IsShowing)
+        {
+            LoadingScreen.Complete();
+        }
+    }
+
+    public void CancelClient()
+    {
+        _networkManager.StopClient();
     }
 
     public void QuitGame()
