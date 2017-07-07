@@ -52,6 +52,7 @@ public class Player : MovingObject
     private GameObject _holdingGameObject;
 
     [SyncVar] private bool _usePaddle;
+    [SyncVar] public bool IsReady;
     [SyncVar] public int PlayerID;
     [SyncVar] public int ConnectionId;
     private int _currentModel;
@@ -417,6 +418,7 @@ public class Player : MovingObject
     [Command]
     public void CmdSetModel(int model)
     {
+        IsReady = true;
         _playerModel = model;
     }
 

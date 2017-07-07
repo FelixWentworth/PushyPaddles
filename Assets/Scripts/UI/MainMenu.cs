@@ -31,6 +31,11 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
+#if UNITY_WEBGL
+        _networkManager.useWebSockets = true;
+#elif UNITY_STANDALONE_WIN
+        _networkManager.useWebSockets = false;
+#endif
         LoadingScreen.gameObject.SetActive(true);
 
         if (_useDefault)
@@ -79,6 +84,7 @@ public class MainMenu : MonoBehaviour
 
     public void Connect()
     {
+
         _networkManager.networkAddress = IpAddress.text;
         _networkManager.networkPort = Convert.ToInt16(Port.text);
 

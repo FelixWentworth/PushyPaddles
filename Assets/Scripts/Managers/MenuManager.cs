@@ -12,12 +12,15 @@ public class MenuManager : NetworkBehaviour
     private static bool _rightPressed;
     private static bool _selectPressed;
 
+    public GameManager GameManager;
+
     public RewardScreenManager RewardScreenManager;
     public GameOverScreen GameOverScreen;
     public GameObject TitleScreen;
     public GameObject CharacterSelectionScreen;
     public GameObject LevelInfo;
     public GameObject HowToPlayScreen;
+    public GameObject WaitingForPlayersPrompt;
 
     void Start()
     {
@@ -36,7 +39,6 @@ public class MenuManager : NetworkBehaviour
     /// </summary>
     private void UpdateScreens()
     {
-       
         if (_showMenu && !TitleScreen.activeSelf)
         {
             _hideMenu = false;
@@ -46,6 +48,14 @@ public class MenuManager : NetworkBehaviour
         {
             _showMenu = false;
             TitleScreen.SetActive(false);
+        }
+        if (GameManager.AllPlayersReady && WaitingForPlayersPrompt.activeSelf)
+        {
+            WaitingForPlayersPrompt.SetActive(false);
+        }
+        else if (!GameManager.AllPlayersReady && !WaitingForPlayersPrompt.activeSelf)
+        {
+            WaitingForPlayersPrompt.SetActive(true);
         }
     }
 
@@ -87,6 +97,7 @@ public class MenuManager : NetworkBehaviour
 
         CharacterSelectionScreen.SetActive(false);
         HowToPlayScreen.SetActive(false);
+        WaitingForPlayersPrompt.gameObject.SetActive(false);
 
         LevelInfo.SetActive(true);
 

@@ -9,6 +9,7 @@ public class GameManager : NetworkBehaviour
 {
     [SyncVar] public bool DistributingRewards;
     [SyncVar] private bool _gamePlaying = false;
+    [SyncVar] public bool AllPlayersReady;
 
     public GameObject Platform;
     public GameObject PauseScreen;
@@ -59,6 +60,17 @@ public class GameManager : NetworkBehaviour
                 _menu.ShowGameOver();
                 RestartGame();
             }
+
+            // Check if the game should be started
+            if (_players.Count == 3 && !_level.RoundStarted)
+            {
+                AllPlayersReady = AreAllPlayersReady();
+                if (AllPlayersReady)
+                {
+                    StartGameTimer();
+                }
+            }
+
         }
 
         if (Input.GetKeyDown(KeyCode.F1))
@@ -98,7 +110,7 @@ public class GameManager : NetworkBehaviour
             _level = GameObject.Find("LevelManager").GetComponent<LevelManager>();
         }
         _menu.HideMenu();
-        StartGame(NetworkServer.connections[NetworkServer.connections.Count - 1]);
+        JoinGame(NetworkServer.connections[NetworkServer.connections.Count - 1]);
     }
 
     [Server]
@@ -130,6 +142,18 @@ public class GameManager : NetworkBehaviour
 
         // Todo Assign New Roles
         ChangeRoles();
+    }
+
+    private bool AreAllPlayersReady()
+    {
+        foreach (var player in _players)
+        {
+            if (!player.IsReady)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     public bool GamePlaying()
@@ -191,7 +215,7 @@ public class GameManager : NetworkBehaviour
     }
 
 
-    public void StartGame(NetworkConnection conn)
+    public void JoinGame(NetworkConnection conn)
     {
         var index = _players.Count;
         if (conn != null)
@@ -208,10 +232,6 @@ public class GameManager : NetworkBehaviour
             _players.Add(player);
             NetworkServer.AddPlayerForConnection(conn, player.gameObject, 0);
         }
-#if !USE_PROSOCIAL_EVENTS
-        StartGameTimer();
-#endif
-
 
     }
 
