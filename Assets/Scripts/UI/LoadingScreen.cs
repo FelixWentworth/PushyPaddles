@@ -31,7 +31,10 @@ public class LoadingScreen : UIScreen
     public void CancelPressed()
     {
         Hide();
-        _cancelAction();
+        if (_cancelAction != null)
+        {
+            _cancelAction();
+        }
     }
 
 }

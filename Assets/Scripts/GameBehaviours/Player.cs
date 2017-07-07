@@ -143,12 +143,21 @@ public class Player : MovingObject
                         _rigidbody.useGravity = true;
                     }
                     var x = Input.GetAxis("Horizontal");
-                    var z = Input.GetAxis("Vertical");
+                    //var z = Input.GetAxis("Vertical");
 
-                    if (x != 0 || z != 0)
+                    if (x != 0 )
                     {
                         // Move Player Command
-                        Move(gameObject, x, z);
+                        if (PlayerRole == Role.Floater)
+                        {
+                            // Move Left/Right
+                            Move(gameObject, x, 0);
+                        }
+                        else
+                        {
+                            // Move Up/Down
+                            Move(gameObject, 0, x);
+                        }
                         if (_animationState != AnimationState.WALKING)
                         {
                             CmdChangeState((int) AnimationState.WALKING);
@@ -161,6 +170,7 @@ public class Player : MovingObject
                         {
                             CmdChangeState((int) AnimationState.IDLE);
                         }
+
                     }
                     _elapsedTime += Time.deltaTime;
                     if (_elapsedTime > _updateInterval)
@@ -290,8 +300,15 @@ public class Player : MovingObject
             {
                 // Pickup Plaftorm
                 CmdPickupPlatform(platform);
+                return;
             }
-            else if (HoldingPlatform)
+            
+            // Make sure the player is looking in the correct direction
+            transform.LookAt(PlayerRole == Role.Floater
+                ? new Vector3(transform.position.x, transform.position.y, 100f)
+                : new Vector3(0f, transform.position.y, transform.position.z));
+
+            if (HoldingPlatform)
             {
                 if (fp.CanBePlacedInWater() && PlayerRole == Role.Floater)
                 {
@@ -307,6 +324,7 @@ public class Player : MovingObject
             }
             else
             {
+
                 // Use paddle in water
                 CmdUsePaddle();
             }

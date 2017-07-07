@@ -16,7 +16,6 @@ public class MenuManager : NetworkBehaviour
     public GameOverScreen GameOverScreen;
     public GameObject TitleScreen;
     public GameObject CharacterSelectionScreen;
-    public GameObject Objective;
     public GameObject LevelInfo;
     public GameObject HowToPlayScreen;
 
@@ -90,7 +89,6 @@ public class MenuManager : NetworkBehaviour
         HowToPlayScreen.SetActive(false);
 
         LevelInfo.SetActive(true);
-        Objective.SetActive(true);
 
         TitleScreen.SetActive(false);
     }

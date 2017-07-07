@@ -4,10 +4,14 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PlayGen.Unity.Utilities.Localization;
 
 public class MainMenu : MonoBehaviour
 {
+
+    [SerializeField] private bool _showMenu;
 
     [SerializeField] private bool _useDefault;
 
@@ -17,9 +21,15 @@ public class MainMenu : MonoBehaviour
     public InputField IpAddress;
     public InputField Port;
 
+    struct Config
+    {
+        public string Address;
+        public int Port;
+    }
+
     public LoadingScreen LoadingScreen;
 
-    void Awake()
+    void Start()
     {
         LoadingScreen.gameObject.SetActive(true);
 
@@ -27,6 +37,43 @@ public class MainMenu : MonoBehaviour
         {
             IpAddress.text = _networkManager.networkAddress;
             Port.text = _networkManager.networkPort.ToString();
+        }
+
+        if (!_showMenu)
+        {
+#if UNITY_STANDALONE_LINUX
+            // TODO shut down if no players after x seconds (30?)
+            _networkManager.StartServer();
+            _menuManager.HideMenu();
+#elif UNITY_WEBGL
+            LoadingScreen.ShowScreen("Loading", null);
+            StartCoroutine(GetConnectionConfig());
+#endif
+        }
+    }
+
+    private IEnumerator GetConnectionConfig()
+    {
+        var path = Application.streamingAssetsPath + "/ConnectionConfig.json";
+
+        if (Application.platform == RuntimePlatform.WindowsEditor ||
+                Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WSAPlayerX86 ||
+                Application.platform == RuntimePlatform.WSAPlayerX64 || Application.platform == RuntimePlatform.LinuxPlayer)
+        {
+            path = "file:///" + path;
+        }
+
+        var www = new WWW(path);
+
+        yield return www;
+        if (www.text != null)
+        {
+            var config = JsonConvert.DeserializeObject<Config>(www.text);
+            LoadingScreen.ShowScreen("Connecting", CancelClient);
+
+            _networkManager.networkAddress = config.Address;
+            _networkManager.networkPort = config.Port;
+            _networkManager.StartClient();
         }
     }
 
@@ -50,30 +97,35 @@ public class MainMenu : MonoBehaviour
 
     void Update()
     {
-        bool noConnection = (_networkManager.client == null || _networkManager.client.connection == null ||
-                             _networkManager.client.connection.connectionId == -1);
-
-        if (!_networkManager.IsClientConnected() && !NetworkServer.active && _networkManager.matchMaker == null)
+        if (_showMenu)
         {
-            if (noConnection)
+            bool noConnection = (_networkManager.client == null || _networkManager.client.connection == null ||
+                                 _networkManager.client.connection.connectionId == -1);
+
+            if (!_networkManager.IsClientConnected() && !NetworkServer.active && _networkManager.matchMaker == null)
             {
-                if (LoadingScreen.IsShowing)
+                if (noConnection)
                 {
-                    LoadingScreen.Hide();
-                }
-            }
-            else
-            {
-                if (!LoadingScreen.IsShowing)
+                    if (LoadingScreen.IsShowing)
                     {
-                        LoadingScreen.ShowScreen("Connecting to: " + _networkManager.networkAddress + ":" + _networkManager.networkPort, CancelClient);
+                        LoadingScreen.Hide();
+                    }
+                }
+                else
+                {
+                    if (!LoadingScreen.IsShowing)
+                    {
+                        LoadingScreen.ShowScreen(
+                            "Connecting to: " + _networkManager.networkAddress + ":" + _networkManager.networkPort,
+                            CancelClient);
                     }
 
+                }
             }
-        }
-        else if (LoadingScreen.IsShowing)
-        {
-            LoadingScreen.Complete();
+            else if (LoadingScreen.IsShowing)
+            {
+                LoadingScreen.Complete();
+            }
         }
     }
 
