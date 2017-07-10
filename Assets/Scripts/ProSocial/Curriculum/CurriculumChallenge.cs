@@ -1,13 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
-public class CurriculumChallenge : MonoBehaviour
+[Serializable]
+public class CurriculumChallenge
 {
-    public int Level { get; set; }
-    public double Target { get; set; }
+    public int Level;
+    public double Target;
 
-    public string[] RequiredOperations { get; set; }
-    public string[] ExtraOperations { get; set; }
+    public string[] RequiredOperations;
+    public string[] ExtraOperations;
 
 }
+
+public class CurriculumChallenges
+{
+    public CurriculumChallenge[] Items;
+}
+

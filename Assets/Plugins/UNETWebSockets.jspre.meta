@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 6dbd61729b10358478cfac9624930adb
-timeCreated: 1499072047
+guid: c56536e16f759764eba04d09ebad3f5e
+timeCreated: 1499684577
 licenseType: Free
 PluginImporter:
   serializedVersion: 2
@@ -13,7 +13,7 @@ PluginImporter:
       first:
         Any: 
       second:
-        enabled: 1
+        enabled: 0
         settings: {}
     data:
       first:
@@ -24,11 +24,16 @@ PluginImporter:
           DefaultValueInitialized: true
     data:
       first:
-        Windows Store Apps: WindowsStoreApps
+        Facebook: WebGL
       second:
-        enabled: 0
-        settings:
-          CPU: AnyCPU
+        enabled: 1
+        settings: {}
+    data:
+      first:
+        WebGL: WebGL
+      second:
+        enabled: 1
+        settings: {}
   userData: 
   assetBundleName: 
   assetBundleVariant: 

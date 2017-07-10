@@ -62,10 +62,9 @@ public class GameManager : NetworkBehaviour
             }
 
             // Check if the game should be started
-            if (_players.Count == 3 && !_level.RoundStarted)
+            if (!_level.RoundStarted)
             {
-                AllPlayersReady = AreAllPlayersReady();
-                if (AllPlayersReady)
+                if (AreAllPlayersReady())
                 {
                     StartGameTimer();
                 }
@@ -144,6 +143,7 @@ public class GameManager : NetworkBehaviour
 
         // Todo Assign New Roles
         ChangeRoles();
+
     }
 
     private bool AreAllPlayersReady()
@@ -159,6 +159,7 @@ public class GameManager : NetworkBehaviour
                 return false;
             }
         }
+
         return true;
     }
 

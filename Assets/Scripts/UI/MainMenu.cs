@@ -1,11 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using PlayGen.Unity.Utilities.Localization;
 
 public class MainMenu : MonoBehaviour
@@ -21,6 +18,8 @@ public class MainMenu : MonoBehaviour
     public InputField IpAddress;
     public InputField Port;
 
+    private bool _connecting;
+
     struct Config
     {
         public string Address;
@@ -31,11 +30,11 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
-#if UNITY_WEBGL
-        _networkManager.useWebSockets = true;
-#elif UNITY_STANDALONE_WIN
-        _networkManager.useWebSockets = false;
-#endif
+//#if UNITY_WEBGL
+//        _networkManager.useWebSockets = true;
+//#elif UNITY_STANDALONE_WIN
+//        _networkManager.useWebSockets = false;
+//#endif
         LoadingScreen.gameObject.SetActive(true);
 
         if (_useDefault)
@@ -73,12 +72,18 @@ public class MainMenu : MonoBehaviour
         yield return www;
         if (www.text != null)
         {
-            var config = JsonConvert.DeserializeObject<Config>(www.text);
+            var config = JsonUtility.FromJson<Config>(www.text);
             LoadingScreen.ShowScreen("Connecting", CancelClient);
+
+            IpAddress.text = config.Address;
+            Port.text = config.Port.ToString();
 
             _networkManager.networkAddress = config.Address;
             _networkManager.networkPort = config.Port;
             _networkManager.StartClient();
+
+            _connecting = true;
+
         }
     }
 
@@ -125,14 +130,28 @@ public class MainMenu : MonoBehaviour
                             "Connecting to: " + _networkManager.networkAddress + ":" + _networkManager.networkPort,
                             CancelClient);
                     }
-
                 }
             }
             else if (LoadingScreen.IsShowing)
             {
-                LoadingScreen.Complete();
+                LoadingScreen.Hide();
             }
         }
+        if (LoadingScreen.IsShowing && _connecting)
+        {
+            bool connected = (_networkManager.client != null && _networkManager.client.connection != null && _networkManager.client.connection.connectionId != -1);
+
+            if (_networkManager.IsClientConnected() && !NetworkServer.active && _networkManager.matchMaker == null)
+            {
+                if (connected)
+                {
+                    LoadingScreen.Complete();
+                    _menuManager.HideMenu();
+                    _connecting = false;
+                }
+            }
+        }
+        
     }
 
     public void CancelClient()

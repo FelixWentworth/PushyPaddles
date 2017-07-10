@@ -10,7 +10,7 @@ public class LoadingScreen : UIScreen
 
     private Action _cancelAction;
 
-    void Start()
+    void Awake()
     {
         Hide();
     }   

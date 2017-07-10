@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
+﻿using System.Linq;
 using UnityEngine;
 
 public class Curriculum : MonoBehaviour {
@@ -17,21 +14,21 @@ public class Curriculum : MonoBehaviour {
     [SerializeField]
     private string _fileName;
 
-    private List<CurriculumChallenge> _challenges = new List<CurriculumChallenge>();
+    private CurriculumChallenges _challenges;
 
     public CurriculumChallenge GetNewChallenge(int level)
     {
-        if (_challenges.Count == 0)
+        if (_challenges == null || _challenges.Items.Length == 0)
         {
             GetChallengeData();
         }
 
-        if (_challenges.Count == 0)
+        if (_challenges.Items.Length == 0)
         {
             return null;
         }
 
-        var challenges = _challenges.Where(c => c.Level == level).ToList();
+        var challenges = _challenges.Items.Where(c => c.Level == level).ToList();
         var rand = Random.Range(0, challenges.Count());
 
         return challenges[rand];
@@ -45,7 +42,7 @@ public class Curriculum : MonoBehaviour {
             return;
         }
 
-        _challenges = JsonConvert.DeserializeObject<List<CurriculumChallenge>>(data.text);
+        _challenges = JsonUtility.FromJson<CurriculumChallenges>(data.text);
     }
 
 }

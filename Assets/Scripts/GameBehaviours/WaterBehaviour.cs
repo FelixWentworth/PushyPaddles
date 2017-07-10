@@ -106,6 +106,13 @@ public class WaterBehaviour : NetworkBehaviour
         }
     }
 
+    [Command]
+    public void CmdPaddleUsed(int playerId)
+    {
+        var player = _gameManager.GetPlayer(playerId);
+        PaddleUsed(player);
+    }
+
     // Only allow the server to run this as to avoid players exploiting
     [Server]
     public void PaddleUsed(Player player)

@@ -131,9 +131,6 @@ public class LevelLayout : NetworkBehaviour {
         // Block the central path, but make sure there is still a route through
         GeneratedLevelLayout[centerX - rnd, centerZ] = "x";
         GeneratedLevelLayout[centerX - opp, centerZ] = "+";
-
-
-        Debug.Log(GetArrayString());
     }
 
     public string GetArrayString()

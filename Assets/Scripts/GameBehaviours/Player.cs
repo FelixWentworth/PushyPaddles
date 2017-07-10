@@ -281,7 +281,10 @@ public class Player : MovingObject
         {
             _usePaddle = false;
             GetComponentInChildren<ParticleSystem>().Play();
-            GameObject.Find("Water").GetComponent<WaterBehaviour>().PaddleUsed(this);
+            if (isLocalPlayer)
+            {
+                GameObject.Find("Water").GetComponent<WaterBehaviour>().CmdPaddleUsed(this.PlayerID);
+            }
         }
         if (_playerModel != _currentModel)
         {
