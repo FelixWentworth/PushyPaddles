@@ -5,7 +5,6 @@ using UnityEngine.Networking;
 
 public class ObstacleGeneration : LevelLayout
 {
-    public GameObject[] RockGameObjects;
 
     public override void Setup<T>(int numObstacles, T info)
     {
@@ -42,32 +41,11 @@ public class ObstacleGeneration : LevelLayout
                 x = Random.Range(0, GeneratedLevelLayout.GetLength(0));
                 z = Random.Range(0, GeneratedLevelLayout.GetLength(1));
 
-            } while (GeneratedLevelLayout[x, z] != 'c');
+            } while (GeneratedLevelLayout[x, z] != "c");
 
             // Mark the position as used
-            GeneratedLevelLayout[x, z] = 'x';
-
-            var xPos = MinX + x;
-            var zPos = MinZ + z;
-
-            var location = new Vector3(xPos, -0.5f, zPos);
-            // Create the object
-            CreateObstacle(location, ObstacleParent.transform);
+            GeneratedLevelLayout[x, z] = "x";
         }
-    }
-
-    [Server]
-    private void CreateObstacle(Vector3 position, Transform parent)
-    {
-        var rockNumber = Random.Range(0, RockGameObjects.Length);
-        var yRotation = Random.Range(0, 4) * 90f;
-
-        var go = Instantiate(RockGameObjects[rockNumber], position, Quaternion.identity);
-
-        go.transform.SetParent(parent, false);
-        go.transform.eulerAngles = new Vector3(0f, yRotation, 0f);
-
-
-        NetworkServer.Spawn(go);
+        GenerateObstacles();
     }
 }

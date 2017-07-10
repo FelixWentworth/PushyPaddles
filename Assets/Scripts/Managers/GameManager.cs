@@ -135,6 +135,8 @@ public class GameManager : NetworkBehaviour
             
         }
 
+        PauseGame();
+
         // Destroy player game object
         DestroyImmediate(player.gameObject);
 
@@ -146,6 +148,10 @@ public class GameManager : NetworkBehaviour
 
     private bool AreAllPlayersReady()
     {
+        if (_players.Count != 3)
+        {
+            return false;
+        }
         foreach (var player in _players)
         {
             if (!player.IsReady)
@@ -248,7 +254,7 @@ public class GameManager : NetworkBehaviour
             default:
                 var xMultiplier = index % 2 == 0 ? 1f : -1f;
                 var zMultiplier = (index / 2) * 1.5f;
-                return new Vector3(xMultiplier, -0.72f, zMultiplier);
+                return new Vector3(xMultiplier * 4.5f, -0.72f, zMultiplier);
         }
     }
 
