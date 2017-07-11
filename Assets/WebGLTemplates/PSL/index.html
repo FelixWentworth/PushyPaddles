@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en-us">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>%UNITY_WEB_NAME%</title>
+		<link rel="stylesheet" href="TemplateData/style.css">
+		<link rel="shortcut icon" href="favicon.ico" />
+		<script src="TemplateData/UnityProgress.js"></script>
+		<script src="pslLibs/PSLClientAPI.js"></script>
+		<script src="PlayGen.WebGLProxy.js"></script>
+		<script src="PlayGen.WebGLProxy.PSL.js"></script>
+		<script src="%UNITY_WEBGL_LOADER_URL%"></script>
+		<script>
+			window.PlayGen.GameInstance = UnityLoader.instantiate("gameContainer", "%UNITY_WEBGL_BUILD_URL%", {onProgress: UnityProgress});
+		</script>
+	</head>
+	<body class="template">
+		<div class="webgl-content">
+			<div id="gameContainer" style="width: %UNITY_WIDTH%px; height: %UNITY_HEIGHT%px"></div>
+			<div class="footer">
+				<div class="webgl-logo"></div>
+				<div class="fullscreen" onclick="window.PlayGen.GameInstance.SetFullscreen(1)"></div>
+			</div>
+		</div>
+	</body>
+</html>

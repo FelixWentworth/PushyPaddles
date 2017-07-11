@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
 using UnityEngine;
@@ -28,6 +29,8 @@ public class GameManager : NetworkBehaviour
 
     private bool _generatingLevel;
 
+    private bool ready;
+
     void Start()
     {
 #if USE_PROSOCIAL_EVENTS
@@ -40,8 +43,8 @@ public class GameManager : NetworkBehaviour
     {
         if (isServer)
         {
-            NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
-            NetworkServer.RegisterHandler(MsgType.Disconnect, OnDisconnected);
+            //NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
+            //NetworkServer.RegisterHandler(MsgType.Disconnect, OnDisconnected);
 
             if (_level == null)
             {
@@ -61,6 +64,7 @@ public class GameManager : NetworkBehaviour
                 RestartGame();
             }
 
+
             // Check if the game should be started
             if (!_level.RoundStarted)
             {
@@ -76,14 +80,7 @@ public class GameManager : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.F1))
         {
-            if (isServer)
-            {
-                GameObject.Find("NetworkManager").GetComponent<NetworkManager>().StartServer();  
-            }
-            else
-            {
-                GameObject.Find("NetworkManager").GetComponent<NetworkManager>().StopClient();
-            }
+            ready = true;
         }
 #if USE_PROSOCIAL_EVENTS
         PauseScreen.SetActive(!_gamePlaying);
@@ -100,7 +97,7 @@ public class GameManager : NetworkBehaviour
     }
 
     [Server]
-    void OnConnected(NetworkMessage netMsg)
+    public void OnConnected(NetworkConnection netMsg)
     {
         if (_menu == null)
         {
@@ -110,20 +107,29 @@ public class GameManager : NetworkBehaviour
         {
             _level = GameObject.Find("LevelManager").GetComponent<LevelManager>();
         }
+
+        var connection = netMsg;
+        Debug.Log("Has connectionL " + NetworkServer.connections.Contains(connection));
+        Debug.Log("(C) Current Players: " + _players.Count);
+        //NetworkManager.singleton.OnClientConnect(connection);
+
         _menu.HideMenu();
-        JoinGame(NetworkServer.connections[NetworkServer.connections.Count - 1]);
+        JoinGame(netMsg);
     }
 
     [Server]
-    void OnDisconnected(NetworkMessage netMsg)
+    public void OnDisconnected(NetworkConnection netMsg)
     { 
-        var player = _players.Find(p => p.ConnectionId == netMsg.conn.connectionId);
+        Debug.Log("Disconnected: " + netMsg.connectionId);
+        var player = _players.Find(p => p.ConnectionId == netMsg.connectionId);
         if (player == null)
         {
             return;
         }
         // Remove player from the list
         _players.Remove(player);
+        Debug.Log("(D) Current Players: " + _players.Count);
+
 
         if (player.HoldingPlatform)
         {
@@ -141,15 +147,16 @@ public class GameManager : NetworkBehaviour
         // Destroy player game object
         DestroyImmediate(player.gameObject);
 
-        netMsg.conn.Disconnect();
+        netMsg.Disconnect();
 
-        // Todo Assign New Roles
         ChangeRoles();
 
     }
 
     private bool AreAllPlayersReady()
     {
+        if (ready)
+            return true;
         if (_players.Count != 3)
         {
             return false;
@@ -223,9 +230,9 @@ public class GameManager : NetworkBehaviour
         return _players.Count;
     }
 
-
     public void JoinGame(NetworkConnection conn)
     {
+        Debug.LogError("Connection Ready: " + conn.isReady + ", " + conn.connectionId);
         var index = _players.Count;
         if (conn != null)
         {
@@ -241,7 +248,6 @@ public class GameManager : NetworkBehaviour
             _players.Add(player);
             NetworkServer.AddPlayerForConnection(conn, player.gameObject, 0);
         }
-
     }
 
     public Vector3 GetPlayerRespawn(int index)

@@ -9,31 +9,31 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1721609873524054}
+  m_RootGameObject: {fileID: 1260455905501108}
   m_IsPrefabParent: 1
---- !u!1 &1721609873524054
+--- !u!1 &1260455905501108
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4106368236930098}
-  - component: {fileID: 114270631413667480}
-  - component: {fileID: 114442216738304306}
+  - component: {fileID: 4250888824504248}
+  - component: {fileID: 114422808277168164}
+  - component: {fileID: 114987455416771950}
   m_Layer: 0
-  m_Name: NetworkManager
+  m_Name: NetworkManager_Server
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4106368236930098
+--- !u!4 &4250888824504248
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1721609873524054}
+  m_GameObject: {fileID: 1260455905501108}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -6.84263, y: 0.98598146, z: -4.8242445}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -41,21 +41,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114270631413667480
+--- !u!114 &114422808277168164
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1721609873524054}
+  m_GameObject: {fileID: 1260455905501108}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -822479833, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Script: {fileID: -1438973116, guid: f16594f7bfc8d494a9cb35f63c1743d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_NetworkPort: 7777
+  _useNetworkManager: 1
+  Standalone: 0
+  SimulatePlatformIntegration: 0
+  _commandLine: listen 0.0.0.0:9001 players 4:4 start Explicit instanceId c367a32c-a659-4619-99ba-e8ceae087022
+--- !u!114 &114987455416771950
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1260455905501108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9c250d5bbc4eb24eaaaacf60e6a9cf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NetworkPort: 9000
   m_ServerBindToIP: 0
   m_ServerBindAddress: 
-  m_NetworkAddress: localhost
+  m_NetworkAddress: 0.0.0.0
   m_DontDestroyOnLoad: 1
   m_RunInBackground: 1
   m_ScriptCRCCheck: 1
@@ -72,8 +87,10 @@ MonoBehaviour:
   - {fileID: 1935753264462714, guid: c9dc277791fea484fb9f14807fd7dd46, type: 2}
   - {fileID: 1630714956933264, guid: a4f9c964dd45c2d46b50b3b10f07e72d, type: 2}
   - {fileID: 1869481529692194, guid: 0318a0df2262e4544ba15fb40c9657cf, type: 2}
-  m_CustomConfig: 0
-  m_MaxConnections: 4
+  - {fileID: 1064902781124798, guid: 0a241f7c4dc3da44bac60d4788d9a8d2, type: 2}
+  - {fileID: 1137053814282736, guid: de6305b2fff71ff4d9402388f9483861, type: 2}
+  m_CustomConfig: 1
+  m_MaxConnections: 8
   m_ConnectionConfig:
     m_PacketSize: 1440
     m_FragmentSize: 500
@@ -114,31 +131,16 @@ MonoBehaviour:
     m_MaxTimerTimeout: 12000
     m_MinNetSimulatorTimeout: 1
     m_MaxNetSimulatorTimeout: 12000
-  m_Channels: 
-  m_UseWebSockets: 0
+  m_Channels: 0500000000000000
+  m_UseWebSockets: 1
   m_UseSimulator: 0
   m_SimulatedLatency: 1
   m_PacketLossPercentage: 0
-  m_MaxBufferedPackets: 16
+  m_MaxBufferedPackets: 512
   m_AllowFragmentation: 1
   m_MatchHost: mm.unet.unity3d.com
   m_MatchPort: 443
   matchName: default
-  matchSize: 4
+  matchSize: 16
   isNetworkActive: 0
   matchMaker: {fileID: 0}
---- !u!114 &114442216738304306
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1721609873524054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 227461547, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  manager: {fileID: 0}
-  showGUI: 1
-  offsetX: 0
-  offsetY: 0

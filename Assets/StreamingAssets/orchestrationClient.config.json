@@ -1,0 +1,5 @@
+{
+	"LogLevel": "3",
+	"ServiceUrl": "http://localhost:49769/",
+	"ServiceUrlSuffix": "api/"
+}

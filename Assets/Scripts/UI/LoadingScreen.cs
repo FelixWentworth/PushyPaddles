@@ -21,6 +21,9 @@ public class LoadingScreen : UIScreen
         _statusText.text = message;
 
         _cancelAction = cancel;
+
+        var button = GetComponentInChildren<Button>();
+        button.gameObject.SetActive(cancel != null);
     }
 
     public void Complete()

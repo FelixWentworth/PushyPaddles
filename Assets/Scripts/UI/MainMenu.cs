@@ -12,7 +12,6 @@ public class MainMenu : MonoBehaviour
 
     [SerializeField] private bool _useDefault;
 
-    [SerializeField] private NetworkManager _networkManager;
     [SerializeField] private MenuManager _menuManager;
 
     public InputField IpAddress;
@@ -30,6 +29,11 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
+        if (PlatformSelection.ConnectionType != ConnectionType.Testing)
+        {
+            _useDefault = false;
+            _showMenu = false;
+        }
 //#if UNITY_WEBGL
 //        _networkManager.useWebSockets = true;
 //#elif UNITY_STANDALONE_WIN
@@ -39,20 +43,29 @@ public class MainMenu : MonoBehaviour
 
         if (_useDefault)
         {
-            IpAddress.text = _networkManager.networkAddress;
-            Port.text = _networkManager.networkPort.ToString();
+            IpAddress.text = NetworkManager.singleton.networkAddress;
+            Port.text = NetworkManager.singleton.networkPort.ToString();
         }
 
         if (!_showMenu)
         {
+            if (PlatformSelection.ConnectionType == ConnectionType.Testing)
+            {
 #if UNITY_STANDALONE_LINUX
-            // TODO shut down if no players after x seconds (30?)
+// TODO shut down if no players after x seconds (30?)
             _networkManager.StartServer();
             _menuManager.HideMenu();
 #elif UNITY_WEBGL
-            LoadingScreen.ShowScreen("Loading", null);
-            StartCoroutine(GetConnectionConfig());
+                LoadingScreen.ShowScreen("Loading", null);
+                StartCoroutine(GetConnectionConfig());
 #endif
+            }
+            else if (PlatformSelection.ConnectionType == ConnectionType.Client)
+            {
+                //TODO LOCALIZE
+                LoadingScreen.ShowScreen("Connecting", null);
+                _connecting = true;
+            }
         }
     }
 
@@ -78,9 +91,9 @@ public class MainMenu : MonoBehaviour
             IpAddress.text = config.Address;
             Port.text = config.Port.ToString();
 
-            _networkManager.networkAddress = config.Address;
-            _networkManager.networkPort = config.Port;
-            _networkManager.StartClient();
+            NetworkManager.singleton.networkAddress = config.Address;
+            NetworkManager.singleton.networkPort = config.Port;
+            NetworkManager.singleton.StartClient();
 
             _connecting = true;
 
@@ -90,19 +103,19 @@ public class MainMenu : MonoBehaviour
     public void Connect()
     {
 
-        _networkManager.networkAddress = IpAddress.text;
-        _networkManager.networkPort = Convert.ToInt16(Port.text);
+        NetworkManager.singleton.networkAddress = IpAddress.text;
+        NetworkManager.singleton.networkPort = Convert.ToInt16(Port.text);
 
-        _networkManager.StartClient();
+        NetworkManager.singleton.StartClient();
         _menuManager.HideMenu();
     }
 
     public void HostServer()
     {
-        _networkManager.networkAddress = IpAddress.text;
-        _networkManager.networkPort = Convert.ToInt16(Port.text);
+        NetworkManager.singleton.networkAddress = IpAddress.text;
+        NetworkManager.singleton.networkPort = Convert.ToInt16(Port.text);
 
-        _networkManager.StartServer();
+        NetworkManager.singleton.StartServer();
         _menuManager.HideMenu();
     }
 
@@ -110,10 +123,10 @@ public class MainMenu : MonoBehaviour
     {
         if (_showMenu)
         {
-            bool noConnection = (_networkManager.client == null || _networkManager.client.connection == null ||
-                                 _networkManager.client.connection.connectionId == -1);
+            bool noConnection = (NetworkManager.singleton.client == null || NetworkManager.singleton.client.connection == null ||
+                                 NetworkManager.singleton.client.connection.connectionId == -1);
 
-            if (!_networkManager.IsClientConnected() && !NetworkServer.active && _networkManager.matchMaker == null)
+            if (!NetworkManager.singleton.IsClientConnected() && !NetworkServer.active && NetworkManager.singleton.matchMaker == null)
             {
                 if (noConnection)
                 {
@@ -127,7 +140,7 @@ public class MainMenu : MonoBehaviour
                     if (!LoadingScreen.IsShowing)
                     {
                         LoadingScreen.ShowScreen(
-                            "Connecting to: " + _networkManager.networkAddress + ":" + _networkManager.networkPort,
+                            "Connecting to: " + NetworkManager.singleton.networkAddress + ":" + NetworkManager.singleton.networkPort,
                             CancelClient);
                     }
                 }
@@ -139,9 +152,9 @@ public class MainMenu : MonoBehaviour
         }
         if (LoadingScreen.IsShowing && _connecting)
         {
-            bool connected = (_networkManager.client != null && _networkManager.client.connection != null && _networkManager.client.connection.connectionId != -1);
+            bool connected = (NetworkManager.singleton.client != null && NetworkManager.singleton.client.connection != null && NetworkManager.singleton.client.connection.connectionId != -1);
 
-            if (_networkManager.IsClientConnected() && !NetworkServer.active && _networkManager.matchMaker == null)
+            if (NetworkManager.singleton.IsClientConnected() && !NetworkServer.active && NetworkManager.singleton.matchMaker == null)
             {
                 if (connected)
                 {
@@ -156,7 +169,7 @@ public class MainMenu : MonoBehaviour
 
     public void CancelClient()
     {
-        _networkManager.StopClient();
+        NetworkManager.singleton.StopClient();
     }
 
     public void QuitGame()
