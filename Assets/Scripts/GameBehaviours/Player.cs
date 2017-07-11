@@ -281,10 +281,6 @@ public class Player : MovingObject
         {
             _usePaddle = false;
             GetComponentInChildren<ParticleSystem>().Play();
-            if (isLocalPlayer)
-            {
-                GameObject.Find("Water").GetComponent<WaterBehaviour>().CmdPaddleUsed(this.PlayerID);
-            }
         }
         if (_playerModel != _currentModel)
         {
@@ -411,7 +407,9 @@ public class Player : MovingObject
     {
         // Check here if the right player as only the server knows the current roles
         if (PlayerRole == Role.Paddler)
-        { 
+        {
+            GameObject.Find("Water").GetComponent<WaterBehaviour>().PaddleUsed(this);
+
             _usePaddle = true;
         }
         GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Paddle");

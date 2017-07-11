@@ -64,7 +64,9 @@ public class GameManager : NetworkBehaviour
             // Check if the game should be started
             if (!_level.RoundStarted)
             {
-                if (AreAllPlayersReady())
+                // Set the sync var variable
+                AllPlayersReady = AreAllPlayersReady();
+                if (AllPlayersReady)
                 {
                     StartGameTimer();
                 }
