@@ -90,7 +90,7 @@ public class FloatingPlatform : MovingObject
         _pickupText.text = PickupValue;
     }
 
-    void OnCollisionEnter(Collision other)
+    void OnTriggerEnter(Collider other)
     {
         // VICTORY CONDITION
         if (_playerOnPlatform == null)
@@ -106,6 +106,11 @@ public class FloatingPlatform : MovingObject
 
             CanFloat = false;
             Water.TouchedWater(this);
+
+            if (isServer)
+            {
+                GameObject.Find("SpawnedObjects").GetComponent<CollectibleGeneration>().ResetColliders();
+            }
         }
         else if (other.gameObject.tag == "Treasure")
         {
@@ -113,6 +118,10 @@ public class FloatingPlatform : MovingObject
         }
         else if (other.gameObject.tag == "Collectible")
         {
+            
+           // other.enabled = false;
+            
+
             var operation = other.gameObject.GetComponent<MathsCollectible>().Operation;
 
 
@@ -138,7 +147,6 @@ public class FloatingPlatform : MovingObject
                 GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Pickup");
             }
 
-            other.collider.enabled = false;;
         }
     }
 

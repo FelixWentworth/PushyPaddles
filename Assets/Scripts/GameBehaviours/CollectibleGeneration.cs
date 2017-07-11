@@ -28,6 +28,10 @@ public class CollectibleGeneration : LevelLayout
         CreateLevel(curriculumInfo.RequiredOperations, "+");
         CreateLevel(curriculumInfo.ExtraOperations, "c");
 
+        // Generate the collectibles based on the level array
+        GenerateCollectibles(CollectibleGameObject);
+        GenerateObstacles();
+
         GameObject.Find("LevelManager").GetComponent<LevelManager>().Target = curriculumInfo.Target.ToString();
 
     }
@@ -59,6 +63,17 @@ public class CollectibleGeneration : LevelLayout
         {
             collider1.enabled = true;
         }
+        RpcResetColliders();
+    }
+
+    [ClientRpc]
+    private void RpcResetColliders()
+    {
+        var colliders = ObstacleParent.GetComponentsInChildren<Collider>();
+        foreach (var collider1 in colliders)
+        {
+            collider1.enabled = true;
+        }
     }
 
     [Server]
@@ -84,10 +99,6 @@ public class CollectibleGeneration : LevelLayout
 
             startDepth += (depth - z) / (challengeInfo.Length-i);
         }
-
-        // Generate the collectibles based on the level array
-        GenerateCollectibles(CollectibleGameObject);
-        GenerateObstacles();
 
     }
 
