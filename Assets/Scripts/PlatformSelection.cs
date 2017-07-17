@@ -27,12 +27,14 @@ public class PlatformSelection : MonoBehaviour {
 		_instance = this;
 		DontDestroyOnLoad(this);
 		ConnectionType = _connectionType;
-		var manager = _platformManagers.FirstOrDefault(p => p.ConnectionType == _connectionType);
-		if (manager != null && manager.NetworkManagerObj != null)
-		{
-			Instantiate(manager.NetworkManagerObj);
-		}
-		gameObject.AddComponent<AsyncConfigLoader>();
+
+        var manager = _platformManagers.FirstOrDefault(p => p.ConnectionType == _connectionType);
+        if (manager != null && manager.NetworkManagerObj != null)
+        {
+            Instantiate(manager.NetworkManagerObj);
+        }
+
+        gameObject.AddComponent<AsyncConfigLoader>();
 		switch (_connectionType)
 		{
 			case ConnectionType.Server:

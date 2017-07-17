@@ -43,8 +43,8 @@ public class GameManager : NetworkBehaviour
     {
         if (isServer)
         {
-            //NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
-            //NetworkServer.RegisterHandler(MsgType.Disconnect, OnDisconnected);
+            NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
+            NetworkServer.RegisterHandler(MsgType.Disconnect, OnDisconnected);
 
             if (_level == null)
             {
@@ -97,6 +97,12 @@ public class GameManager : NetworkBehaviour
     }
 
     [Server]
+    public void OnConnected(NetworkMessage netMsg)
+    {
+        OnConnected(netMsg.conn);
+    }
+
+    [Server]
     public void OnConnected(NetworkConnection netMsg)
     {
         if (_menu == null)
@@ -114,7 +120,13 @@ public class GameManager : NetworkBehaviour
         //NetworkManager.singleton.OnClientConnect(connection);
 
         _menu.HideMenu();
-        JoinGame(netMsg);
+        StartCoroutine(JoinGame(netMsg));
+    }
+
+    [Server]
+    public void OnDisconnected(NetworkMessage netMsg)
+    {
+        OnDisconnected(netMsg.conn);
     }
 
     [Server]
@@ -230,13 +242,17 @@ public class GameManager : NetworkBehaviour
         return _players.Count;
     }
 
-    public void JoinGame(NetworkConnection conn)
+    public IEnumerator JoinGame(NetworkConnection conn)
     {
         Debug.LogError("Connection Ready: " + conn.isReady + ", " + conn.connectionId);
+        
         var index = _players.Count;
         if (conn != null)
         {
+            Debug.Log("Gladiator ready");
+
             var playerObject = Instantiate(PlayerPrefab);
+
             playerObject.transform.position = GetPlayerRespawn(index);
 
             var player = playerObject.GetComponent<Player>();
@@ -247,6 +263,12 @@ public class GameManager : NetworkBehaviour
 
             _players.Add(player);
             NetworkServer.AddPlayerForConnection(conn, player.gameObject, 0);
+
+            while (!conn.isReady)
+            {
+                Debug.Log("Waiting for connection to be ready");
+                yield return null;
+            }
         }
     }
 

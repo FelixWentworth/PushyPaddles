@@ -72,13 +72,13 @@ MonoBehaviour:
   m_Script: {fileID: -822479833, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_NetworkPort: 9000
+  m_NetworkPort: 7777
   m_ServerBindToIP: 0
   m_ServerBindAddress: 
-  m_NetworkAddress: 0.0.0.0
+  m_NetworkAddress: localhost
   m_DontDestroyOnLoad: 1
   m_RunInBackground: 1
-  m_ScriptCRCCheck: 1
+  m_ScriptCRCCheck: 0
   m_MaxDelay: 0.01
   m_LogLevel: 2
   m_PlayerPrefab: {fileID: 0}
@@ -94,7 +94,7 @@ MonoBehaviour:
   - {fileID: 1869481529692194, guid: 0318a0df2262e4544ba15fb40c9657cf, type: 2}
   - {fileID: 1064902781124798, guid: 0a241f7c4dc3da44bac60d4788d9a8d2, type: 2}
   - {fileID: 1137053814282736, guid: de6305b2fff71ff4d9402388f9483861, type: 2}
-  m_CustomConfig: 1
+  m_CustomConfig: 0
   m_MaxConnections: 8
   m_ConnectionConfig:
     m_PacketSize: 1440
@@ -136,7 +136,7 @@ MonoBehaviour:
     m_MaxTimerTimeout: 12000
     m_MinNetSimulatorTimeout: 1
     m_MaxNetSimulatorTimeout: 12000
-  m_Channels: 0500000000000000
+  m_Channels: 0500000002000000
   m_UseWebSockets: 1
   m_UseSimulator: 0
   m_SimulatedLatency: 1
@@ -146,6 +146,6 @@ MonoBehaviour:
   m_MatchHost: mm.unet.unity3d.com
   m_MatchPort: 443
   matchName: default
-  matchSize: 16
+  matchSize: 8
   isNetworkActive: 0
   matchMaker: {fileID: 0}

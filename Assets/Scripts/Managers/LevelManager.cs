@@ -28,6 +28,9 @@ public class LevelManager : NetworkBehaviour
 
     public bool TimerPaused { get; private set; }
 
+    private GameManager _gameManager;
+    private Player _localPlayer;
+
     void Start()
     {
         TotalUI.gameObject.SetActive(false);
@@ -36,11 +39,7 @@ public class LevelManager : NetworkBehaviour
         {
             PlayerText.text = Localization.Get("UI_GAME_SERVER");
         }
-        else
-        {
-            PlayerText.text = Localization.Get("UI_GAME_PLAYER") + " " +
-                              (GameObject.Find("GameManager").GetComponent<GameManager>().GetLocalPlayer().PlayerID + 1); 
-        }
+        _localPlayer = null;
     }
 
     [Server]
@@ -83,6 +82,21 @@ public class LevelManager : NetworkBehaviour
             if (RoundStarted)
             {
                 UpdateTimer(Time.deltaTime);
+            }
+        }
+        if (!isServer)
+        {
+            if (_gameManager == null)
+            {
+                _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+            }
+            else if (_localPlayer == null)
+            {
+                _localPlayer = _gameManager.GetLocalPlayer();
+            }
+            else
+            {
+                PlayerText.text = Localization.Get("UI_GAME_PLAYER") + " " + _localPlayer.PlayerID + 1;
             }
         }
     }
