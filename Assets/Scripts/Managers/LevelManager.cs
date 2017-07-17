@@ -34,9 +34,9 @@ public class LevelManager : NetworkBehaviour
     void Start()
     {
         TotalUI.gameObject.SetActive(false);
-        ResetRound();
         if (isServer)
         {
+            ResetRound();
             PlayerText.text = Localization.Get("UI_GAME_SERVER");
         }
         _localPlayer = null;
@@ -96,7 +96,7 @@ public class LevelManager : NetworkBehaviour
             }
             else
             {
-                PlayerText.text = Localization.Get("UI_GAME_PLAYER") + " " + _localPlayer.PlayerID + 1;
+                PlayerText.text = Localization.Get("UI_GAME_PLAYER") + " " + (_localPlayer.PlayerID + 1);
             }
         }
     }

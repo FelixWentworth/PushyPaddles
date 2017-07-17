@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
-
+using PlayGen.Orchestrator.Common;
+using PlayGen.Orchestrator.Contracts;
 using PlayGen.Orchestratror.Unity.Client;
 using PlayGen.Orchestratror.Unity.Server;
 using PlayGen.Unity.AsyncUtilities;
@@ -9,24 +10,27 @@ using PlayGen.Unity.AsyncUtilities;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PlatformSelection : MonoBehaviour {
-	[SerializeField]
-	private ConnectionType _connectionType;
-	[SerializeField]
-	private PlatformManager[] _platformManagers;
+public class PlatformSelection : MonoBehaviour
+{
+    [SerializeField] private ConnectionType _connectionType;
+    [SerializeField] private PlatformManager[] _platformManagers;
 
-	private static PlatformSelection _instance;
-	public static ConnectionType ConnectionType { get; private set; }
+    private static PlatformSelection _instance;
+    public static ConnectionType ConnectionType { get; private set; }
 
-	void Awake () {
-		if (_instance)
-		{
-			Destroy(gameObject);
-			return;
-		}
-		_instance = this;
-		DontDestroyOnLoad(this);
-		ConnectionType = _connectionType;
+    private OrchestratedGameServer _orchestratedServer;
+    private OrchestrationClient _orchestrationClient;
+
+    void Awake()
+    {
+        if (_instance)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        _instance = this;
+        DontDestroyOnLoad(this);
+        ConnectionType = _connectionType;
 
         var manager = _platformManagers.FirstOrDefault(p => p.ConnectionType == _connectionType);
         if (manager != null && manager.NetworkManagerObj != null)
@@ -34,42 +38,37 @@ public class PlatformSelection : MonoBehaviour {
             Instantiate(manager.NetworkManagerObj);
         }
 
-        gameObject.AddComponent<AsyncConfigLoader>();
-		switch (_connectionType)
-		{
-			case ConnectionType.Server:
-				StartCoroutine(StartServer());
-				break;
-			case ConnectionType.Client:
-				StartCoroutine(StartClient());
-				break;
-			case ConnectionType.Testing:
-				break;
-		}
-	}
+        switch (_connectionType)
+        {
+            case ConnectionType.Server:
+                _orchestratedServer = FindObjectOfType<OrchestratedGameServer>();
+                _orchestratedServer.ConfigValidated += ConfigValidated;
+                _orchestratedServer.RegisteredWithOrchestrator += RegisteredWithOrchestrator;
+                break;
+            case ConnectionType.Client:
+                _orchestrationClient = FindObjectOfType<OrchestrationClient>();
+                _orchestrationClient.EndpointLocated += StartClient;
+                break;
+            case ConnectionType.Testing:
+                break;
+        }
+    }
 
-	private IEnumerator StartServer()
-	{
-		while (!NetworkManager.singleton.isNetworkActive)
-		{
-			yield return new WaitForSeconds(1);
-            OrchestratedGameServer.StartServer();
-			yield return new WaitForSeconds(1);
-		}
-	}
+    private void ConfigValidated()
+    {
+        _orchestratedServer.StartListening();
+    }
 
-	private IEnumerator StartClient()
-	{
-		var started = false;
-		while (!started)
-		{
-			started = OrchestrationClient.StartClient();
-			yield return new WaitForSeconds(1);
-		}
-	}
+    private void RegisteredWithOrchestrator(GameRegistrationResponse obj)
+    {
+        Debug.Log(obj.language);
+        Debug.Log(obj.scenario);
+        Debug.Log(obj.maxPlayers);
+        Debug.Log(obj.difficulty);
+    }
 
-	private void OnError(Exception obj)
-	{
-		Debug.Log(obj.Message);
-	}
+    private void StartClient(Endpoint endpoint)
+    {
+        _orchestrationClient.ConnectNetworkManager();
+    }
 }

@@ -262,6 +262,7 @@ public class GameManager : NetworkBehaviour
             player.ConnectionId = conn.connectionId;
 
             _players.Add(player);
+
             NetworkServer.AddPlayerForConnection(conn, player.gameObject, 0);
 
             while (!conn.isReady)
