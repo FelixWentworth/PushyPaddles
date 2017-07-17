@@ -9,6 +9,7 @@ public class LevelManager : NetworkBehaviour
     public Text TimeRemainingText;
     public Text PlayerText;
     public Text TargetText;
+    public Text CurrentText;
         
     public GameTotal TotalUI;
 
@@ -18,6 +19,7 @@ public class LevelManager : NetworkBehaviour
     [SyncVar] public bool RoundStarted;
 
     [SyncVar] public string Target = "";
+    [SyncVar] public string Current = "";
 
     public bool IsGameOver
     {
@@ -122,7 +124,7 @@ public class LevelManager : NetworkBehaviour
         TimeRemainingText.text = minute + ":" + second.ToString("00");
 
         TargetText.text = Target != "" ? string.Format(Localization.Get("FORMATTED_UI_GAME_TARGET"), Target): "";
-
+        CurrentText.text = Current != "" ? string.Format(Localization.Get("FORMATTED_UI_GAME_CURRENT"), Current): "";
     }
 
     [Server]

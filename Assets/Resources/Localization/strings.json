@@ -47,4 +47,5 @@
 {"Key":"FORMATTED_UI_END_ROUNDS_COMPLETED","en-gb":"Rounds Completed: {0}","it":"XXXX","es":"XXXX","el":"XXXX"},
 {"Key":"FORMATTED_UI_GAME_ROUND","en-gb":"Round: {0}","it":"XXXX","es":"XXXX","el":"XXXX"},
 {"Key":"FORMATTED_UI_GAME_PLAYER","en-gb":"Player {0}","it":"XXXX","es":"XXXX","el":"XXXX"},
-{"Key":"FORMATTED_UI_GAME_TARGET","en-gb":"Target: {0}","it":"XXXX","es":"XXXX","el":"XXXX"}]
+{"Key":"FORMATTED_UI_GAME_TARGET","en-gb":"Target: {0}","it":"XXXX","es":"XXXX","el":"XXXX"},
+{"Key":"FORMATTED_UI_GAME_CURRENT","en-gb":"Current Total: {0}","it":"XXXX","es":"XXXX","el":"XXXX"}]

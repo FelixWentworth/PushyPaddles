@@ -87,7 +87,10 @@ public class FloatingPlatform : MovingObject
         }
         // Not on water
         _mesh.enabled = CanPickUp;
-        _pickupText.text = PickupValue;
+        if (_levelManager != null)
+        {
+            _levelManager.Current = PickupValue;
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -236,7 +239,7 @@ public class FloatingPlatform : MovingObject
             return false;
         }
         var distance = Vector3.Distance(other.transform.position, transform.position);
-        return distance < 1.5f;
+        return distance < 2.5f;
 
     }
 

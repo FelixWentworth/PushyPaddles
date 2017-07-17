@@ -244,13 +244,9 @@ public class GameManager : NetworkBehaviour
 
     public IEnumerator JoinGame(NetworkConnection conn)
     {
-        Debug.LogError("Connection Ready: " + conn.isReady + ", " + conn.connectionId);
-        
         var index = _players.Count;
         if (conn != null)
         {
-            Debug.Log("Gladiator ready");
-
             var playerObject = Instantiate(PlayerPrefab);
 
             playerObject.transform.position = GetPlayerRespawn(index);
