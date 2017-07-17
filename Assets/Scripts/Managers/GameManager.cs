@@ -75,7 +75,19 @@ public class GameManager : NetworkBehaviour
                     StartGameTimer();
                 }
             }
-
+            else
+            {
+                AllPlayersReady = _players.Count >= 3;
+                if (!AllPlayersReady)
+                {
+                    PauseGame();
+                }
+                else
+                {
+                    ResumeGame();
+                }
+            }
+            
         }
 
         if (Input.GetKeyDown(KeyCode.F1))
@@ -153,9 +165,7 @@ public class GameManager : NetworkBehaviour
             GameObject.FindGameObjectWithTag("Platform").GetComponent<FloatingPlatform>().Respawn();
             
         }
-
-        PauseGame();
-
+        
         // Destroy player game object
         DestroyImmediate(player.gameObject);
 
