@@ -104,7 +104,6 @@ public class InstructionManager : MonoBehaviour
     public void ShowMoveToPlatformIndicator()
     {
         DisableMoveInstruction();
-        DisableInteractInstruction();
         DisablePlaceInstruction();
 
         if (!_indicatorPlatform.activeSelf)

@@ -239,7 +239,7 @@ public class FloatingPlatform : MovingObject
             return false;
         }
         var distance = Vector3.Distance(other.transform.position, transform.position);
-        return distance < 1.5f;
+        return distance < 2f;
 
     }
 
@@ -256,8 +256,8 @@ public class FloatingPlatform : MovingObject
         var leftPlacement = GameObject.FindWithTag("PlatformPlaceLeft");
         var rightPlacement = GameObject.FindWithTag("PlatformPlaceRight");
 
-        return Vector3.Distance(leftPlacement.transform.position, transform.position) < 1.0f ||
-                      Vector3.Distance(rightPlacement.transform.position, transform.position) < 1.0f;
+        return Vector3.Distance(leftPlacement.transform.position, transform.position) < 1.5f ||
+                      Vector3.Distance(rightPlacement.transform.position, transform.position) < 1.5f;
 
     }
 

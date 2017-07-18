@@ -213,18 +213,23 @@ public class Player : MovingObject
                 {
                     _instructionManager.ShowMovement(PlayerRole, transform.position.x);
                 }
-                else if (!HoldingPlatform && !_floatingPlatform.CanPickUp)
+                else if (!HoldingPlatform && _floatingPlatform.CanPickUp && IsNextToGetPlatform())
                 {
                     _instructionManager.ShowMoveToPlatformIndicator();
-                }
-                else if (!HoldingPlatform && _floatingPlatform.InRange(gameObject))
-                {
-                    _instructionManager.ShowInteractIndicator();
+                    if (_floatingPlatform.InRange(gameObject))
+                    {
+                        _instructionManager.ShowInteractIndicator();
+                    }
+                    else
+                    {
+                        _instructionManager.DisableInteractInstruction();
+                    }
                 }
                 else if (HoldingPlatform)
                 {
                     _instructionManager.ShowMoveToPlaceIndicator(PlayerRole, transform.position.x);
-                    if (_floatingPlatform.CanBePlacedOnLand() || _floatingPlatform.CanBePlacedInWater())
+                    if ((_floatingPlatform.CanBePlacedOnLand() && PlayerRole == Role.Paddler) ||
+                        (_floatingPlatform.CanBePlacedInWater() && PlayerRole == Role.Floater)) 
                     {
                         _instructionManager.ShowInteractIndicator();
                     }
@@ -244,6 +249,32 @@ public class Player : MovingObject
             }
         }
         
+    }
+
+    /// <summary>
+    /// Check if the current player is next to grab the platfomr
+    /// </summary>
+    /// <returns>current player is next</returns>
+    private bool IsNextToGetPlatform()
+    {
+        if (PlayerRole == Role.Floater && _raft.transform.position.z <= 1.0f)
+        {
+            return true;
+        }
+        else if (PlayerRole == Role.Paddler && _raft.transform.position.z > 1.0f)
+        {
+            if (transform.position.x < 0 && _raft.transform.position.x < 0)
+            {
+                // the player and raft are on the left
+                return true;
+            }
+            else if (transform.position.x > 0 && _raft.transform.position.x > 0)
+            {
+                // the player and raft are on the right
+                return true;
+            }
+        }
+        return false;
     }
 
     private void Move(GameObject go, float x, float z)
@@ -370,7 +401,7 @@ public class Player : MovingObject
                     CmdDropPlatform(_raft);
                     CmdPlacePlatformInWater(_raft, gameObject);
                 }
-                else if (_floatingPlatform.CanBePlacedOnLand() )
+                else if (_floatingPlatform.CanBePlacedOnLand() && PlayerRole == Role.Paddler)
                 {
                     // Drop Platform
                     CmdDropPlatform(_raft);
