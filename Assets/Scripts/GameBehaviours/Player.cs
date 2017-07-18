@@ -207,40 +207,45 @@ public class Player : MovingObject
         }
         if (isLocalPlayer)
         {
-            if (!_floatingPlatform.OnWater)
-            { 
-                if (!_hasMoved)
+            ShowInstructions();
+        }
+        
+    }
+
+    /// <summary>
+    /// Determine which instructions should be shown to the player
+    /// </summary>
+    private void ShowInstructions()
+    {
+        if (!_floatingPlatform.OnWater)
+        {
+            if (!_hasMoved)
+            {
+                _instructionManager.ShowMovement(PlayerRole, transform.position.x);
+            }
+            if (!HoldingPlatform && _floatingPlatform.CanPickUp && IsNextToGetPlatform())
+            {
+                _instructionManager.ShowMoveToPlatformIndicator();
+                if (_floatingPlatform.InRange(gameObject))
                 {
-                    _instructionManager.ShowMovement(PlayerRole, transform.position.x);
-                }
-                else if (!HoldingPlatform && _floatingPlatform.CanPickUp && IsNextToGetPlatform())
-                {
-                    _instructionManager.ShowMoveToPlatformIndicator();
-                    if (_floatingPlatform.InRange(gameObject))
-                    {
-                        _instructionManager.ShowInteractIndicator();
-                    }
-                    else
-                    {
-                        _instructionManager.DisableInteractInstruction();
-                    }
-                }
-                else if (HoldingPlatform)
-                {
-                    _instructionManager.ShowMoveToPlaceIndicator(PlayerRole, transform.position.x);
-                    if ((_floatingPlatform.CanBePlacedOnLand() && PlayerRole == Role.Paddler) ||
-                        (_floatingPlatform.CanBePlacedInWater() && PlayerRole == Role.Floater)) 
-                    {
-                        _instructionManager.ShowInteractIndicator();
-                    }
-                    else
-                    {
-                        _instructionManager.DisableInteractInstruction();
-                    }
+                    _instructionManager.ShowInteractIndicator();
                 }
                 else
                 {
-                    _instructionManager.DisableInsctructions();
+                    _instructionManager.DisableInteractInstruction();
+                }
+            }
+            else if (HoldingPlatform)
+            {
+                _instructionManager.ShowMoveToPlaceIndicator(PlayerRole, transform.position.x);
+                if ((_floatingPlatform.CanBePlacedOnLand() && PlayerRole == Role.Paddler) ||
+                    (_floatingPlatform.CanBePlacedInWater() && PlayerRole == Role.Floater))
+                {
+                    _instructionManager.ShowInteractIndicator();
+                }
+                else
+                {
+                    _instructionManager.DisableInteractInstruction();
                 }
             }
             else
@@ -248,7 +253,10 @@ public class Player : MovingObject
                 _instructionManager.DisableInsctructions();
             }
         }
-        
+        else
+        {
+            _instructionManager.DisableInsctructions();
+        }
     }
 
     /// <summary>
