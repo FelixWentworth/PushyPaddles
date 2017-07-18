@@ -18,6 +18,7 @@ public class Player : MovingObject
 
     public GameObject Paddle;
     public GameObject Platform;
+    public GameObject PaddlePrompt;
 
     public enum Role
     {
@@ -72,8 +73,10 @@ public class Player : MovingObject
 
     private InstructionManager _instructionManager;
     private bool _hasMoved;
+    private bool _usedPaddle;
     private GameObject _raft;
     private FloatingPlatform _floatingPlatform;
+    
 
     public override void Start()
     {
@@ -93,6 +96,9 @@ public class Player : MovingObject
 
         SetModel();
         _currentModel = _playerModel;
+
+        PaddlePrompt.SetActive(false);
+
         if (!isServer && isLocalPlayer)
         {
             GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowCharacterSelect();
@@ -223,6 +229,10 @@ public class Player : MovingObject
             {
                 _instructionManager.ShowMovement(PlayerRole, transform.position.x);
             }
+            else
+            {
+                _instructionManager.DisableMoveInstruction();
+            }
             if (!HoldingPlatform && _floatingPlatform.CanPickUp && IsNextToGetPlatform())
             {
                 _instructionManager.ShowMoveToPlatformIndicator();
@@ -248,7 +258,7 @@ public class Player : MovingObject
                     _instructionManager.DisableInteractInstruction();
                 }
             }
-            else
+            else if (_hasMoved)
             {
                 _instructionManager.DisableInsctructions();
             }
@@ -256,6 +266,12 @@ public class Player : MovingObject
         else
         {
             _instructionManager.DisableInsctructions();
+            if (PlayerRole == Role.Paddler && !PaddlePrompt.activeSelf && !_usedPaddle)
+            {
+                var multiplier = transform.position.x < 0 ? 1f : -1f;
+                PaddlePrompt.transform.localScale = new Vector3(PaddlePrompt.transform.localScale.x, PaddlePrompt.transform.localScale.y, PaddlePrompt.transform.localScale.z * multiplier);
+                PaddlePrompt.SetActive(true);
+            }
         }
     }
 
@@ -372,6 +388,11 @@ public class Player : MovingObject
 
         if (_usePaddle)
         {
+            if (PaddlePrompt.activeSelf)
+            {
+                _usedPaddle = true;
+                PaddlePrompt.SetActive(false);
+            }
             _usePaddle = false;
             GetComponentInChildren<ParticleSystem>().Play();
         }
