@@ -19,7 +19,6 @@ public class MenuManager : NetworkBehaviour
     public GameObject TitleScreen;
     public GameObject CharacterSelectionScreen;
     public GameObject LevelInfo;
-    public GameObject HowToPlayScreen;
     public GameObject WaitingForPlayersPrompt;
 
     void Start()
@@ -96,7 +95,6 @@ public class MenuManager : NetworkBehaviour
         GameOverScreen.Hide();
 
         CharacterSelectionScreen.SetActive(false);
-        HowToPlayScreen.SetActive(false);
         WaitingForPlayersPrompt.gameObject.SetActive(false);
 
         LevelInfo.SetActive(true);
@@ -111,17 +109,6 @@ public class MenuManager : NetworkBehaviour
     {
         _showMenu = false;
         _hideMenu = true;
-    }
-
-    public void ShowHowToPlay()
-    {
-        HowToPlayScreen.SetActive(true);
-    }
-
-    public void HideHowToPlay()
-    {
-        HowToPlayScreen.SetActive(false);
-        ShowCharacterSelect();
     }
 
     /// <summary>
