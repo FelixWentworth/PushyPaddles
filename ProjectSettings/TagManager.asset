@@ -10,6 +10,8 @@ TagManager:
   - Treasure
   - PlatformStart
   - Collectible
+  - PlatformPlaceLeft
+  - PlatformPlaceRight
   layers:
   - Default
   - TransparentFX

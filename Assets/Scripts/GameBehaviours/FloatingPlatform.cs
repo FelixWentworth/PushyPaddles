@@ -239,7 +239,7 @@ public class FloatingPlatform : MovingObject
             return false;
         }
         var distance = Vector3.Distance(other.transform.position, transform.position);
-        return distance < 2.5f;
+        return distance < 1.5f;
 
     }
 
@@ -248,6 +248,17 @@ public class FloatingPlatform : MovingObject
         // Get Start Point
         var start = GameObject.Find("PlatformStartPoint");
 
-        return Vector3.Distance(start.transform.position, transform.position) < 1.5f;
+        return Vector3.Distance(start.transform.position, transform.position) < 2.0f;
     }
+
+    public bool CanBePlacedOnLand()
+    {
+        var leftPlacement = GameObject.FindWithTag("PlatformPlaceLeft");
+        var rightPlacement = GameObject.FindWithTag("PlatformPlaceRight");
+
+        return Vector3.Distance(leftPlacement.transform.position, transform.position) < 1.0f ||
+                      Vector3.Distance(rightPlacement.transform.position, transform.position) < 1.0f;
+
+    }
+
 }

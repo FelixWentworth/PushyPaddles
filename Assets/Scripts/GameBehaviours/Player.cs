@@ -70,6 +70,11 @@ public class Player : MovingObject
 
     private GameManager _gameManager;
 
+    private InstructionManager _instructionManager;
+    private bool _hasMoved;
+    private GameObject _raft;
+    private FloatingPlatform _floatingPlatform;
+
     public override void Start()
     {
         CanFloat = false;
@@ -116,6 +121,7 @@ public class Player : MovingObject
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
+       
         if (!_gameManager.DistributingRewards)
         {
             if (isLocalPlayer)
@@ -142,25 +148,24 @@ public class Player : MovingObject
                         // when the player has full control, they should be affected by gravity
                         _rigidbody.useGravity = true;
                     }
-                    var x = Input.GetAxis("Horizontal");
-                    //var z = Input.GetAxis("Vertical");
 
-                    if (x != 0 )
+                    var x = Input.GetAxis("Horizontal");
+                    var z = Input.GetAxis("Vertical");
+
+                    if (PlayerRole == Role.Floater && x != 0)
                     {
-                        // Move Player Command
-                        if (PlayerRole == Role.Floater)
-                        {
-                            // Move Left/Right
-                            Move(gameObject, x, 0);
-                        }
-                        else
-                        {
-                            // Move Up/Down
-                            Move(gameObject, 0, x);
-                        }
+                        Move(gameObject, x, 0);
                         if (_animationState != AnimationState.WALKING)
                         {
-                            CmdChangeState((int) AnimationState.WALKING);
+                            CmdChangeState((int)AnimationState.WALKING);
+                        }
+                    }
+                    else if (PlayerRole == Role.Paddler && z != 0)
+                    {
+                        Move(gameObject, 0, z);
+                        if (_animationState != AnimationState.WALKING)
+                        {
+                            CmdChangeState((int)AnimationState.WALKING);
                         }
                     }
                     else
@@ -191,10 +196,60 @@ public class Player : MovingObject
             RestartGame();
         }
 
-    }
+        if (_raft == null)
+        {
+            _raft = GameObject.FindGameObjectWithTag("Platform");
+            _floatingPlatform = _raft.GetComponent<FloatingPlatform>();
+        }
+        if (_instructionManager == null)
+        {
+            _instructionManager = GameObject.Find("PlayerInstructionManager").GetComponent<InstructionManager>();
+        }
+        if (isLocalPlayer)
+        {
+            if (!_floatingPlatform.OnWater)
+            { 
+                if (!_hasMoved)
+                {
+                    _instructionManager.ShowMovement(PlayerRole, transform.position.x);
+                }
+                else if (!HoldingPlatform && !_floatingPlatform.CanPickUp)
+                {
+                    _instructionManager.ShowMoveToPlatformIndicator();
+                }
+                else if (!HoldingPlatform && _floatingPlatform.InRange(gameObject))
+                {
+                    _instructionManager.ShowInteractIndicator();
+                }
+                else if (HoldingPlatform)
+                {
+                    _instructionManager.ShowMoveToPlaceIndicator(PlayerRole, transform.position.x);
+                    if (_floatingPlatform.CanBePlacedOnLand() || _floatingPlatform.CanBePlacedInWater())
+                    {
+                        _instructionManager.ShowInteractIndicator();
+                    }
+                    else
+                    {
+                        _instructionManager.DisableInteractInstruction();
+                    }
+                }
+                else
+                {
+                    _instructionManager.DisableInsctructions();
+                }
+            }
+            else
+            {
+                _instructionManager.DisableInsctructions();
+            }
+        }
         
+    }
+
     private void Move(GameObject go, float x, float z)
     {
+        _hasMoved = true;
+
         x *= MovementSpeed * SpeedModifier * DirectionModifier;
         z *= MovementSpeed * SpeedModifier * DirectionModifier;
 
@@ -290,15 +345,15 @@ public class Player : MovingObject
         /////////////////////////
         // Local Player Controls
         /////////////////////////
+
+        
         if (isLocalPlayer && !Respawning && Input.GetKeyDown(KeyCode.Space))
         {
-            var platform = GameObject.FindGameObjectWithTag("Platform");
-            var fp = platform.GetComponent<FloatingPlatform>();
 
-            if (fp.CanPickUp && !fp.OnWater && fp.InRange(gameObject) && !HoldingPlatform)
+            if (_floatingPlatform.CanPickUp && !_floatingPlatform.OnWater && _floatingPlatform.InRange(gameObject) && !HoldingPlatform)
             {
                 // Pickup Plaftorm
-                CmdPickupPlatform(platform);
+                CmdPickupPlatform(_raft);
                 return;
             }
             
@@ -309,16 +364,16 @@ public class Player : MovingObject
 
             if (HoldingPlatform)
             {
-                if (fp.CanBePlacedInWater() && PlayerRole == Role.Floater)
+                if (_floatingPlatform.CanBePlacedInWater() && PlayerRole == Role.Floater)
                 {
                     // Place in water
-                    CmdDropPlatform(platform);
-                    CmdPlacePlatformInWater(platform, gameObject);
+                    CmdDropPlatform(_raft);
+                    CmdPlacePlatformInWater(_raft, gameObject);
                 }
-                else
+                else if (_floatingPlatform.CanBePlacedOnLand() )
                 {
                     // Drop Platform
-                    CmdDropPlatform(platform);
+                    CmdDropPlatform(_raft);
                 }
             }
             else
