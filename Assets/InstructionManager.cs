@@ -64,7 +64,6 @@ public class InstructionManager : MonoBehaviour
     /// <param name="xPos">Current x position of player object</param>
     public void ShowMovement(Player.Role role, float xPos)
     {
-        DisablePlatformInstruction();
         DisablePlaceInstruction();
         DisableInteractInstruction();
 
@@ -103,7 +102,6 @@ public class InstructionManager : MonoBehaviour
     /// </summary>
     public void ShowMoveToPlatformIndicator()
     {
-        DisableMoveInstruction();
         DisablePlaceInstruction();
 
         if (!_indicatorPlatform.activeSelf)
@@ -153,8 +151,6 @@ public class InstructionManager : MonoBehaviour
     /// </summary>
     public void ShowInteractIndicator()
     {
-        DisableMoveInstruction();
-
         if (!_interactPress.activeSelf)
         {
             _interactPress.SetActive(true);
