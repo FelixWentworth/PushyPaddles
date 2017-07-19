@@ -26,6 +26,11 @@ public class LevelManager : NetworkBehaviour
         get { return _timeRemaining <= 0f; }
     }
 
+    public int SecondsTaken
+    {
+        get { return Mathf.RoundToInt(_timeLimit - _timeRemaining); }
+    }
+
     private float _timeLimit = 600;
 
     public bool TimerPaused { get; private set; }

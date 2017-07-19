@@ -61,6 +61,10 @@ public class FloatingPlatform : MovingObject
         _playerOnPlatform = null;
         CanPickUp = true;
         OnWater = false;
+        if (isServer)
+        {
+            LRSManager.Instance.NewAttempt();
+        }
     }
 
     public void PlaceOnWater(Player player)
@@ -172,6 +176,11 @@ public class FloatingPlatform : MovingObject
             RpcDisableTotal();
         }
 
+        if (isServer)
+        {
+            LRSManager.Instance.ChestReached();
+        }
+
         if (PickupValue == levelManager.Target)
         {
             var player = _playerOnPlatform.GetComponent<Player>();
@@ -190,6 +199,8 @@ public class FloatingPlatform : MovingObject
 
             CanFloat = false;
             Water.TouchedWater(this);
+
+
 
         }
         else

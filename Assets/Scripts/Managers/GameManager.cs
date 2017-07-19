@@ -61,8 +61,10 @@ public class GameManager : NetworkBehaviour
             if (_level.IsGameOver)
             {
                 _menu.ShowGameOver();
+                LRSManager.Instance.GameCompleted(_level.SecondsTaken);
                 RestartGame();
             }
+            
 
 
             // Check if the game should be started
@@ -112,6 +114,8 @@ public class GameManager : NetworkBehaviour
     public void OnConnected(NetworkMessage netMsg)
     {
         OnConnected(netMsg.conn);
+        // TODO set player / match ids
+        LRSManager.Instance.OnConnect("", "");
     }
 
     [Server]
@@ -415,6 +419,8 @@ public class GameManager : NetworkBehaviour
                 var challenge = _curriculum.GetNewChallenge(1);
                 GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
             }
+
+            LRSManager.Instance.NewRound(_level.SecondsTaken);
 
             ChangeRoles();
 
