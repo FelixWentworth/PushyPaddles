@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using PlayGen.Orchestrator.Common;
 using PlayGen.Orchestrator.Contracts;
+using PlayGen.Orchestrator.Unity.Common.Model;
 using PlayGen.Orchestratror.Unity.Client;
 using PlayGen.Orchestratror.Unity.Server;
 using PlayGen.Unity.AsyncUtilities;
@@ -47,11 +48,18 @@ public class PlatformSelection : MonoBehaviour
                 break;
             case ConnectionType.Client:
                 _orchestrationClient = FindObjectOfType<OrchestrationClient>();
+                _orchestrationClient.PlayerIdentified += PlayerIdentified;
                 _orchestrationClient.EndpointLocated += StartClient;
                 break;
             case ConnectionType.Testing:
                 break;
         }
+    }
+
+    private void PlayerIdentified(SessionIdentifier obj)
+    {
+        // TODO use these values
+        Debug.Log("TODO" + obj.playerID + ", " + obj.gameInstanceID + ", " + obj.playerNickName);
     }
 
     private void ConfigValidated()

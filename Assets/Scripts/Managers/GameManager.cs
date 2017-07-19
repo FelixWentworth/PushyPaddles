@@ -64,8 +64,6 @@ public class GameManager : NetworkBehaviour
                 LRSManager.Instance.GameCompleted(_level.SecondsTaken);
                 RestartGame();
             }
-            
-
 
             // Check if the game should be started
             if (!_level.RoundStarted)
