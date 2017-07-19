@@ -47,10 +47,15 @@ public class LRSManager : NetworkBehaviour
     /// <param name="matchId">The current match id as defined in the orchestrator</param>
     /// <param name="playerId">The current player id as defined in the orchestrator</param>
     [Server]
-    public void OnConnect(string matchId, string playerId)
+    public void JoinedGame(string matchId, string playerId)
     {
         _matchId = matchId;
-        _playerIds.Add(playerId);
+
+        // Make sure the player has not rejoined without being removed properly
+        if (!_playerIds.Contains(playerId))
+        {
+            _playerIds.Add(playerId);
+        }
     }
     /// <summary>
     /// Setupd the game variables

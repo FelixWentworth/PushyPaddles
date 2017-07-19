@@ -58,6 +58,8 @@ public class Player : MovingObject
     [SyncVar] public int ConnectionId;
     private int _currentModel;
     [SyncVar] private int _playerModel;
+    [SyncVar] private string _syncNickName;
+    private PlatformSelection.PSLPlayerData _playerData;
 
     [SyncVar] public Vector3 RealPosition;
     [SyncVar] public Vector3 RealRotation;
@@ -92,8 +94,14 @@ public class Player : MovingObject
         //GetComponent<Rigidbody>().isKinematic = !isServer;
         _rigidbody = GetComponent<Rigidbody>();
         _playerText = GetComponentInChildren<TextMesh>();
-        _playerText.text = string.Format(Localization.Get("FORMATTED_UI_GAME_PLAYER"),PlayerID + 1);
-
+        if (_syncNickName == "")
+        {
+            _playerText.text = string.Format(Localization.Get("FORMATTED_UI_GAME_PLAYER"), PlayerID + 1);
+        }
+        else
+        {
+            _playerText.text = _syncNickName;
+        }
         SetModel();
         _currentModel = _playerModel;
 
@@ -102,6 +110,9 @@ public class Player : MovingObject
         if (!isServer && isLocalPlayer)
         {
             GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowCharacterSelect();
+
+            var platformSelection = GameObject.Find("PlatformManager").GetComponent<PlatformSelection>();
+            _playerData = platformSelection.PlayerData;
         }
     }
 
@@ -215,7 +226,14 @@ public class Player : MovingObject
         {
             ShowInstructions();
         }
-        
+        if (_playerText.text != _syncNickName && _syncNickName != "")
+        {
+            _playerText.text = _syncNickName;
+        }
+        if (isLocalPlayer && _syncNickName != _playerData.NickName)
+        {
+            CmdSetPlayerData(_playerData);
+        }
     }
 
     /// <summary>
@@ -327,7 +345,19 @@ public class Player : MovingObject
         transform.position = Vector3.Lerp(transform.position, RealPosition, 0.5f);
         transform.eulerAngles = RealRotation;
     }
-    
+
+    [Command]
+    private void CmdSetPlayerData(PlatformSelection.PSLPlayerData data)
+    {
+        Debug.Log("Player data set:" 
+            + "\nnickname: " +data.NickName
+            + "\nPlayerId: " + data.PlayerId
+            + "\nMatchId: " + data.MatchId);
+        _syncNickName = data.NickName;
+        LRSManager.Instance.JoinedGame(data.MatchId, data.PlayerId);
+    }
+
+
     // Server moves the player and forces them to a position
     [Server]
     public void SyncForceMove(Vector3 position, Vector3 rotation)

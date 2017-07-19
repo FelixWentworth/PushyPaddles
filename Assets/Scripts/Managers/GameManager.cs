@@ -111,9 +111,7 @@ public class GameManager : NetworkBehaviour
     [Server]
     public void OnConnected(NetworkMessage netMsg)
     {
-        OnConnected(netMsg.conn);
-        // TODO set player / match ids
-        LRSManager.Instance.OnConnect("", "");
+        OnConnected(netMsg.conn);;
     }
 
     [Server]

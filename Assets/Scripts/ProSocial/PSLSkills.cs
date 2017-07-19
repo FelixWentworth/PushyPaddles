@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PSLSkills : MonoBehaviour {
 
-    private enum Verbs
+    public enum Verb
     {
         IntroducedSelf,
         WasAssertive,
@@ -24,7 +24,7 @@ public class PSLSkills : MonoBehaviour {
         StayedOnTask
     }
 
-    public void Send()
+    public void Send(string playerId, Verb verb)
     {
         
     }

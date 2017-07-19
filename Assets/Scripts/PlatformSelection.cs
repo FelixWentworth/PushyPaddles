@@ -22,6 +22,15 @@ public class PlatformSelection : MonoBehaviour
     private OrchestratedGameServer _orchestratedServer;
     private OrchestrationClient _orchestrationClient;
 
+    public struct PSLPlayerData
+    {
+        public string PlayerId;
+        public string MatchId;
+        public string NickName;
+    }
+
+    public PSLPlayerData PlayerData { get; private set; }
+
     void Awake()
     {
         if (_instance)
@@ -58,8 +67,12 @@ public class PlatformSelection : MonoBehaviour
 
     private void PlayerIdentified(SessionIdentifier obj)
     {
-        // TODO use these values
-        Debug.Log("TODO" + obj.playerID + ", " + obj.gameInstanceID + ", " + obj.playerNickName);
+        PlayerData = new PSLPlayerData()
+        {
+            MatchId = obj.gameInstanceID,
+            PlayerId = obj.playerID,
+            NickName = obj.playerNickName
+        };
     }
 
     private void ConfigValidated()
