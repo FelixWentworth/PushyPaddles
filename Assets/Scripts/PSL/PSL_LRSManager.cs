@@ -10,6 +10,8 @@ public class PSL_LRSManager : NetworkBehaviour
 
     public static PSL_LRSManager Instance;
 
+    private PSL_SkillTracking _tracking;
+
     // Our variables needed for sending data
     [SerializeField] private string _url;
     private object _body;
@@ -38,6 +40,8 @@ public class PSL_LRSManager : NetworkBehaviour
     void Awake()
     {
         Instance = this;
+
+        _tracking = GetComponent<PSL_SkillTracking>();
     }
 
     #region public methods - game tracking
@@ -105,6 +109,12 @@ public class PSL_LRSManager : NetworkBehaviour
     public void GameCompleted(int timeTaken)
     {
         SendTrackedData(timeTaken);
+    }
+
+    [Server]
+    public void PlayerShowedSkill(string playerId, PSL_Verbs verb, int increment)
+    {
+        _tracking.AddSkill(playerId, verb, increment);
     }
 
     #endregion

@@ -14960,8 +14960,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1968042640}
   - component: {fileID: 1968042641}
+  - component: {fileID: 1968042643}
+  - component: {fileID: 1968042642}
   m_Layer: 0
-  m_Name: LRSManager
+  m_Name: InteractionManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14992,6 +14994,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _url: 
+--- !u!114 &1968042642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1968042639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da285361e00629b4aa20a6e29af99fa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _skillCriteria:
+  - Name: Pushed against another player
+    Skill: 11
+    Positive: 0
+    TriggerAction: 1
+    PreviousAction: 1
+    MultiplePlayers: 1
+    Interval: 0.4
+  - Name: Reached Goal
+    Skill: 11
+    Positive: 1
+    TriggerAction: 3
+    PreviousAction: 0
+    MultiplePlayers: 0
+    Interval: 0
+--- !u!114 &1968042643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1968042639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b9e2a5be7ff9f147b1560b39a4b43d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1968812621
 GameObject:
   m_ObjectHideFlags: 0

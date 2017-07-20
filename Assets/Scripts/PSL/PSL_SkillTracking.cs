@@ -15,9 +15,9 @@ public class PSL_SkillTracking : MonoBehaviour {
         public PSL_Verbs Skill;
     }
 
-    private Dictionary<PlayerSkill, int> _playerSkills = new Dictionary<PlayerSkill, int>();
+    private readonly Dictionary<PlayerSkill, int> _playerSkills = new Dictionary<PlayerSkill, int>();
 
-    private Dictionary<PSL_Verbs, int> _verbCount = new Dictionary<PSL_Verbs, int>();
+    private readonly Dictionary<PSL_Verbs, int> _verbCount = new Dictionary<PSL_Verbs, int>();
 
     public void AddSkill(string playerId, PSL_Verbs skill, int increment)
     {
@@ -61,16 +61,14 @@ public class PSL_SkillTracking : MonoBehaviour {
             var id = playerSkill.Key.Id;
             var skill = playerSkill.Key.Skill;
 
-            // TODO set min/max
-            var value = GetNormalizedValue(playerSkill.Key, playerSkill.Key.Skill.GetMinRange(), 1);
+            var value = GetNormalizedValue(playerSkill.Key);
 
             // TODO send data to PLS
-
-
+            
         }   
     }
 
-    private float GetNormalizedValue(PlayerSkill playerSkill, float min, float max)
+    private float GetNormalizedValue(PlayerSkill playerSkill)
     {
         var playersSkillValues = _playerSkills.Where(p => p.Key.Skill == playerSkill.Skill )
             .Select(p => p.Value)
@@ -78,7 +76,7 @@ public class PSL_SkillTracking : MonoBehaviour {
 
         var totalValue = _verbCount.First(c => c.Key == playerSkill.Skill).Value;
 
-        var normalized = GetNormalized(_playerSkills[playerSkill], totalValue, 0, min, max);
+        var normalized = GetNormalized(_playerSkills[playerSkill], totalValue, 0, playerSkill.Skill.GetMinRange(), 1);
 
         return normalized;
     }
