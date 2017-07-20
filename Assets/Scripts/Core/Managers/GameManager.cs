@@ -61,7 +61,7 @@ public class GameManager : NetworkBehaviour
             if (_level.IsGameOver)
             {
                 _menu.ShowGameOver();
-                LRSManager.Instance.GameCompleted(_level.SecondsTaken);
+                PSL_LRSManager.Instance.GameCompleted(_level.SecondsTaken);
                 RestartGame();
             }
 
@@ -416,7 +416,7 @@ public class GameManager : NetworkBehaviour
                 GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
             }
 
-            LRSManager.Instance.NewRound(_level.SecondsTaken);
+            PSL_LRSManager.Instance.NewRound(_level.SecondsTaken);
 
             ChangeRoles();
 

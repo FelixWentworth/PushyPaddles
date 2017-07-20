@@ -1,1 +1,1 @@
-ExcelToJsonConverter.exe C:\Users\Felix\Documents\Projects\GameJam\PushyPaddles\Assets\Localization\Editor\LocalizationStrings.xlsx C:\Users\Felix\Documents\Projects\GameJam\PushyPaddles\Assets\Resources\Localization\strings.json
+ExcelToJsonConverter.exe C:\Users\Felix\Documents\Projects\GameJam\PushyPaddles\Assets\Localization\Editor\PP_LocalizationStrings.xlsx C:\Users\Felix\Documents\Projects\GameJam\PushyPaddles\Assets\Resources\Localization\strings.json

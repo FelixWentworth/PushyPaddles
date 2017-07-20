@@ -354,7 +354,7 @@ public class Player : MovingObject
             + "\nPlayerId: " + data.PlayerId
             + "\nMatchId: " + data.MatchId);
         _syncNickName = data.NickName;
-        LRSManager.Instance.JoinedGame(data.MatchId, data.PlayerId);
+        PSL_LRSManager.Instance.JoinedGame(data.MatchId, data.PlayerId);
     }
 
 

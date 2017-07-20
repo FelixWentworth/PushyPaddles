@@ -4,11 +4,11 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class LRSManager : NetworkBehaviour
+public class PSL_LRSManager : NetworkBehaviour
 {
 #region Variables
 
-    public static LRSManager Instance;
+    public static PSL_LRSManager Instance;
 
     // Our variables needed for sending data
     [SerializeField] private string _url;

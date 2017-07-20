@@ -15,6 +15,8 @@
 {"Key":"UI_MAIN_TITLE","en-gb":"Main Menu","it":"XXXX","es":"XXXX","el":"XXXX"},
 {"Key":"UI_MAIN_IP_ADDRESS","en-gb":"ip address","it":"XXXX","es":"XXXX","el":"XXXX"},
 {"Key":"UI_MAIN_PORT","en-gb":"port","it":"XXXX","es":"XXXX","el":"XXXX"},
+{"Key":"UI_MAIN_LOADING","en-gb":"Loading","it":"XXXX","es":"XXXX","el":"XXXX"},
+{"Key":"UI_MAIN_CONNECTING","en-gb":"Connecting","it":"XXXX","es":"XXXX","el":"XXXX"},
 {"Key":"UI_END_TITLE","en-gb":"Game Over","it":"XXXX","es":"XXXX","el":"XXXX"},
 {"Key":"UI_END_TIME_UP","en-gb":"Time Up","it":"XXXX","es":"XXXX","el":"XXXX"},
 {"Key":"UI_END_ROUNDS_COMPLETED","en-gb":"Rounds Completed","it":"XXXX","es":"XXXX","el":"XXXX"},

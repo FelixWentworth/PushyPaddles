@@ -56,14 +56,14 @@ public class MainMenu : MonoBehaviour
             _networkManager.StartServer();
             _menuManager.HideMenu();
 #elif UNITY_WEBGL
-                LoadingScreen.ShowScreen("Loading", null);
+                LoadingScreen.ShowScreen(Localization.Get("UI_MAIN_LOADING"), null);
                 StartCoroutine(GetConnectionConfig());
 #endif
             }
             else if (PlatformSelection.ConnectionType == ConnectionType.Client)
             {
                 //TODO LOCALIZE
-                LoadingScreen.ShowScreen("Connecting", null);
+                LoadingScreen.ShowScreen(Localization.Get("UI_MAIN_CONNECTING"), null);
                 _connecting = true;
             }
         }
@@ -86,7 +86,7 @@ public class MainMenu : MonoBehaviour
         if (www.text != null)
         {
             var config = JsonUtility.FromJson<Config>(www.text);
-            LoadingScreen.ShowScreen("Connecting", CancelClient);
+            LoadingScreen.ShowScreen(Localization.Get("UI_MAIN_CONNECTING"), CancelClient);
 
             IpAddress.text = config.Address;
             Port.text = config.Port.ToString();
@@ -140,7 +140,7 @@ public class MainMenu : MonoBehaviour
                     if (!LoadingScreen.IsShowing)
                     {
                         LoadingScreen.ShowScreen(
-                            "Connecting to: " + NetworkManager.singleton.networkAddress + ":" + NetworkManager.singleton.networkPort,
+                           Localization.Get("UI_MAIN_CONNECTING") + ":" + NetworkManager.singleton.networkAddress + ":" + NetworkManager.singleton.networkPort,
                             CancelClient);
                     }
                 }

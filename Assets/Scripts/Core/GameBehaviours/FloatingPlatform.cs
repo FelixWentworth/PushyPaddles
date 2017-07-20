@@ -63,7 +63,7 @@ public class FloatingPlatform : MovingObject
         OnWater = false;
         if (isServer)
         {
-            LRSManager.Instance.NewAttempt();
+            PSL_LRSManager.Instance.NewAttempt();
         }
     }
 
@@ -178,7 +178,7 @@ public class FloatingPlatform : MovingObject
 
         if (isServer)
         {
-            LRSManager.Instance.ChestReached();
+            PSL_LRSManager.Instance.ChestReached();
         }
 
         if (PickupValue == levelManager.Target)
