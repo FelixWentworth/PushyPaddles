@@ -103,7 +103,7 @@ public class LevelManager : NetworkBehaviour
             }
             else
             {
-                PlayerText.text = Localization.Get("UI_GAME_PLAYER") + " " + (_localPlayer.PlayerID + 1);
+                PlayerText.text = _localPlayer.SyncNickName;
             }
         }
     }

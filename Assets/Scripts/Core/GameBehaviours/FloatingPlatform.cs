@@ -107,6 +107,8 @@ public class FloatingPlatform : MovingObject
 
         if (other.gameObject.tag == "Obstacle")
         {
+            _playerOnPlatform.GetComponent<Player>().HitObstacle();
+
             _playerOnPlatform.GetComponent<Player>().OnPlatform = false;
             _playerOnPlatform.GetComponent<Rigidbody>().useGravity = true;
             _playerOnPlatform = null;
@@ -117,18 +119,19 @@ public class FloatingPlatform : MovingObject
             if (isServer)
             {
                 GameObject.Find("SpawnedObjects").GetComponent<CollectibleGeneration>().ResetColliders();
+                
             }
         }
         else if (other.gameObject.tag == "Treasure")
         {
+            PSL_LRSManager.Instance.ChestReached();
+            _playerOnPlatform.GetComponent<Player>().ReachedChest();
+
             StartCoroutine(GoalReached(other.gameObject));
         }
         else if (other.gameObject.tag == "Collectible")
         {
             
-           // other.enabled = false;
-            
-
             var operation = other.gameObject.GetComponent<MathsCollectible>().Operation;
 
 
@@ -174,16 +177,14 @@ public class FloatingPlatform : MovingObject
         if (isServer)
         {
             RpcDisableTotal();
-        }
 
-        if (isServer)
-        {
-            PSL_LRSManager.Instance.ChestReached();
         }
 
         if (PickupValue == levelManager.Target)
         {
             var player = _playerOnPlatform.GetComponent<Player>();
+
+            
 
             if (isServer)
             {

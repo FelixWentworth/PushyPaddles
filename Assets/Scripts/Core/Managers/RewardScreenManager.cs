@@ -21,7 +21,8 @@ public class RewardScreenManager : UIScreen
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
 
-        RewardsManager.ResetRewards(_gameManager.GetPlayerCount());
+        var players = _gameManager.GetPlayerIds();
+        RewardsManager.ResetRewards(players.Count, players);
     }
 
     public override void Hide()
@@ -63,21 +64,23 @@ public class RewardScreenManager : UIScreen
         }
     }
 
-    public void SetReward(Reward.RewardType type, int playerIndex)
+    public void SetReward(Reward.RewardType type, string playerId)
     {
         var manager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         var player = manager.GetLocalPlayer();
+
+        player.GaveReward();
 
         switch (type)
         {
             case Reward.RewardType.None:
                 break;
             case Reward.RewardType.SpeedBoost:  
-                player.AssignSpeedBoost(playerIndex, _speedBoost);
+                player.AssignSpeedBoost(playerId, _speedBoost);
                 break;
             case Reward.RewardType.ReverseControls:
-                player.AssignReverseControls(playerIndex, _controlsModifier);
+                player.AssignReverseControls(playerId, _controlsModifier);
                 break;
             default:
                 throw new ArgumentOutOfRangeException("type", type, null);

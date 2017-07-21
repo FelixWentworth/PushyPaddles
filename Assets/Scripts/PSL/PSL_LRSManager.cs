@@ -11,7 +11,7 @@ public class PSL_LRSManager : NetworkBehaviour
     public static PSL_LRSManager Instance;
 
     private PSL_SkillTracking _tracking;
-
+    
     // Our variables needed for sending data
     [SerializeField] private string _url;
     private object _body;

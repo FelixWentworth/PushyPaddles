@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
+using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
@@ -22,6 +23,7 @@ public class GameManager : NetworkBehaviour
     private MenuManager _menu;
     private LevelManager _level;
     private Curriculum _curriculum;
+    private PlayerActionsManager _playerActionsManager;
 
     public GameObject PlayerOneSpawn;
     public GameObject PlayerTwoSpawn;
@@ -58,11 +60,13 @@ public class GameManager : NetworkBehaviour
             {
                 _curriculum = GameObject.Find("CurriculumManager").GetComponent<Curriculum>();
             }
+            if (_playerActionsManager == null)
+            {
+                _playerActionsManager = GameObject.Find("InteractionManager").GetComponent<PlayerActionsManager>();
+            }
             if (_level.IsGameOver)
             {
-                _menu.ShowGameOver();
-                PSL_LRSManager.Instance.GameCompleted(_level.SecondsTaken);
-                RestartGame();
+                GameOver();
             }
 
             // Check if the game should be started
@@ -220,7 +224,7 @@ public class GameManager : NetworkBehaviour
         Debug.Log("Remove Player");
     }
 
-    public Player GetPlayer(int id)
+    public Player GetPlayer(string id)
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
 
@@ -236,7 +240,19 @@ public class GameManager : NetworkBehaviour
         return null;
     }
 
+    public List<string> GetPlayerIds()
+    {
+        if(_players.Count == 0)
+        {
+            var players = GameObject.FindGameObjectsWithTag("Player");
+            foreach (var player in players)
+            {
+                _players.Add(player.GetComponent<Player>());
+            }
+        }
 
+        return _players.Select(p => p.PlayerID).ToList();
+    }
 
     public int GetPlayerCount()
     {
@@ -332,7 +348,7 @@ public class GameManager : NetworkBehaviour
     private void SetPlayerRole(int playerIndex, Player player)
     {
         //only the 1st player should be able to ride the platform
-        player.PlayerID = playerIndex;
+        player.SyncNickName = Localization.Get("UI_GAME_PLAYER") + (playerIndex + 1);
         player.SetRole(playerIndex == 0 ? Player.Role.Floater : Player.Role.Paddler);
     }
 
@@ -380,6 +396,25 @@ public class GameManager : NetworkBehaviour
         NetworkManager.singleton.StopClient();
     }
 
+    /// <summary>
+    /// Actions completed as a group gets credited to each player
+    /// </summary>
+    /// <param name="action">the action that was completed</param>
+    [Server]
+    public void GroupAction(PlayerActionsManager.GameAction action)
+    {
+        foreach (var player in  _players)
+        {
+            PlayerAction(action, player.PlayerID);
+        }
+    }
+
+    [Server]
+    public void PlayerAction(PlayerActionsManager.GameAction action, string playerId)
+    {
+        _playerActionsManager.PerformedAction(action, playerId);
+    }
+
     [Server]
     private void ClearPlayerObjects()
     {
@@ -394,11 +429,11 @@ public class GameManager : NetworkBehaviour
     public void NextRound()
     {
         _level.NextRound();
-        Restart();
+        Restart(newRound: true);
     }
 
     [Server]
-    public void Restart()
+    public void Restart(bool newRound = false)
     {
         if (!_generatingLevel)
         {
@@ -413,7 +448,22 @@ public class GameManager : NetworkBehaviour
             else
             {
                 var challenge = _curriculum.GetNewChallenge(1, 1);
-                GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
+
+                if (newRound)
+                {
+                    challenge = _curriculum.GetNextChallenge(1, 1);
+                }
+                if (challenge == null)
+                {
+                    // Reached the end of the game
+                    //TODO show a victory screen
+                    GameOver();
+                }
+                else
+                {
+                    GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>()
+                        .Setup(0, challenge);
+                }
             }
 
             PSL_LRSManager.Instance.NewRound(_level.SecondsTaken);
@@ -491,6 +541,14 @@ public class GameManager : NetworkBehaviour
         {
             player.SyncRespawn(player.transform.eulerAngles);
         }
+    }
+
+    [Server]
+    private void GameOver()
+    {
+        _menu.ShowGameOver();
+        PSL_LRSManager.Instance.GameCompleted(_level.SecondsTaken);
+        RestartGame();
     }
 
     public void HideRewards()

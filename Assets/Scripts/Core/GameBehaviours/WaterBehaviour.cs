@@ -107,7 +107,7 @@ public class WaterBehaviour : NetworkBehaviour
     }
 
     [Command]
-    public void CmdPaddleUsed(int playerId)
+    public void CmdPaddleUsed(string playerId)
     {
         var player = _gameManager.GetPlayer(playerId);
         PaddleUsed(player);

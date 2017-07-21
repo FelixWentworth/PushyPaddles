@@ -11,12 +11,17 @@ public class RewardsManager : MonoBehaviour
 
     private int _currentlyHighlighting = 0;
     private int _assignedRewards = 0;
+    private List<string> _playerIds;
+    private int _currentId;
+    
     private int _playerCount;
 
-    public void ResetRewards(int playerCount)
+    public void ResetRewards(int playerCount, List<string> ids)
     {
         _assignedRewards = 0;
         _currentlyHighlighting = 0;
+        _playerIds = ids;
+        _currentId = 0;
         foreach (var reward in Rewards)
         {
             reward.SetAvailable(true);
@@ -60,8 +65,7 @@ public class RewardsManager : MonoBehaviour
     public void Select()
     {
         var type = Rewards[_currentlyHighlighting].Type;
-        var assignedPlayer = _assignedRewards;
-        RewardSelected(type, assignedPlayer);
+        RewardSelected(type, _playerIds[_currentId]);
 
         Rewards[_currentlyHighlighting].SetAvailable(false);
         _assignedRewards++;
@@ -73,6 +77,7 @@ public class RewardsManager : MonoBehaviour
         {
             Right();
         }
+        _currentId+=1;
     }
 
     private void UpdateHighlighted()
@@ -87,9 +92,9 @@ public class RewardsManager : MonoBehaviour
         Rewards[_currentlyHighlighting].SetName("Player " + (_assignedRewards+1));
     }
 
-    public void RewardSelected(Reward.RewardType type, int playerIndex)
+    public void RewardSelected(Reward.RewardType type, string playerId)
     {
-        transform.parent.GetComponent<RewardScreenManager>().SetReward(type, playerIndex);
+        transform.parent.GetComponent<RewardScreenManager>().SetReward(type, playerId);
     }
 
     private void Complete()

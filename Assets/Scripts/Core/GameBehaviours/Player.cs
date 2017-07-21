@@ -54,11 +54,11 @@ public class Player : MovingObject
 
     [SyncVar] private bool _usePaddle;
     [SyncVar] public bool IsReady;
-    [SyncVar] public int PlayerID;
     [SyncVar] public int ConnectionId;
     private int _currentModel;
     [SyncVar] private int _playerModel;
-    [SyncVar] private string _syncNickName;
+    [SyncVar] public string SyncNickName;
+    [SyncVar] public string PlayerID;
     private PlatformSelection.PSLPlayerData _playerData;
 
     [SyncVar] public Vector3 RealPosition;
@@ -94,13 +94,13 @@ public class Player : MovingObject
         //GetComponent<Rigidbody>().isKinematic = !isServer;
         _rigidbody = GetComponent<Rigidbody>();
         _playerText = GetComponentInChildren<TextMesh>();
-        if (_syncNickName == "")
+        if (SyncNickName == "")
         {
-            _playerText.text = string.Format(Localization.Get("FORMATTED_UI_GAME_PLAYER"), PlayerID + 1);
+            _playerText.text = SyncNickName;
         }
         else
         {
-            _playerText.text = _syncNickName;
+            _playerText.text = SyncNickName;
         }
         SetModel();
         _currentModel = _playerModel;
@@ -226,11 +226,11 @@ public class Player : MovingObject
         {
             ShowInstructions();
         }
-        if (_playerText.text != _syncNickName && _syncNickName != "")
+        if (_playerText.text != SyncNickName && SyncNickName != "")
         {
-            _playerText.text = _syncNickName;
+            _playerText.text = SyncNickName;
         }
-        if (isLocalPlayer && _syncNickName != _playerData.NickName)
+        if (isLocalPlayer && SyncNickName != _playerData.NickName)
         {
             CmdSetPlayerData(_playerData);
         }
@@ -353,7 +353,8 @@ public class Player : MovingObject
             + "\nnickname: " +data.NickName
             + "\nPlayerId: " + data.PlayerId
             + "\nMatchId: " + data.MatchId);
-        _syncNickName = data.NickName;
+        SyncNickName = data.NickName;
+        PlayerID = data.PlayerId;
         PSL_LRSManager.Instance.JoinedGame(data.MatchId, data.PlayerId);
     }
 
@@ -408,6 +409,72 @@ public class Player : MovingObject
         transform.position = position;
         transform.eulerAngles = rotation;
     }
+
+    public void HitObstacle()
+    {
+        if (isLocalPlayer)
+        {
+            CmdHitObstacle();
+        }
+    }
+
+    #region game actions
+
+    [Command]
+    private void CmdHitObstacle()
+    {
+        _gameManager.PlayerAction(PlayerActionsManager.GameAction.HitObstacle, PlayerID);
+    }
+
+    public void ReachedChest()
+    {
+        if (!isLocalPlayer)
+        {
+            CmdReachedGoal();
+        }
+    }
+
+    public void ReachedChest(bool success)
+    {
+        if (isLocalPlayer)
+        {
+            CmdTargetCalculated(success);
+        }
+    }
+
+    [Command]
+    private void CmdReachedGoal()
+    {
+        _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChest);
+    }
+
+    [Command]
+    private void CmdTargetCalculated(bool success)
+    {
+        if (success)
+        {
+            _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChestSuccess);
+        }
+        else
+        {
+            _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChestFail);
+        }
+    }
+
+    public void GaveReward()
+    {
+        if (isLocalPlayer)
+        {
+            CmdGaveReward();
+        }
+    }
+
+    [Command]
+    private void CmdGaveReward()
+    {
+        _gameManager.PlayerAction(PlayerActionsManager.GameAction.SetReward, PlayerID);
+    }
+    #endregion
 
     // Update is called once per frame
     void FixedUpdate()
@@ -470,7 +537,7 @@ public class Player : MovingObject
             {
 
                 // Use paddle in water
-                CmdUsePaddle();
+                CmdUsePaddle(_playerData.PlayerId);
             }
         }
 
@@ -498,6 +565,8 @@ public class Player : MovingObject
         platform.GetComponent<FloatingPlatform>().CanPickUp = !HoldingPlatform;
         platform.transform.SetParent(this.transform, true);
         platform.transform.localPosition = new Vector3(0f, 1.0f, 1.5f);
+
+        _gameManager.PlayerAction(PlayerActionsManager.GameAction.PickedUpPlatform, PlayerID);
     }
 
     [Command]
@@ -507,6 +576,9 @@ public class Player : MovingObject
         platform.transform.SetParent(null, true);
         HoldingPlatform = false;
         platform.GetComponent<FloatingPlatform>().CanPickUp = !HoldingPlatform;
+
+        _gameManager.PlayerAction(PlayerActionsManager.GameAction.PlacedPlatform, PlayerID);
+
     }
 
     [Server]
@@ -547,7 +619,7 @@ public class Player : MovingObject
     }
 
     [Command]
-    private void CmdUsePaddle()
+    private void CmdUsePaddle(string playerId)
     {
         // Check here if the right player as only the server knows the current roles
         if (PlayerRole == Role.Paddler)
@@ -557,7 +629,7 @@ public class Player : MovingObject
             _usePaddle = true;
         }
         GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Paddle");
-
+        _gameManager.PlayerAction(PlayerActionsManager.GameAction.Pushed, playerId);
     }
 
     [Command]
@@ -704,28 +776,28 @@ public class Player : MovingObject
         _gameManager.StartTimer();
     }
 
-    public void AssignSpeedBoost(int playerIndex, float speedIncrement)
+    public void AssignSpeedBoost(string playerID, float speedIncrement)
     {
         if (isLocalPlayer)
         {
-            CmdAssignSpeedBoost(playerIndex, speedIncrement);
+            CmdAssignSpeedBoost(playerID, speedIncrement);
         }
     }
 
     [Command]
-    public void CmdAssignSpeedBoost(int playerNumber, float increment)
+    public void CmdAssignSpeedBoost(string playerID, float increment)
     {
         if (_gameManager == null)
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
-        var player = _gameManager.GetPlayer(playerNumber);
+        var player = _gameManager.GetPlayer(playerID);
 
         // Assign the reward
         player.SpeedModifier += increment;
     }
 
-    public void AssignReverseControls(int playerIndex, float modifier)
+    public void AssignReverseControls(string playerIndex, float modifier)
     {
         if (isLocalPlayer)
         {
@@ -734,13 +806,13 @@ public class Player : MovingObject
     }
 
     [Command]
-    public void CmdAssignReverseControls(int playerNumber, float modifier)
+    public void CmdAssignReverseControls(string playerID, float modifier)
     {
         if (_gameManager == null)
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
-        var player = _gameManager.GetPlayer(playerNumber);
+        var player = _gameManager.GetPlayer(playerID);
 
         // Assign the reward
         player.DirectionModifier *= modifier;

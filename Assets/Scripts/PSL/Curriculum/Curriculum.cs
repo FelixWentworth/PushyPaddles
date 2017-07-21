@@ -16,6 +16,8 @@ public class Curriculum : MonoBehaviour {
 
     private CurriculumChallenges _challenges;
 
+    private int _levelIndex;
+
     public CurriculumChallenge GetNewChallenge(int keyStage, int lesson)
     {
         if (_challenges == null || _challenges.MathsProblems.Length == 0)
@@ -29,10 +31,37 @@ public class Curriculum : MonoBehaviour {
         }
 
         var challenges = _challenges.MathsProblems.Where(c => c.KeyStage == keyStage && c.Lesson == lesson).ToList();
-        var rand = Random.Range(0, challenges.Count());
 
-        return challenges[rand];
+        _levelIndex = challenges[0].Level;
+        return challenges[0];
     }
+
+    /// <summary>
+    /// Return the next challenge for the key stage and lesson
+    /// </summary>
+    /// <param name="keyStage">Target key stage</param>
+    /// <param name="lesson">Target lesson number</param>
+    /// <returns>Next challenge, or null if reached end</returns>
+    public CurriculumChallenge GetNextChallenge(int keyStage, int lesson)
+    {
+        if (_challenges == null || _challenges.MathsProblems.Length == 0)
+        {
+            GetChallengeData();
+        }
+
+        if (_challenges.MathsProblems.Length == 0)
+        {
+            return null;
+        }
+
+        _levelIndex += 1;
+        var challenge = _challenges.MathsProblems.FirstOrDefault(c => c.KeyStage == keyStage && c.Lesson == lesson && c.Level == _levelIndex);
+
+        return challenge;
+
+    }
+
+
 
     private void GetChallengeData()
     {
