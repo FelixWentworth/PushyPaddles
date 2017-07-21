@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -109,7 +106,7 @@ public class Player : MovingObject
 
         if (!isServer && isLocalPlayer)
         {
-            GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowCharacterSelect();
+            GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowHowToPlay();
 
             var platformSelection = GameObject.Find("PlatformManager").GetComponent<PlatformSelection>();
             _playerData = platformSelection.PlayerData;
@@ -230,7 +227,7 @@ public class Player : MovingObject
         {
             _playerText.text = SyncNickName;
         }
-        if (isLocalPlayer && SyncNickName != _playerData.NickName)
+        if (isLocalPlayer && SyncNickName != _playerData.NickName && _playerData.NickName != "")
         {
             CmdSetPlayerData(_playerData);
         }
@@ -349,10 +346,12 @@ public class Player : MovingObject
     [Command]
     private void CmdSetPlayerData(PlatformSelection.PSLPlayerData data)
     {
-        Debug.Log("Player data set:" 
-            + "\nnickname: " +data.NickName
-            + "\nPlayerId: " + data.PlayerId
-            + "\nMatchId: " + data.MatchId);
+        if (data.PlayerId == "")
+        {
+            data.NickName = "Testing";
+            data.MatchId = "-1";
+            data.PlayerId = System.Guid.NewGuid().ToString();
+        }
         SyncNickName = data.NickName;
         PlayerID = data.PlayerId;
         PSL_LRSManager.Instance.JoinedGame(data.MatchId, data.PlayerId);
