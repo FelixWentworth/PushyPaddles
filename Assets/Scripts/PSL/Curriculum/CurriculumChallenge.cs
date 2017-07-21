@@ -3,6 +3,8 @@
 [Serializable]
 public class CurriculumChallenge
 {
+    public int KeyStage;
+    public int Lesson;
     public int Level;
     public double Target;
 
@@ -13,6 +15,6 @@ public class CurriculumChallenge
 
 public class CurriculumChallenges
 {
-    public CurriculumChallenge[] Items;
+    public CurriculumChallenge[] MathsProblems;
 }
 

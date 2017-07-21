@@ -16,19 +16,19 @@ public class Curriculum : MonoBehaviour {
 
     private CurriculumChallenges _challenges;
 
-    public CurriculumChallenge GetNewChallenge(int level)
+    public CurriculumChallenge GetNewChallenge(int keyStage, int lesson)
     {
-        if (_challenges == null || _challenges.Items.Length == 0)
+        if (_challenges == null || _challenges.MathsProblems.Length == 0)
         {
             GetChallengeData();
         }
 
-        if (_challenges.Items.Length == 0)
+        if (_challenges.MathsProblems.Length == 0)
         {
             return null;
         }
 
-        var challenges = _challenges.Items.Where(c => c.Level == level).ToList();
+        var challenges = _challenges.MathsProblems.Where(c => c.KeyStage == keyStage && c.Lesson == lesson).ToList();
         var rand = Random.Range(0, challenges.Count());
 
         return challenges[rand];

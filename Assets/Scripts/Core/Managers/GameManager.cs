@@ -316,7 +316,7 @@ public class GameManager : NetworkBehaviour
         }
         else
         {
-            var challenge = _curriculum.GetNewChallenge(1);
+            var challenge = _curriculum.GetNewChallenge(1, 1);
             GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
         }
 
@@ -412,7 +412,7 @@ public class GameManager : NetworkBehaviour
             }
             else
             {
-                var challenge = _curriculum.GetNewChallenge(1);
+                var challenge = _curriculum.GetNewChallenge(1, 1);
                 GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
             }
 
