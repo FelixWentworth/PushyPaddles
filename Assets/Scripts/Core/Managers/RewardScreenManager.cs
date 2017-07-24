@@ -22,7 +22,9 @@ public class RewardScreenManager : UIScreen
         }
 
         var players = _gameManager.GetPlayerIds();
-        RewardsManager.ResetRewards(players.Count, players);
+
+        // Its a 3 player game, so always show 3 rewards
+        RewardsManager.ResetRewards(3, players);
     }
 
     public override void Hide()
