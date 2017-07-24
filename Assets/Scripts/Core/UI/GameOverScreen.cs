@@ -31,7 +31,13 @@ public class GameOverScreen : UIScreen
     /// </summary>
     public void BtnQuitGame()
     {
+
         var manager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        if (manager == null)
+        {
+            // We have been disconnected but haven't left the game properly, auto restart scene
+            SceneManager.LoadScene(0);
+        }
         var player = manager.GetLocalPlayer();
 
         var ni = manager.GetComponent<NetworkIdentity>();
