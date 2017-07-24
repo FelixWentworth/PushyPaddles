@@ -34,10 +34,16 @@ public class GameOverScreen : UIScreen
         var manager = GameObject.Find("GameManager").GetComponent<GameManager>();
         var player = manager.GetLocalPlayer();
 
-        var ni = player.GetComponent<NetworkIdentity>();
+        var ni = manager.GetComponent<NetworkIdentity>();
 
-        ni.connectionToServer.Disconnect();
-
+        if (player != null)
+        {
+            ni.connectionToServer.Disconnect();
+        }
+        else if (ni.isServer)
+        {
+            NetworkManager.singleton.StopServer();
+        }
         // Load the current scene
         SceneManager.LoadScene(0);
     }
