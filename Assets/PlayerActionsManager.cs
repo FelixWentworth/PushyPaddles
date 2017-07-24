@@ -25,6 +25,7 @@ public class PlayerActionsManager : MonoBehaviour
         SetReward
     }
 
+    [Serializable]
     private class PlayerActions
     {
         public string PlayerId;

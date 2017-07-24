@@ -2506,8 +2506,9 @@ MonoBehaviour:
   PlayerRole: 1
   _animState: 0
   IsReady: 0
-  PlayerID: 0
   ConnectionId: 0
+  SyncNickName: 
+  PlayerID: 
   RealPosition: {x: 0, y: 0, z: 0}
   RealRotation: {x: 0, y: 0, z: 0}
   OnPlatform: 0

@@ -227,7 +227,7 @@ public class Player : MovingObject
         {
             _playerText.text = SyncNickName;
         }
-        if (isLocalPlayer && SyncNickName != _playerData.NickName && _playerData.NickName != "")
+        if (isLocalPlayer && PlayerID == "")
         {
             CmdSetPlayerData(_playerData);
         }
@@ -346,12 +346,13 @@ public class Player : MovingObject
     [Command]
     private void CmdSetPlayerData(PlatformSelection.PSLPlayerData data)
     {
-        if (data.PlayerId == "")
+        if (string.IsNullOrEmpty(data.PlayerId))
         {
             data.NickName = "Testing";
             data.MatchId = "-1";
             data.PlayerId = System.Guid.NewGuid().ToString();
         }
+
         SyncNickName = data.NickName;
         PlayerID = data.PlayerId;
         PSL_LRSManager.Instance.JoinedGame(data.MatchId, data.PlayerId);
@@ -427,9 +428,13 @@ public class Player : MovingObject
 
     public void ReachedChest()
     {
-        if (!isLocalPlayer)
+        if (isLocalPlayer)
         {
             CmdReachedGoal();
+        }
+        else if (isServer)
+        {
+            _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChest);
         }
     }
 
@@ -438,6 +443,18 @@ public class Player : MovingObject
         if (isLocalPlayer)
         {
             CmdTargetCalculated(success);
+        }
+        else if (isServer)
+        {
+            if (success)
+            {
+                _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChestSuccess);
+            }
+            else
+            {
+                _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChestFail);
+            }
+            
         }
     }
 

@@ -25,7 +25,7 @@ public class PSL_LRSManager : NetworkBehaviour
     private int _totalGoalReached;
     private int _totalRoundComplete;
 
-    private List<int> _timeTakenPerRound;
+    private List<int> _timeTakenPerRound = new List<int>();
     private double _averageTimeTaken {
         get { return _timeTakenPerRound.Average(); }
         set { }
