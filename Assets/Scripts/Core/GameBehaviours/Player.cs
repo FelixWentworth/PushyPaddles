@@ -75,7 +75,10 @@ public class Player : MovingObject
     private bool _usedPaddle;
     private GameObject _raft;
     private FloatingPlatform _floatingPlatform;
-    
+
+    private float _timeSinceLastMove = 0f;
+    [SerializeField] private float _idleTime;
+
 
     public override void Start()
     {
@@ -130,6 +133,7 @@ public class Player : MovingObject
 
     void Update()
     {
+       
         // Don't allow players to move whilst rewards are being distributed
         if (_gameManager == null)
         {
@@ -169,18 +173,10 @@ public class Player : MovingObject
                     if (PlayerRole == Role.Floater && x != 0)
                     {
                         Move(gameObject, x, 0);
-                        if (_animationState != AnimationState.WALKING)
-                        {
-                            CmdChangeState((int)AnimationState.WALKING);
-                        }
                     }
                     else if (PlayerRole == Role.Paddler && z != 0)
                     {
                         Move(gameObject, 0, z);
-                        if (_animationState != AnimationState.WALKING)
-                        {
-                            CmdChangeState((int)AnimationState.WALKING);
-                        }
                     }
                     else
                     {
@@ -230,6 +226,17 @@ public class Player : MovingObject
         if (isLocalPlayer && PlayerID == "")
         {
             CmdSetPlayerData(_playerData);
+        }
+
+        if (isLocalPlayer)
+        {
+            _timeSinceLastMove += Time.deltaTime;
+            if (_timeSinceLastMove >= _idleTime)
+            {
+                _timeSinceLastMove = 0;
+                // Player has been idle, send a message
+                CmdBeenIdle();
+            }
         }
     }
 
@@ -329,6 +336,12 @@ public class Player : MovingObject
 
         go.transform.position = new Vector3(newX, go.transform.position.y, newZ);
         go.transform.LookAt(new Vector3(go.transform.localPosition.x + x, go.transform.localPosition.y, go.transform.localPosition.z + z));
+
+        if (_animationState != AnimationState.WALKING)
+        {
+            CmdChangeState((int)AnimationState.WALKING);
+        }
+        _timeSinceLastMove = 0f;
     }
 
     private void UpdatePlayerPosition()
@@ -346,16 +359,19 @@ public class Player : MovingObject
     [Command]
     private void CmdSetPlayerData(PlatformSelection.PSLPlayerData data)
     {
-        if (string.IsNullOrEmpty(data.PlayerId))
+        if (string.IsNullOrEmpty(PlayerID))
         {
-            data.NickName = "Testing";
-            data.MatchId = "-1";
-            data.PlayerId = System.Guid.NewGuid().ToString();
-        }
+            if (string.IsNullOrEmpty(data.PlayerId))
+            {
+                data.NickName = "Testing";
+                data.MatchId = "-1";
+                data.PlayerId = System.Guid.NewGuid().ToString();
+            }
 
-        SyncNickName = data.NickName;
-        PlayerID = data.PlayerId;
-        PSL_LRSManager.Instance.JoinedGame(data.MatchId, data.PlayerId);
+            SyncNickName = data.NickName;
+            PlayerID = data.PlayerId;
+            PSL_LRSManager.Instance.JoinedGame(data.MatchId, data.PlayerId);
+        }
     }
 
 
@@ -423,7 +439,27 @@ public class Player : MovingObject
     [Command]
     private void CmdHitObstacle()
     {
-        _gameManager.PlayerAction(PlayerActionsManager.GameAction.HitObstacle, PlayerID);
+        _gameManager.PlayerAction(PlayerActionsManager.GameAction.HitObstacle, PlayerID, true);
+    }
+
+    public void GotCollectible()
+    {
+        if (isLocalPlayer)
+        {
+            CmdGotCollectible();
+        }
+    }
+
+    [Command]
+    private void CmdGotCollectible()
+    {
+        _gameManager.PlayerAction(PlayerActionsManager.GameAction.GotCollectible, PlayerID, true);
+    }
+
+    [Command]
+    private void CmdBeenIdle()
+    {
+        _gameManager.PlayerAction(PlayerActionsManager.GameAction.Idle, PlayerID, true);
     }
 
     public void ReachedChest()
@@ -434,7 +470,7 @@ public class Player : MovingObject
         }
         else if (isServer)
         {
-            _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChest);
+            _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChest, false);
         }
     }
 
@@ -448,11 +484,11 @@ public class Player : MovingObject
         {
             if (success)
             {
-                _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChestSuccess);
+                _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChestSuccess, false);
             }
             else
             {
-                _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChestFail);
+                _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChestFail, false);
             }
             
         }
@@ -461,7 +497,7 @@ public class Player : MovingObject
     [Command]
     private void CmdReachedGoal()
     {
-        _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChest);
+        _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChest, false);
     }
 
     [Command]
@@ -469,11 +505,11 @@ public class Player : MovingObject
     {
         if (success)
         {
-            _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChestSuccess);
+            _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChestSuccess, false);
         }
         else
         {
-            _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChestFail);
+            _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChestFail, false);
         }
     }
 
@@ -488,7 +524,7 @@ public class Player : MovingObject
     [Command]
     private void CmdGaveReward()
     {
-        _gameManager.PlayerAction(PlayerActionsManager.GameAction.SetReward, PlayerID);
+        _gameManager.PlayerAction(PlayerActionsManager.GameAction.SetReward, PlayerID, false);
     }
     #endregion
 
@@ -582,7 +618,7 @@ public class Player : MovingObject
         platform.transform.SetParent(this.transform, true);
         platform.transform.localPosition = new Vector3(0f, 1.0f, 1.5f);
 
-        _gameManager.PlayerAction(PlayerActionsManager.GameAction.PickedUpPlatform, PlayerID);
+        _gameManager.PlayerAction(PlayerActionsManager.GameAction.PickedUpPlatform, PlayerID, false);
     }
 
     [Command]
@@ -593,7 +629,7 @@ public class Player : MovingObject
         HoldingPlatform = false;
         platform.GetComponent<FloatingPlatform>().CanPickUp = !HoldingPlatform;
 
-        _gameManager.PlayerAction(PlayerActionsManager.GameAction.PlacedPlatform, PlayerID);
+        _gameManager.PlayerAction(PlayerActionsManager.GameAction.PlacedPlatform, PlayerID, false, PlayerActionsManager.GameAction.PickedUpPlatform);
 
     }
 
@@ -645,7 +681,7 @@ public class Player : MovingObject
             _usePaddle = true;
         }
         GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Paddle");
-        _gameManager.PlayerAction(PlayerActionsManager.GameAction.Pushed, playerId);
+        _gameManager.PlayerAction(PlayerActionsManager.GameAction.Pushed, playerId, true);
     }
 
     [Command]

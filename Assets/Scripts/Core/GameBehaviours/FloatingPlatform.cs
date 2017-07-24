@@ -131,7 +131,8 @@ public class FloatingPlatform : MovingObject
         }
         else if (other.gameObject.tag == "Collectible")
         {
-            
+            _playerOnPlatform.GetComponent<Player>().GotCollectible();
+
             var operation = other.gameObject.GetComponent<MathsCollectible>().Operation;
 
 

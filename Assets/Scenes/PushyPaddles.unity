@@ -16229,6 +16229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _url: 
+  _logFileName: PlayerTracking.txt
 --- !u!114 &1968042642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16248,13 +16249,55 @@ MonoBehaviour:
     PreviousAction: 1
     MultiplePlayers: 1
     Interval: 0.4
-  - Name: Reached Goal
+  - Name: Reached Chest
     Skill: 11
     Positive: 1
     TriggerAction: 3
     PreviousAction: 0
     MultiplePlayers: 0
     Interval: -1
+  - Name: Pushed Into Obstacle
+    Skill: 11
+    Positive: 0
+    TriggerAction: 2
+    PreviousAction: 1
+    MultiplePlayers: 1
+    Interval: 1.5
+  - Name: Pushed Into Collectible
+    Skill: 11
+    Positive: 1
+    TriggerAction: 2
+    PreviousAction: 1
+    MultiplePlayers: 1
+    Interval: 1.5
+  - Name: Gave A Reward
+    Skill: 10
+    Positive: 1
+    TriggerAction: 10
+    PreviousAction: 0
+    MultiplePlayers: 0
+    Interval: -1
+  - Name: Got Correct Calculation
+    Skill: 9
+    Positive: 1
+    TriggerAction: 5
+    PreviousAction: 0
+    MultiplePlayers: 0
+    Interval: -1
+  - Name: Got Incorrect Calculation
+    Skill: 9
+    Positive: 0
+    TriggerAction: 5
+    PreviousAction: 0
+    MultiplePlayers: 0
+    Interval: -1
+  - Name: Idle holding Platform
+    Skill: 12
+    Positive: 0
+    TriggerAction: 9
+    PreviousAction: 7
+    MultiplePlayers: 0
+    Interval: 5
 --- !u!114 &1968042643
 MonoBehaviour:
   m_ObjectHideFlags: 0

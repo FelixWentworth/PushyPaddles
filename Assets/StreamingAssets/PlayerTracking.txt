@@ -1,0 +1,41 @@
+
+
+Attempts: 1
+Chests Reached: 1
+Calculation Success Rate: 100
+Rounds Complete: 1
+Time Taken: 37
+Problems Complete: -2147483648
+
+Attempts: 7
+Chests Reached: 3
+Calculation Success Rate: 67
+Rounds Complete: 2
+Time Taken: 26
+Problems Complete: -2147483648
+
+Attempts: 9
+Chests Reached: 4
+Calculation Success Rate: 75
+Rounds Complete: 3
+Time Taken: 33
+Problems Complete: -2147483648
+
+Attempts: 11
+Chests Reached: 5
+Calculation Success Rate: 80
+Rounds Complete: 4
+Time Taken: 45
+Problems Complete: -2147483648
+Player: ff245a40-6a97-4bfb-a51a-333c9f82b78a, showed skill: TookTurns, with value: -2
+Player: 3228e028-2442-4b04-9c0e-9bed21c30075, showed skill: TookTurns, with value: -2
+Player: fb09022d-7b41-408b-bd2a-83f6b7b8c76d, showed skill: TookTurns, with value: -2
+Player: , showed skill: Cooperated, with value: 0
+Player: 3228e028-2442-4b04-9c0e-9bed21c30075, showed skill: Shared, with value: 0
+
+Attempts: 1
+Chests Reached: 1
+Calculation Success Rate: 100
+Rounds Complete: 1
+Time Taken: 19
+Problems Complete: -2147483648

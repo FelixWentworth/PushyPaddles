@@ -16,12 +16,13 @@ public class PlayerActionsManager : MonoBehaviour
 
         Pushed,
         HitObstacle,
+        GotCollectible,
         ReachedChest,
         ReachedChestSuccess,
         ReachedChestFail,
         PickedUpPlatform,
         PlacedPlatform,
-        IdleHoldingPlatform,
+        Idle,
         SetReward
     }
 
@@ -31,6 +32,7 @@ public class PlayerActionsManager : MonoBehaviour
         public string PlayerId;
         public GameAction Action;
         public DateTime TimeStamp;
+        public bool Removable;
     }
 
     [Serializable]
@@ -56,7 +58,7 @@ public class PlayerActionsManager : MonoBehaviour
         get { return _skillCriteria.Max(c => c.Interval); }
     }
 
-    public void PerformedAction(GameAction action, string playerId)
+    public void PerformedAction(GameAction action, string playerId, bool removable, GameAction removeAction = PlayerActionsManager.GameAction.None)
     {
         Log(string.Format("Player: {0}, performed action: {1}", playerId, action));
 
@@ -64,13 +66,19 @@ public class PlayerActionsManager : MonoBehaviour
         {
             Action = action,
             PlayerId = playerId,
-            TimeStamp = DateTime.Now
+            TimeStamp = DateTime.Now,
+            Removable = removable
         });
 
         // remove actions older than largest interval
         if (_largestInterval > 0)
         { 
-            _playerActions.RemoveAll(a => (DateTime.Now - a.TimeStamp).Seconds > _largestInterval);
+            _playerActions.RemoveAll(a => (DateTime.Now - a.TimeStamp).Seconds > _largestInterval && a.Removable);
+        }
+
+        if (removeAction != null)
+        {
+            _playerActions.RemoveAll(a => a.PlayerId == playerId && a.Action == removeAction);
         }
 
         // only check actions that trigger action meets this action
@@ -82,7 +90,7 @@ public class PlayerActionsManager : MonoBehaviour
 
             // Check if criteria requires a previous action to be met as well
             actionsMeetingCriteria = criteria.PreviousAction != GameAction.None
-                ? actionsMeetingCriteria.Where(a => a.Action != criteria.PreviousAction).ToList()
+                ? actionsMeetingCriteria.Where(a => a.Action == criteria.PreviousAction).ToList()
                 : actionsMeetingCriteria;
             
             // Check is within interval or interval not important
@@ -105,12 +113,13 @@ public class PlayerActionsManager : MonoBehaviour
 
     private void RecordSkillValue(PSL_Verbs verb, string playerId, bool positiveSkill)
     {
+        Debug.Log("Player " + playerId + " showed Skill: " + verb);
         var increment = positiveSkill ? 1 : -1;
         PSL_LRSManager.Instance.PlayerShowedSkill(playerId, verb, increment);
     }
     
     private static void Log(string message)
     {
-        LogProxy.Info(message);
+        //LogProxy.Info(message);
     }
 }

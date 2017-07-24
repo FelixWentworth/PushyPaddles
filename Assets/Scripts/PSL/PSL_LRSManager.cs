@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -14,6 +16,8 @@ public class PSL_LRSManager : NetworkBehaviour
     
     // Our variables needed for sending data
     [SerializeField] private string _url;
+
+    [SerializeField] private string _logFileName;
     private object _body;
 
     // Our variables that identify the players and the match, used when sending data through LRS
@@ -99,6 +103,8 @@ public class PSL_LRSManager : NetworkBehaviour
     {
         _timeTakenPerRound.Add(timeTaken);
         _totalRoundComplete += 1;
+
+        SendSkillData(false, timeTaken);
     }
 
     /// <summary>
@@ -108,13 +114,28 @@ public class PSL_LRSManager : NetworkBehaviour
     [Server]
     public void GameCompleted(int timeTaken)
     {
-        SendTrackedData(timeTaken);
+        SendSkillData(false, timeTaken);
     }
 
     [Server]
     public void PlayerShowedSkill(string playerId, PSL_Verbs verb, int increment)
     {
         _tracking.AddSkill(playerId, verb, increment);
+    }
+
+    [Server]
+    public void SendSkillData(bool usePLS, int timeTaken)
+    {
+        if (usePLS)
+        {
+            _tracking.SendSkillData();
+            SendTrackedData(timeTaken);
+        }
+        else
+        {
+            var individualData = _tracking.OutputSkillData();
+            OutputTrackedData(individualData, timeTaken);
+        }
     }
 
     #endregion
@@ -150,6 +171,23 @@ public class PSL_LRSManager : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// Output the tracked data to log
+    /// </summary>
+    /// <param name="timeTaken"></param>
+    [Server]
+    private void OutputTrackedData(string individualData, int timeTaken)
+    {
+        StartCoroutine(WriteToFile("\n" + individualData + 
+                  "\nAttempts: " + _totalAttempts +
+                  "\nChests Reached: " + _totalGoalReached +
+                  "\nCalculation Success Rate: " + Mathf.RoundToInt(((float)_totalRoundComplete / (float)_totalGoalReached) * 100f) +
+                  "\nRounds Complete: " + _totalRoundComplete +
+                  "\nTime Taken: " + timeTaken +
+                  "\nProblems Complete: " + (Mathf.RoundToInt(((float)_totalRoundComplete / (float)_totalRounds) * 100f))));
+    }
+    
+
     [Server]
     private IEnumerator SendPlayerData(WWWForm data, string playerId)
     {
@@ -157,6 +195,31 @@ public class PSL_LRSManager : NetworkBehaviour
 
         var www = new WWW(_url, data);
         yield return www;
+    }
+
+    [Server]
+    private IEnumerator WriteToFile(string message)
+    {
+        var path = Application.streamingAssetsPath + "/" + _logFileName;
+
+        if (Application.platform == RuntimePlatform.WindowsEditor ||
+            Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WSAPlayerX86 ||
+            Application.platform == RuntimePlatform.WSAPlayerX64 || Application.platform == RuntimePlatform.LinuxPlayer)
+        {
+            path = "file:///" + path;
+        }
+
+        var www = new WWW(path);
+
+        yield return www;
+        if (www.text != null)
+        {
+            var newtext = www.text + message;
+            using (var sw = new StreamWriter(Application.streamingAssetsPath + "/" + _logFileName))
+            {
+                sw.Write(newtext);
+            }
+        }
     }
 
 #endregion

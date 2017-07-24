@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
@@ -33,9 +34,12 @@ public class GameManager : NetworkBehaviour
     private bool _generatingLevel;
 
     private bool ready;
+    private DateTime _startTime;
 
     void Start()
     {
+        _startTime = DateTime.Now;
+
 #if USE_PROSOCIAL_EVENTS
         Platform.SetActive(false);
 #endif
@@ -403,18 +407,19 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     /// <param name="action">the action that was completed</param>
     [Server]
-    public void GroupAction(PlayerActionsManager.GameAction action)
+    public void GroupAction(PlayerActionsManager.GameAction action, bool removableFromList, PlayerActionsManager.GameAction removeAction = PlayerActionsManager.GameAction.None)
     {
         foreach (var player in  _players)
         {
-            PlayerAction(action, player.PlayerID);
+            PlayerAction(action, player.PlayerID, removableFromList, removeAction);
         }
     }
 
     [Server]
-    public void PlayerAction(PlayerActionsManager.GameAction action, string playerId)
+    public void PlayerAction(PlayerActionsManager.GameAction action, string playerId, bool removableFromList, PlayerActionsManager.GameAction removeAction = PlayerActionsManager.GameAction.None)
     {
-        _playerActionsManager.PerformedAction(action, playerId);
+        // HACK send remove action here, should be an attribute
+        _playerActionsManager.PerformedAction(action, playerId, removableFromList, removeAction);
     }
 
     [Server]
@@ -431,7 +436,11 @@ public class GameManager : NetworkBehaviour
     public void NextRound()
     {
         _level.NextRound();
+        // output the values from this round
+        PSL_LRSManager.Instance.NewRound((DateTime.Now - _startTime).Seconds);
         Restart(newRound: true);
+        _startTime = DateTime.Now;
+
     }
 
     [Server]
@@ -467,8 +476,6 @@ public class GameManager : NetworkBehaviour
                         .Setup(0, challenge);
                 }
             }
-
-            PSL_LRSManager.Instance.NewRound(_level.SecondsTaken);
 
             ChangeRoles();
 

@@ -9,15 +9,23 @@ public class PSL_SkillTracking : MonoBehaviour {
     // This class will contain a list of players and their current skills, ready for sending at the end of the game. Skills will be incremented and normalised as appropriate
     // Eg. if a player is cooperative, cooperative +1 then the most cooperative score at the end will be closest to 1
 
-    public struct PlayerSkill
+    public class PlayerSkill
     {
         public string Id;
         public PSL_Verbs Skill;
+
+        public override bool Equals(object other)
+        {
+            var otherSkill = other as PlayerSkill;
+            if (otherSkill == null)
+                return false;
+            return Id == otherSkill.Id && Skill == otherSkill.Skill;
+        }
     }
 
-    private readonly Dictionary<PlayerSkill, int> _playerSkills = new Dictionary<PlayerSkill, int>();
+    private Dictionary<PlayerSkill, int> _playerSkills = new Dictionary<PlayerSkill, int>();
 
-    private readonly Dictionary<PSL_Verbs, int> _verbCount = new Dictionary<PSL_Verbs, int>();
+    private Dictionary<PlayerSkill, int> _verbCount = new Dictionary<PlayerSkill, int>();
 
     public void AddSkill(string playerId, PSL_Verbs skill, int increment)
     {
@@ -27,15 +35,15 @@ public class PSL_SkillTracking : MonoBehaviour {
             Skill = skill
         };
 
-        if (_playerSkills.ContainsKey(playerSkill))
-        {
-            _playerSkills[playerSkill] += increment;
-            if (_playerSkills[playerSkill] <= 0)
-            {
-                _playerSkills[playerSkill] = 0;
-            }
+        var key = _playerSkills.Keys.FirstOrDefault(p => p.Equals(playerSkill));
 
-            
+        if (key != null)
+        {
+            _playerSkills[key] += increment;
+            if (_playerSkills[key] <= 0)
+            {
+                _playerSkills[key] = 0;
+            }
         }
         else
         {
@@ -43,14 +51,16 @@ public class PSL_SkillTracking : MonoBehaviour {
 
         }
 
-        if (_verbCount.ContainsKey(playerSkill.Skill))
+        key = _verbCount.Keys.FirstOrDefault(p => p.Equals(playerSkill));
+
+        if (key != null)
         {
             // incrememnt the total possible
-            _verbCount[playerSkill.Skill] += 1;
+            _verbCount[key] += 1;
         }
         else
         {
-            _verbCount.Add(playerSkill.Skill, 1);
+            _verbCount.Add(playerSkill, 1);
         }
     }
 
@@ -68,13 +78,31 @@ public class PSL_SkillTracking : MonoBehaviour {
         }   
     }
 
+    public string OutputSkillData()
+    {
+        var data = "";
+
+        foreach (var playerSkill in _playerSkills)
+        {
+            var id = playerSkill.Key.Id;
+            var skill = playerSkill.Key.Skill;
+
+            var value = GetNormalizedValue(playerSkill.Key);
+
+            data += string.Format("Player: {0}, showed skill: {1}, with value: {2}", id, skill, value) + "\n";
+
+            Debug.Log(data);
+        }
+        return data;
+    }
+
     private float GetNormalizedValue(PlayerSkill playerSkill)
     {
         var playersSkillValues = _playerSkills.Where(p => p.Key.Skill == playerSkill.Skill )
             .Select(p => p.Value)
             .ToList();
 
-        var totalValue = _verbCount.First(c => c.Key == playerSkill.Skill).Value;
+        var totalValue = _verbCount[playerSkill];
 
         var normalized = GetNormalized(_playerSkills[playerSkill], totalValue, 0, playerSkill.Skill.GetMinRange(), 1);
 
@@ -87,10 +115,10 @@ public class PSL_SkillTracking : MonoBehaviour {
         // Normalised value between a and b
         //        
         //                       x - min x
-        //     n = (b - a) ------------------- + a
+        //     n = (b - a) -------------------- + a
         //                     max x - min x
         // 
 
-        return (rangeMax - rangeMin) * (((value - minValue) / (totalValue - minValue)) + rangeMin);
+        return (rangeMax - rangeMin) * ((value - minValue) / (totalValue - minValue)) + rangeMin;
     }
 }
