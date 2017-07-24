@@ -1,6 +1,7 @@
 ﻿using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
@@ -31,12 +32,14 @@ public class GameOverScreen : UIScreen
     public void BtnQuitGame()
     {
         var manager = GameObject.Find("GameManager").GetComponent<GameManager>();
-
         var player = manager.GetLocalPlayer();
 
         var ni = player.GetComponent<NetworkIdentity>();
 
         ni.connectionToServer.Disconnect();
+
+        // Load the current scene
+        SceneManager.LoadScene(0);
     }
 
     /// <summary>

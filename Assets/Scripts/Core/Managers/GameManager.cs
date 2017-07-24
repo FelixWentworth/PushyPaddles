@@ -6,6 +6,7 @@ using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
+using UnityEngine.SceneManagement;
 
 public class GameManager : NetworkBehaviour
 {
@@ -103,6 +104,7 @@ public class GameManager : NetworkBehaviour
 #else
 
 #endif
+    
     }
 
     [Server]
