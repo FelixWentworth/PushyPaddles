@@ -439,7 +439,7 @@ public class Player : MovingObject
     [Command]
     private void CmdHitObstacle()
     {
-        _gameManager.PlayerAction(PlayerActionsManager.GameAction.HitObstacle, PlayerID, true);
+        _gameManager.PlayerAction(PlayerAction.HitObstacle, PlayerID);
     }
 
     public void GotCollectible()
@@ -453,13 +453,13 @@ public class Player : MovingObject
     [Command]
     private void CmdGotCollectible()
     {
-        _gameManager.PlayerAction(PlayerActionsManager.GameAction.GotCollectible, PlayerID, true);
+        _gameManager.PlayerAction(PlayerAction.GotCollectible, PlayerID);
     }
 
     [Command]
     private void CmdBeenIdle()
     {
-        _gameManager.PlayerAction(PlayerActionsManager.GameAction.Idle, PlayerID, true);
+        _gameManager.PlayerAction(PlayerAction.Idle, PlayerID);
     }
 
     public void ReachedChest()
@@ -470,7 +470,7 @@ public class Player : MovingObject
         }
         else if (isServer)
         {
-            _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChest, false);
+            _gameManager.GroupAction(PlayerAction.ReachedChest);
         }
     }
 
@@ -484,11 +484,11 @@ public class Player : MovingObject
         {
             if (success)
             {
-                _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChestSuccess, false);
+                _gameManager.GroupAction(PlayerAction.ReachedChestSuccess);
             }
             else
             {
-                _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChestFail, false);
+                _gameManager.GroupAction(PlayerAction.ReachedChestFail);
             }
             
         }
@@ -497,7 +497,7 @@ public class Player : MovingObject
     [Command]
     private void CmdReachedGoal()
     {
-        _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChest, false);
+        _gameManager.GroupAction(PlayerAction.ReachedChest);
     }
 
     [Command]
@@ -505,11 +505,11 @@ public class Player : MovingObject
     {
         if (success)
         {
-            _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChestSuccess, false);
+            _gameManager.GroupAction(PlayerAction.ReachedChestSuccess);
         }
         else
         {
-            _gameManager.GroupAction(PlayerActionsManager.GameAction.ReachedChestFail, false);
+            _gameManager.GroupAction(PlayerAction.ReachedChestFail);
         }
     }
 
@@ -524,7 +524,7 @@ public class Player : MovingObject
     [Command]
     private void CmdGaveReward()
     {
-        _gameManager.PlayerAction(PlayerActionsManager.GameAction.SetReward, PlayerID, false);
+        _gameManager.PlayerAction(PlayerAction.SetReward, PlayerID);
     }
     #endregion
 
@@ -618,7 +618,7 @@ public class Player : MovingObject
         platform.transform.SetParent(this.transform, true);
         platform.transform.localPosition = new Vector3(0f, 1.0f, 1.5f);
 
-        _gameManager.PlayerAction(PlayerActionsManager.GameAction.PickedUpPlatform, PlayerID, false);
+        _gameManager.PlayerAction(PlayerAction.PickedUpPlatform, PlayerID);
     }
 
     [Command]
@@ -629,7 +629,7 @@ public class Player : MovingObject
         HoldingPlatform = false;
         platform.GetComponent<FloatingPlatform>().CanPickUp = !HoldingPlatform;
 
-        _gameManager.PlayerAction(PlayerActionsManager.GameAction.PlacedPlatform, PlayerID, false, PlayerActionsManager.GameAction.PickedUpPlatform);
+        _gameManager.PlayerAction(PlayerAction.PlacedPlatform, PlayerID);
 
     }
 
@@ -681,7 +681,7 @@ public class Player : MovingObject
             _usePaddle = true;
         }
         GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Paddle");
-        _gameManager.PlayerAction(PlayerActionsManager.GameAction.Pushed, playerId, true);
+        _gameManager.PlayerAction(PlayerAction.Pushed, playerId);
     }
 
     [Command]

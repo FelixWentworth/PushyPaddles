@@ -25,7 +25,7 @@ public class GameManager : NetworkBehaviour
     private MenuManager _menu;
     private LevelManager _level;
     private Curriculum _curriculum;
-    private PlayerActionsManager _playerActionsManager;
+    private PlayerActionManager _playerActionManager;
 
     public GameObject PlayerOneSpawn;
     public GameObject PlayerTwoSpawn;
@@ -65,9 +65,9 @@ public class GameManager : NetworkBehaviour
             {
                 _curriculum = GameObject.Find("CurriculumManager").GetComponent<Curriculum>();
             }
-            if (_playerActionsManager == null)
+            if (_playerActionManager == null)
             {
-                _playerActionsManager = GameObject.Find("InteractionManager").GetComponent<PlayerActionsManager>();
+                _playerActionManager = GameObject.Find("InteractionManager").GetComponent<PlayerActionManager>();
             }
             if (_level.IsGameOver)
             {
@@ -407,19 +407,18 @@ public class GameManager : NetworkBehaviour
     /// </summary>
     /// <param name="action">the action that was completed</param>
     [Server]
-    public void GroupAction(PlayerActionsManager.GameAction action, bool removableFromList, PlayerActionsManager.GameAction removeAction = PlayerActionsManager.GameAction.None)
+    public void GroupAction(PlayerAction action)
     {
         foreach (var player in  _players)
         {
-            PlayerAction(action, player.PlayerID, removableFromList, removeAction);
+            PlayerAction(action, player.PlayerID);
         }
     }
 
     [Server]
-    public void PlayerAction(PlayerActionsManager.GameAction action, string playerId, bool removableFromList, PlayerActionsManager.GameAction removeAction = PlayerActionsManager.GameAction.None)
+    public void PlayerAction(PlayerAction action, string playerId)
     {
-        // HACK send remove action here, should be an attribute
-        _playerActionsManager.PerformedAction(action, playerId, removableFromList, removeAction);
+        _playerActionManager.PerformedAction(action, playerId, action.GetAlwaysTracked(), action.GetCancelAction());
     }
 
     [Server]

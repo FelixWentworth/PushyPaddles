@@ -8,29 +8,15 @@ using PlayGen.Unity.AsyncUtilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class PlayerActionsManager : MonoBehaviour
+public class PlayerActionManager : MonoBehaviour
 {
-    public enum GameAction
-    {
-        None = 0,
-
-        Pushed,
-        HitObstacle,
-        GotCollectible,
-        ReachedChest,
-        ReachedChestSuccess,
-        ReachedChestFail,
-        PickedUpPlatform,
-        PlacedPlatform,
-        Idle,
-        SetReward
-    }
+    
 
     [Serializable]
     private class PlayerActions
     {
         public string PlayerId;
-        public GameAction Action;
+        public PlayerAction Action;
         public DateTime TimeStamp;
         public bool Removable;
     }
@@ -42,8 +28,8 @@ public class PlayerActionsManager : MonoBehaviour
 
         [Tooltip("Skill being shown")] public PSL_Verbs Skill;
         [Tooltip("Is the skill shown positive")] public bool Positive;
-        [Tooltip("Action that must be met for criteria to be met")] public GameAction TriggerAction;
-        [Tooltip("Action to check against for criteria to be met")] public GameAction PreviousAction;
+        [Tooltip("Action that must be met for criteria to be met")] public PlayerAction TriggerAction;
+        [Tooltip("Action to check against for criteria to be met")] public PlayerAction PreviousAction;
         [Tooltip("Compare action between different players?")] public bool MultiplePlayers;
         [Tooltip("Time interval between actions, none = <0")] public float Interval;
     }
@@ -58,7 +44,7 @@ public class PlayerActionsManager : MonoBehaviour
         get { return _skillCriteria.Max(c => c.Interval); }
     }
 
-    public void PerformedAction(GameAction action, string playerId, bool removable, GameAction removeAction = PlayerActionsManager.GameAction.None)
+    public void PerformedAction(PlayerAction action, string playerId, bool removable, PlayerAction removeAction = PlayerAction.None)
     {
         Log(string.Format("Player: {0}, performed action: {1}", playerId, action));
 
@@ -89,7 +75,7 @@ public class PlayerActionsManager : MonoBehaviour
             var actionsMeetingCriteria = _playerActions;
 
             // Check if criteria requires a previous action to be met as well
-            actionsMeetingCriteria = criteria.PreviousAction != GameAction.None
+            actionsMeetingCriteria = criteria.PreviousAction != PlayerAction.None
                 ? actionsMeetingCriteria.Where(a => a.Action == criteria.PreviousAction).ToList()
                 : actionsMeetingCriteria;
             
