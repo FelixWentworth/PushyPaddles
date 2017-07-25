@@ -17,6 +17,8 @@ public class Player : MovingObject
     public GameObject Platform;
     public GameObject PaddlePrompt;
 
+    public GameObject WaveEffect;
+
     public enum Role
     {
         Unassigned = 0,
@@ -534,16 +536,16 @@ public class Player : MovingObject
         SetAnimation();
         SetPaddle();
         SetPlatform();
-
+        PaddlePrompt.SetActive(_usedPaddle);
         if (_usePaddle)
         {
             if (PaddlePrompt.activeSelf)
             {
                 _usedPaddle = true;
-                PaddlePrompt.SetActive(false);
+                
             }
             _usePaddle = false;
-            GetComponentInChildren<ParticleSystem>().Play();
+            SpawnWaveEffect(transform.position);
         }
         if (_playerModel != _currentModel)
         {
@@ -597,6 +599,14 @@ public class Player : MovingObject
         // End Local Player Controls
         /////////////////////////////
     }
+
+    private void SpawnWaveEffect(Vector3 playerPos)
+    {
+        var go = Instantiate(WaveEffect, playerPos, Quaternion.identity);
+        var zRot = playerPos.x < 0 ? 0f : 180f;
+        go.transform.rotation = Quaternion.Euler(-90f, 0f, zRot);
+    }
+
 
     [Command]
     private void CmdMove(GameObject go, float x, float z)
