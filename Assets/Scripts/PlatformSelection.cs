@@ -76,7 +76,10 @@ public class PlatformSelection : MonoBehaviour
     public static void UpdateSeverState(GameState state)
     {
         GameObject.Find("GameManager").GetComponent<GameManager>().ControlledByOrchestrator = true;
-        _instance._orchestratedServer.SetState(state, true);
+        if (_instance._orchestratedServer != null)
+        {
+            _instance._orchestratedServer.SetState(state, true);
+        }
     }
 
     private void PlayerIdentified(SessionIdentifier obj)
@@ -105,5 +108,13 @@ public class PlatformSelection : MonoBehaviour
     private void StartClient(Endpoint endpoint)
     {
         _orchestrationClient.ConnectNetworkManager();
+    }
+
+    public static void EnsureServerState()
+    {
+        if (_instance._orchestratedServer.State < GameState.Started)
+        {
+            _instance._orchestratedServer.SetState(GameState.Started, true);
+        }
     }
 }

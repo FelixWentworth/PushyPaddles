@@ -75,6 +75,10 @@ public class FloatingPlatform : MovingObject
 
     void FixedUpdate()
     {
+        if (_levelManager == null)
+        {
+            _levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+        }
         if (_playerOnPlatform != null && isServer)
         {
             // On Water
@@ -144,10 +148,7 @@ public class FloatingPlatform : MovingObject
             }
             else
             {
-                if (_levelManager == null)
-                {
-                    _levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
-                }
+                
                 PickupValue = _levelManager.Evaluate(PickupValue + operation).ToString();
             }
 
