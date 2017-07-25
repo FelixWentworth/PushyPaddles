@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
+using PlayGen.Orchestrator.Common;
 using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -11,9 +12,12 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : NetworkBehaviour
 {
-    [SyncVar] public bool DistributingRewards;
-    [SyncVar] private bool _gamePlaying = false;
-    [SyncVar] public bool AllPlayersReady;
+    [SyncVar]
+    public bool DistributingRewards;
+    [SyncVar]
+    private bool _gamePlaying = false;
+    [SyncVar]
+    public bool AllPlayersReady;
 
     public GameObject Platform;
     public GameObject PauseScreen;
@@ -35,6 +39,8 @@ public class GameManager : NetworkBehaviour
 
     private bool ready;
     private DateTime _startTime;
+
+    public bool ControlledByOrchestrator;
 
     void Start()
     {
@@ -79,25 +85,38 @@ public class GameManager : NetworkBehaviour
             {
                 // Set the sync var variable
                 AllPlayersReady = AreAllPlayersReady();
+
                 if (AllPlayersReady)
                 {
+                    // TODO change to waiting for start and wait for Orchestrator to start game
+                    PlatformSelection.UpdateSeverState(GameState.Started);
                     StartGameTimer();
                 }
+                else
+                {
+                    PlatformSelection.UpdateSeverState(GameState.WaitingForPlayers);
+                }
             }
-            else
+            else if (!ControlledByOrchestrator)
             {
                 AllPlayersReady = _players.Count >= 3;
                 if (!AllPlayersReady)
                 {
                     PauseGame();
+                    PlatformSelection.UpdateSeverState(GameState.Paused);
+
                 }
                 else
                 {
                     ResumeGame();
+                    PlatformSelection.UpdateSeverState(GameState.Started);
+
                 }
             }
-            
+
         }
+
+
 
         if (Input.GetKeyDown(KeyCode.F1))
         {
@@ -108,7 +127,7 @@ public class GameManager : NetworkBehaviour
 #else
 
 #endif
-    
+
     }
 
     [Server]
@@ -121,7 +140,7 @@ public class GameManager : NetworkBehaviour
     [Server]
     public void OnConnected(NetworkMessage netMsg)
     {
-        OnConnected(netMsg.conn);;
+        OnConnected(netMsg.conn); ;
     }
 
     [Server]
@@ -153,7 +172,7 @@ public class GameManager : NetworkBehaviour
 
     [Server]
     public void OnDisconnected(NetworkConnection netMsg)
-    { 
+    {
         Debug.Log("Disconnected: " + netMsg.connectionId);
         var player = _players.Find(p => p.ConnectionId == netMsg.connectionId);
         if (player == null)
@@ -173,9 +192,9 @@ public class GameManager : NetworkBehaviour
         if (player.OnPlatform)
         {
             GameObject.FindGameObjectWithTag("Platform").GetComponent<FloatingPlatform>().Respawn();
-            
+
         }
-        
+
         // Destroy player game object
         DestroyImmediate(player.gameObject);
 
@@ -248,7 +267,7 @@ public class GameManager : NetworkBehaviour
 
     public List<string> GetPlayerIds()
     {
-        if(_players.Count == 0)
+        if (_players.Count == 0)
         {
             var players = GameObject.FindGameObjectsWithTag("Player");
             foreach (var player in players)
@@ -333,7 +352,7 @@ public class GameManager : NetworkBehaviour
 
         // Generate Obstacles
         if (GenerateRocks)
-        {        
+        {
             GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<ObstacleGeneration>().Setup(3, "");
         }
         else
@@ -373,7 +392,7 @@ public class GameManager : NetworkBehaviour
     public void PauseGame()
     {
         _level.PauseTimer();
-
+        RpcShowPause(true);
         _gamePlaying = false;
     }
 
@@ -381,6 +400,8 @@ public class GameManager : NetworkBehaviour
     public void ResumeGame()
     {
         _level.ResumeTimer();
+
+        RpcShowPause(false);
 
         _gamePlaying = true;
     }
@@ -400,6 +421,13 @@ public class GameManager : NetworkBehaviour
     private void RpcStopGame()
     {
         NetworkManager.singleton.StopClient();
+
+    }
+
+    [ClientRpc]
+    private void RpcShowPause(bool showing)
+    {
+        PauseScreen.SetActive(showing);
     }
 
     /// <summary>
@@ -556,6 +584,7 @@ public class GameManager : NetworkBehaviour
     {
         _menu.ShowGameOver();
         PSL_LRSManager.Instance.GameCompleted(_level.SecondsTaken);
+        PlatformSelection.UpdateSeverState(GameState.Stopped);
         RestartGame();
     }
 

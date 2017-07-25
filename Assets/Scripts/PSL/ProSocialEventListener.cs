@@ -1,4 +1,5 @@
 using System;
+using PlayGen.Orchestrator.Common;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -6,26 +7,21 @@ using UnityEditor;
 
 public class ProSocialEventListener : MonoBehaviour {
 
-	public static event Action StartGame = delegate { };
-	public static event Action PausedGame = delegate { };
-	public static event Action StopGame = delegate { };
-
-	#if UNITY_EDITOR
+#if UNITY_EDITOR
 	public void EditorStart()
 	{
-		StartGame();
+		PlatformSelection.UpdateSeverState(GameState.Started);
 	}
 
 	public void EditorPause()
 	{
-		PausedGame();
+	    PlatformSelection.UpdateSeverState(GameState.Paused);
 	}
 
-	public void EditorStop()
-	{
-		StopGame();
-	}
-
+    public void EditorStop()
+    {
+        PlatformSelection.UpdateSeverState(GameState.Stopped);
+    }
 #endif
 }
 

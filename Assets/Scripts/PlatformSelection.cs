@@ -19,6 +19,8 @@ public class PlatformSelection : MonoBehaviour
     private static PlatformSelection _instance;
     public static ConnectionType ConnectionType { get; private set; }
 
+    public static Action<GameState> ServerStateChanged;
+
     private OrchestratedGameServer _orchestratedServer;
     private OrchestrationClient _orchestrationClient;
 
@@ -52,6 +54,7 @@ public class PlatformSelection : MonoBehaviour
         {
             case ConnectionType.Server:
                 _orchestratedServer = FindObjectOfType<OrchestratedGameServer>();
+                _orchestratedServer.StateChanged += ServerStateChange;
                 _orchestratedServer.ConfigValidated += ConfigValidated;
                 _orchestratedServer.RegisteredWithOrchestrator += RegisteredWithOrchestrator;
                 break;
@@ -63,6 +66,17 @@ public class PlatformSelection : MonoBehaviour
             case ConnectionType.Testing:
                 break;
         }
+    }
+
+    private void ServerStateChange(GameState state)
+    {
+        ServerStateChanged(state);
+    }
+
+    public static void UpdateSeverState(GameState state)
+    {
+        GameObject.Find("GameManager").GetComponent<GameManager>().ControlledByOrchestrator = true;
+        _instance._orchestratedServer.SetState(state, true);
     }
 
     private void PlayerIdentified(SessionIdentifier obj)
