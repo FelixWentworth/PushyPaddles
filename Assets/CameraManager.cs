@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CameraManager : MonoBehaviour
 {
     [SerializeField] private GameObject _chest;
-
     private bool _end;
     private Camera _camera;
     private Animation _animation;
@@ -20,6 +20,7 @@ public class CameraManager : MonoBehaviour
     private void SetChestDefault()
     {
         var anim = _chest.GetComponent<Animation>();
+
         anim[anim.clip.name].time = 0f;
         anim[anim.clip.name].speed = 0f;
 
@@ -52,7 +53,7 @@ public class CameraManager : MonoBehaviour
         yield return StartCoroutine(PlayAnimation(false));
     }
 
-    private IEnumerator PlayAnimation (bool forward)
+    private IEnumerator PlayAnimation (bool forward, string rewardName = "")
     {
 
         while (_animation.isPlaying)
@@ -76,12 +77,12 @@ public class CameraManager : MonoBehaviour
 
         if (forward)
         {
-            OpenChest();
+            StartCoroutine(OpenChest(rewardName));
         }
         
     }
 
-    private void OpenChest()
+    private IEnumerator OpenChest(string rewardName)
     {
         var anim = _chest.GetComponent<Animation>();
         if (!anim.isPlaying || anim[anim.clip.name].speed == 0f)
@@ -90,7 +91,10 @@ public class CameraManager : MonoBehaviour
             anim[anim.clip.name].speed = 1f;
 
             anim.Play();
+            
+            yield return new WaitForSeconds(anim.clip.length * 0.5f);
         }
+
     }
         
 }

@@ -13,9 +13,18 @@ public class RewardScreenManager : UIScreen
     private GameManager _gameManager;
     private Player _player;
 
+    public enum RewardType
+    {
+        None = 0,
+
+        SpeedBoost,
+        ReverseControls
+    }
+
     public override void Show()
     {
         base.Show();
+
         if (_gameManager == null)
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -23,8 +32,11 @@ public class RewardScreenManager : UIScreen
 
         var players = _gameManager.GetPlayerIds();
 
-        // Its a 3 player game, so always show 3 rewards
-        RewardsManager.ResetRewards(3, players);
+        // Generate a random reward
+        var rand = UnityEngine.Random.Range(0, 3);
+        var reward = (RewardType)rand;
+        RewardsManager.ResetRewards(3, players, reward);
+
     }
 
     public override void Hide()
@@ -66,7 +78,7 @@ public class RewardScreenManager : UIScreen
         }
     }
 
-    public void SetReward(Reward.RewardType type, string playerId)
+    public void SetReward(RewardType type, string playerId)
     {
         var manager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
@@ -76,12 +88,12 @@ public class RewardScreenManager : UIScreen
 
         switch (type)
         {
-            case Reward.RewardType.None:
+            case RewardType.None:
                 break;
-            case Reward.RewardType.SpeedBoost:  
+            case RewardType.SpeedBoost:  
                 player.AssignSpeedBoost(playerId, _speedBoost);
                 break;
-            case Reward.RewardType.ReverseControls:
+            case RewardType.ReverseControls:
                 player.AssignReverseControls(playerId, _controlsModifier);
                 break;
             default:
