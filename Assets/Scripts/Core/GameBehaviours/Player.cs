@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -778,11 +779,17 @@ public class Player : MovingObject
     [ClientRpc]
     public void RpcGoalReached()
     {
-        if (!isLocalPlayer)
-        { 
-            return;
+        StartCoroutine(FocusOnChest());
+    }
+
+    private IEnumerator FocusOnChest()
+    {
+        yield return GameObject.Find("CameraManager").GetComponent<CameraManager>().TransitionToEnd();
+
+        if (isLocalPlayer)
+        {
+            GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowRewards();
         }
-        GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowRewards();
     }
 
     public void RestartGame()
@@ -822,6 +829,13 @@ public class Player : MovingObject
         }
         _gameManager.DistributingRewards = false;
         _gameManager.NextRound();
+        RpcResetCamera();
+    }
+
+    [ClientRpc]
+    private void RpcResetCamera()
+    {
+        StartCoroutine(GameObject.Find("CameraManager").GetComponent<CameraManager>().TransitionToStart());
     }
 
     public void StartTimer()

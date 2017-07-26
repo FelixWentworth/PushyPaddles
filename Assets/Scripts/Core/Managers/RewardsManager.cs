@@ -104,5 +104,6 @@ public class RewardsManager : MonoBehaviour
 
         gameManager.GetLocalPlayer().NextRound();
         gameManager.HideRewards();
+
     }
 }

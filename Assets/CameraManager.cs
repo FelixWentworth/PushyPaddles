@@ -32,24 +32,24 @@ public class CameraManager : MonoBehaviour
         {
             if (_end)
             {
-                TransitionToStart();
+                StartCoroutine(TransitionToStart());
             }
             else
             {
-                TransitionToEnd();
+                StartCoroutine(TransitionToEnd());
             }
             _end = !_end;
         }
     }
 
-    public void TransitionToEnd()
+    public IEnumerator TransitionToEnd()
     {
-        StartCoroutine(PlayAnimation(true));
+        yield return StartCoroutine(PlayAnimation(true));
     }
 
-    public void TransitionToStart()
+    public IEnumerator TransitionToStart()
     {
-        StartCoroutine(PlayAnimation(false));
+        yield return StartCoroutine(PlayAnimation(false));
     }
 
     private IEnumerator PlayAnimation (bool forward)
