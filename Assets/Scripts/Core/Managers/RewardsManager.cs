@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -32,7 +33,7 @@ public class RewardsManager : MonoBehaviour
         var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         var go = Instantiate(_rewardObject, _chest.transform.position, Quaternion.identity);
-        go.GetComponent<RewardSetup>().Setup(EnumToString(_type.ToString()), rewardData.Icon);
+        go.GetComponent<RewardSetup>().Setup(Localization.Get(rewardData.LocalizationKey), rewardData.Icon);
 
         var i = 0;
         foreach (var reward in Rewards)
