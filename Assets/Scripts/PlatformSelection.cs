@@ -7,7 +7,7 @@ using PlayGen.Orchestrator.Unity.Common.Model;
 using PlayGen.Orchestratror.Unity.Client;
 using PlayGen.Orchestratror.Unity.Server;
 using PlayGen.Unity.AsyncUtilities;
-
+using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -100,6 +100,7 @@ public class PlatformSelection : MonoBehaviour
     private void RegisteredWithOrchestrator(GameRegistrationResponse obj)
     {
         Debug.Log(obj.language);
+        Localization.UpdateLanguage(obj.language);
         Debug.Log(obj.scenario);
         Debug.Log(obj.maxPlayers);
         Debug.Log(obj.difficulty);

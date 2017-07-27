@@ -70,6 +70,7 @@ GameObject:
   - component: {fileID: 4317775993021552}
   - component: {fileID: 23592802558228392}
   - component: {fileID: 102755815628022934}
+  - component: {fileID: 114389692724498128}
   m_Layer: 0
   m_Name: RewardName
   m_TagString: Untagged
@@ -244,6 +245,18 @@ MonoBehaviour:
   IconFront: {fileID: 212202633824871846}
   IconBack: {fileID: 212584300147731620}
   RewardText: {fileID: 102755815628022934}
+--- !u!114 &114389692724498128
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1407169033028652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5912e882f937ed344ae4de2bf5c17e05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Style: 0
 --- !u!212 &212193781537955464
 SpriteRenderer:
   m_ObjectHideFlags: 1

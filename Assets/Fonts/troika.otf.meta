@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 51f0ffd2ee59ddd43b6e49d1987a9be7
+timeCreated: 1501158347
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Troika
+  fontNames:
+  - Troika
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
