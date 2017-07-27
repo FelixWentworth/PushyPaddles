@@ -12,6 +12,7 @@ TagManager:
   - Collectible
   - PlatformPlaceLeft
   - PlatformPlaceRight
+  - Reward
   layers:
   - Default
   - TransparentFX

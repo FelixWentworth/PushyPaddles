@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RewardScreenManager : UIScreen
 {
     public RewardsManager RewardsManager;
     private float _speedBoost = 0.05f;
     private float _controlsModifier = -1f;
+    private float _boatControlBoost = 0.0005f;
+    private float _strengthBoost = 0.1f;
 
     private GameManager _gameManager;
     private Player _player;
@@ -18,8 +21,19 @@ public class RewardScreenManager : UIScreen
         None = 0,
 
         SpeedBoost,
-        ReverseControls
+        ReverseControls,
+        MoreBoatControl,
+        MorePaddleStrength,
     }
+
+    [Serializable]
+    public class RewardIcons
+    {
+        public RewardType Type;
+        public Sprite Icon;
+    }
+
+    [SerializeField] private List<RewardIcons> _rewardIcons;
 
     public override void Show()
     {
@@ -34,7 +48,7 @@ public class RewardScreenManager : UIScreen
 
         // Generate a random reward
         var rand = UnityEngine.Random.Range(0, 3);
-        var reward = (RewardType)rand;
+        var reward = _rewardIcons[rand];
         RewardsManager.ResetRewards(3, players, reward);
 
     }
@@ -95,6 +109,12 @@ public class RewardScreenManager : UIScreen
                 break;
             case RewardType.ReverseControls:
                 player.AssignReverseControls(playerId, _controlsModifier);
+                break;
+            case RewardType.MoreBoatControl:
+                player.AssignMoreControl(playerId, _boatControlBoost);
+                break;
+            case RewardType.MorePaddleStrength:
+                player.AssignMoreStrength(playerId, _strengthBoost);
                 break;
             default:
                 throw new ArgumentOutOfRangeException("type", type, null);

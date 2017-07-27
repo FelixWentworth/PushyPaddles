@@ -9,6 +9,8 @@ public class Player : MovingObject
     public string Name;
     [SyncVar] public float DirectionModifier = 1;
     [SyncVar] public float SpeedModifier = 1f;
+    [SyncVar] public float RaftControlModifier = 1f;
+    [SyncVar] public float StrengthModifier = 1f;
 
     [SyncVar] public bool HoldingPlatform;
 
@@ -156,6 +158,12 @@ public class Player : MovingObject
                     }
 
                     UpdatePlayerPosition();
+
+                    var x = Input.GetAxis("Horizontal");
+
+                    // slowly tilt the platform
+                    CmdTiltRaft(x);
+
                 }
                 else
                 {
@@ -687,12 +695,19 @@ public class Player : MovingObject
         // Check here if the right player as only the server knows the current roles
         if (PlayerRole == Role.Paddler)
         {
-            GameObject.Find("Water").GetComponent<WaterBehaviour>().PaddleUsed(this);
+            GameObject.Find("Water").GetComponent<WaterBehaviour>().PaddleUsed(this, StrengthModifier);
 
             _usePaddle = true;
         }
         GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Paddle");
         _gameManager.PlayerAction(PlayerAction.Pushed, playerId);
+    }
+
+    [Command]
+    private void CmdTiltRaft(float direction)
+    {
+        GameObject.Find("Water").GetComponent<WaterBehaviour>().RaftTilt(this, direction);
+
     }
 
     [Command]
@@ -830,12 +845,24 @@ public class Player : MovingObject
         _gameManager.DistributingRewards = false;
         _gameManager.NextRound();
         RpcResetCamera();
+        RpcRemoveRewards();
     }
 
     [ClientRpc]
     private void RpcResetCamera()
     {
         StartCoroutine(GameObject.Find("CameraManager").GetComponent<CameraManager>().TransitionToStart());
+    }
+
+    [ClientRpc]
+    private void RpcRemoveRewards()
+    {
+        // make sure rewards are removed
+        var rewards = GameObject.FindGameObjectsWithTag("Reward");
+        foreach (var reward in rewards)
+        {
+            Destroy(reward);
+        }
     }
 
     public void StartTimer()
@@ -892,6 +919,48 @@ public class Player : MovingObject
 
         // Assign the reward
         player.DirectionModifier *= modifier;
+    }
+
+    public void AssignMoreControl(string playerIndex, float increment)
+    {
+        if (isLocalPlayer)
+        {
+            CmdAssignMoreControl(playerIndex, increment);
+        }
+    }
+
+    [Command]
+    public void CmdAssignMoreControl(string playerID, float increment)
+    {
+        if (_gameManager == null)
+        {
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        }
+        var player = _gameManager.GetPlayer(playerID);
+
+        // Assign the reward
+        player.RaftControlModifier += increment;
+    }
+
+    public void AssignMoreStrength(string playerIndex, float increment)
+    {
+        if (isLocalPlayer)
+        {
+            CmdAssignMoreStrength(playerIndex, increment);
+        }
+    }
+
+    [Command]
+    public void CmdAssignMoreStrength(string playerID, float increment)
+    {
+        if (_gameManager == null)
+        {
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        }
+        var player = _gameManager.GetPlayer(playerID);
+
+        // Assign the reward
+        player.StrengthModifier += increment;
     }
 
     void OnCollisionEnter(Collision other)

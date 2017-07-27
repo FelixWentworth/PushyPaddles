@@ -19,9 +19,10 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4200202111534228}
+  - component: {fileID: 114375105406059692}
   m_Layer: 10
   m_Name: RewardHolder
-  m_TagString: Untagged
+  m_TagString: Reward
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -229,6 +230,20 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &114375105406059692
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1051523740103886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c08e9d6bcb849814e818a9ae9dde5790, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IconFront: {fileID: 212202633824871846}
+  IconBack: {fileID: 212584300147731620}
+  RewardText: {fileID: 102755815628022934}
 --- !u!212 &212193781537955464
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -2467,6 +2467,8 @@ MonoBehaviour:
   Name: 
   DirectionModifier: 1
   SpeedModifier: 1
+  RaftControlModifier: 0.001
+  StrengthModifier: 1
   HoldingPlatform: 0
   PlayerNum: 0
   Paddle: {fileID: 1023719456642514}

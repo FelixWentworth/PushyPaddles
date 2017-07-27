@@ -3234,6 +3234,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RewardsManager: {fileID: 819}
+  _rewardIcons:
+  - Type: 0
+    Icon: {fileID: 21300000, guid: 96039039ac53390488086ca2aeaf3af6, type: 3}
+  - Type: 1
+    Icon: {fileID: 21300000, guid: 1c6c04f3e44ea5a4197ac4f48ec1d0c9, type: 3}
+  - Type: 2
+    Icon: {fileID: 21300000, guid: f05a328a90a6a194c9e886c3eb29f10d, type: 3}
+  - Type: 3
+    Icon: {fileID: 21300000, guid: ad6a1ff0c61e4d94d9d132e727169676, type: 3}
+  - Type: 4
+    Icon: {fileID: 21300000, guid: 8a3a823d69977744aa9bdc77edade9cc, type: 3}
 --- !u!114 &779
 MonoBehaviour:
   m_ObjectHideFlags: 0

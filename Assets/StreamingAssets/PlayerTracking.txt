@@ -126,3 +126,11 @@ Calculation Success Rate: 100
 Rounds Complete: 1
 Time Taken: 45
 Problems Complete: -2147483648
+Player: ff3f6087-f696-4d89-8e26-8281cc951780, showed skill: TookTurns, with value: -3
+
+Attempts: 1
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 600
+Problems Complete: -2147483648

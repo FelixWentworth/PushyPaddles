@@ -19,9 +19,9 @@ public class RewardsManager : MonoBehaviour
     
     private int _playerCount;
     
-    public void ResetRewards(int playerCount, List<string> ids, RewardScreenManager.RewardType type)
+    public void ResetRewards(int playerCount, List<string> ids, RewardScreenManager.RewardIcons rewardData)
     {
-        _type = type;
+        _type = rewardData.Type;
         _currentlyHighlighting = 0;
         _playerIds = ids;
         _currentId = 0;
@@ -32,7 +32,7 @@ public class RewardsManager : MonoBehaviour
         var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         var go = Instantiate(_rewardObject, _chest.transform.position, Quaternion.identity);
-        go.GetComponentInChildren<TextMesh>().text = EnumToString(type.ToString());
+        go.GetComponent<RewardSetup>().Setup(EnumToString(_type.ToString()), rewardData.Icon);
 
         var i = 0;
         foreach (var reward in Rewards)

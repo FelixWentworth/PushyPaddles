@@ -7,6 +7,8 @@ public class WaterBehaviour : NetworkBehaviour
 
     [SerializeField] private float _tideStrength = 0.01f;
     [SerializeField] private float _maxPaddleStrength = 1f;
+
+    private float _raftTilt = 0f;
     // The strength of paddle power from another player
     [Range(-1f, 1f)] private float _paddleStrength = 0f;
 
@@ -68,10 +70,12 @@ public class WaterBehaviour : NetworkBehaviour
     { 
         // Get the tide strength and the x transform
         var newPosition = new Vector3(
-            go.transform.position.x + (_paddleStrength * _maxPaddleStrength),
+            go.transform.position.x + (_paddleStrength * _maxPaddleStrength) + _raftTilt,
             go.transform.position.y,
             go.transform.position.z + _tideStrength
         );
+
+        Debug.Log(_raftTilt);
 
         MoveFloatingObject(go.gameObject, newPosition);
     }
@@ -110,17 +114,18 @@ public class WaterBehaviour : NetworkBehaviour
     public void CmdPaddleUsed(string playerId)
     {
         var player = _gameManager.GetPlayer(playerId);
-        PaddleUsed(player);
+        PaddleUsed(player, player.StrengthModifier);
     }
 
     // Only allow the server to run this as to avoid players exploiting
     [Server]
-    public void PaddleUsed(Player player)
+    public void PaddleUsed(Player player, float playerModifier)
     {
         switch (player.PlayerRole)
         {
             case Player.Role.Paddler:
                 _paddleStrength = player.transform.position.x > 0f ? -1f : 1f;
+                _paddleStrength *= playerModifier;
                 break;
             case Player.Role.Unassigned:
             case Player.Role.Floater:
@@ -171,6 +176,14 @@ public class WaterBehaviour : NetworkBehaviour
             yield return null;
         }
         _paddleStrength = 0f;
+    }
+
+    [Server]
+    public void RaftTilt(Player player, float tilt)
+    {
+        var raftTilt = player.RaftControlModifier * tilt;
+
+        _raftTilt = raftTilt;
     }
 
     private IEnumerator ParallaxWater()
