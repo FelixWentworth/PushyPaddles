@@ -32,6 +32,7 @@ public class RewardScreenManager : UIScreen
         public RewardType Type;
         public Sprite Icon;
         public string LocalizationKey;
+        public bool Positive;
     }
 
     [SerializeField] private List<RewardIcons> _rewardIcons;

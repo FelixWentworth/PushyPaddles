@@ -75,8 +75,6 @@ public class WaterBehaviour : NetworkBehaviour
             go.transform.position.z + _tideStrength
         );
 
-        Debug.Log(_raftTilt);
-
         MoveFloatingObject(go.gameObject, newPosition);
     }
 

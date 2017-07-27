@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -23,11 +24,18 @@ public class RewardsManager : MonoBehaviour
     private GameObject _rewardObjectInScene;
 
     private int _playerCount;
-    private List<RewardScreenManager.RewardIcons> _rewardData;
-    
-    public void ShowReward(int playerCount, List<string> ids, List<RewardScreenManager.RewardIcons> rewards, int rewardsToGive)
+    private List<RewardScreenManager.RewardIcons> _rewardData = new List<RewardScreenManager.RewardIcons>();
+
+    public void ShowReward(int playerCount, List<string> ids, List<RewardScreenManager.RewardIcons> rewards,
+        int rewardsToGive)
     {
         _rewardsRemaining = rewardsToGive;
+        // Check if we only care about positive rewards
+        if (PSL_GameConfig.Instance.RewardType == "Positive")
+        {
+            rewards = rewards.Where(r => r.Positive).ToList();
+        }
+
         var rand = UnityEngine.Random.Range(0, rewards.Count);
         var rewardData = rewards[rand];
 

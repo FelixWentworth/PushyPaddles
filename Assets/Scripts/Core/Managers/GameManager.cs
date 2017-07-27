@@ -22,7 +22,7 @@ public class GameManager : NetworkBehaviour
     public GameObject Platform;
     public GameObject PauseScreen;
 
-    public bool GenerateRocks;
+    private bool _generateRocks { get { return PSL_GameConfig.Instance.GameType == "Obstacle"; } }
 
     public GameObject PlayerPrefab;
     private List<Player> _players = new List<Player>();
@@ -351,13 +351,13 @@ public class GameManager : NetworkBehaviour
 
 
         // Generate Obstacles
-        if (GenerateRocks)
+        if (_generateRocks)
         {
             GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<ObstacleGeneration>().Setup(3, "");
         }
         else
         {
-            var challenge = _curriculum.GetNewChallenge(1, 1);
+            var challenge = _curriculum.GetNewChallenge(PSL_GameConfig.Instance.KeyStageLevel, PSL_GameConfig.Instance.LessonNumber);
             GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
         }
 
@@ -478,14 +478,14 @@ public class GameManager : NetworkBehaviour
             _generatingLevel = true;
             // Reset the obstacles
 
-            if (GenerateRocks)
+            if (_generateRocks)
             {
                 GameObject.Find("LevelColliders/SpawnedObjects")
                         .GetComponent<ObstacleGeneration>().GenerateNewLevel(_level.RoundNumber * 3);
             }
             else
             {
-                var challenge = _curriculum.GetNewChallenge(1, 1);
+                var challenge = _curriculum.GetNewChallenge(PSL_GameConfig.Instance.KeyStageLevel, PSL_GameConfig.Instance.LessonNumber);
 
                 if (newRound)
                 {
