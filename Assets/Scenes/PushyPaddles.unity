@@ -3314,9 +3314,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RewardsManager: {fileID: 819}
   _rewardIcons:
-  - Type: 0
-    Icon: {fileID: 21300000, guid: 96039039ac53390488086ca2aeaf3af6, type: 3}
-    LocalizationKey: UI_REWARDS_NO_REWARD
+  - Type: 4
+    Icon: {fileID: 21300000, guid: 8a3a823d69977744aa9bdc77edade9cc, type: 3}
+    LocalizationKey: UI_REWARDS_STRONGER_PUSH
   - Type: 1
     Icon: {fileID: 21300000, guid: 1c6c04f3e44ea5a4197ac4f48ec1d0c9, type: 3}
     LocalizationKey: UI_REWARDS_SPEED_BOOST
@@ -3326,9 +3326,6 @@ MonoBehaviour:
   - Type: 3
     Icon: {fileID: 21300000, guid: ad6a1ff0c61e4d94d9d132e727169676, type: 3}
     LocalizationKey: UI_REWARDS_MORE_PLATFORM_CONTROL
-  - Type: 4
-    Icon: {fileID: 21300000, guid: 8a3a823d69977744aa9bdc77edade9cc, type: 3}
-    LocalizationKey: UI_REWARDS_STRONGER_PUSH
 --- !u!114 &779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6404,7 +6401,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 19a4bb48aa9aba2448eefa2c7567ca18, type: 3}
+    m_Font: {fileID: 12800000, guid: 51f0ffd2ee59ddd43b6e49d1987a9be7, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 1
@@ -14956,7 +14953,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 19a4bb48aa9aba2448eefa2c7567ca18, type: 3}
+    m_Font: {fileID: 12800000, guid: 51f0ffd2ee59ddd43b6e49d1987a9be7, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 1
@@ -16437,7 +16434,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 19a4bb48aa9aba2448eefa2c7567ca18, type: 3}
+    m_Font: {fileID: 12800000, guid: 51f0ffd2ee59ddd43b6e49d1987a9be7, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 1

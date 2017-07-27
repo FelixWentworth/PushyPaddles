@@ -17,23 +17,38 @@ public class RewardsManager : MonoBehaviour
     private int _currentlyHighlighting = 0;
     private List<string> _playerIds;
     private int _currentId;
-    
+
+    private int _rewardsRemaining;
+
+    private GameObject _rewardObjectInScene;
+
     private int _playerCount;
+    private List<RewardScreenManager.RewardIcons> _rewardData;
     
-    public void ResetRewards(int playerCount, List<string> ids, RewardScreenManager.RewardIcons rewardData)
+    public void ShowReward(int playerCount, List<string> ids, List<RewardScreenManager.RewardIcons> rewards, int rewardsToGive)
     {
+        _rewardsRemaining = rewardsToGive;
+        var rand = UnityEngine.Random.Range(0, rewards.Count);
+        var rewardData = rewards[rand];
+
+        if (_rewardObjectInScene != null)
+        {
+            Destroy(_rewardObjectInScene);
+        }
+
         _type = rewardData.Type;
         _currentlyHighlighting = 0;
         _playerIds = ids;
         _currentId = 0;
+        _rewardData = rewards;
 
         UpdateHighlighted();
         _playerCount = playerCount;
 
         var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
-        var go = Instantiate(_rewardObject, _chest.transform.position, Quaternion.identity);
-        go.GetComponent<RewardSetup>().Setup(Localization.Get(rewardData.LocalizationKey), rewardData.Icon);
+        _rewardObjectInScene = Instantiate(_rewardObject, _chest.transform.position, Quaternion.identity);
+        _rewardObjectInScene.GetComponent<RewardSetup>().Setup(Localization.Get(rewardData.LocalizationKey), rewardData.Icon);
 
         var i = 0;
         foreach (var reward in Rewards)
@@ -97,11 +112,21 @@ public class RewardsManager : MonoBehaviour
 
     private void Complete()
     {
-        // Notify the server that all rewards are given out
-        var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _rewardsRemaining -= 1;
 
-        gameManager.GetLocalPlayer().NextRound();
-        gameManager.HideRewards();
+
+        if (_rewardsRemaining <= 0)
+        {
+            // Notify the server that all rewards are given out
+            var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+            gameManager.GetLocalPlayer().NextRound();
+            gameManager.HideRewards();
+        }
+        else
+        {
+            ShowReward(3, _playerIds, _rewardData, _rewardsRemaining);
+        }
 
     }
 }
