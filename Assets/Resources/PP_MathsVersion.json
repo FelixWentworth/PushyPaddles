@@ -1,8 +1,8 @@
 {
-  "MathsProblems" : [
+  "MathsProblems": [
     {
       "KeyStage": 1,
-      "Lesson": 1,  
+      "Lesson": 1,
       "Level": 1,
       "Target": 10,
       "RequiredOperations": [
@@ -45,6 +45,183 @@
         "-5",
         "+4",
         "+6"
+      ]
+    },
+    {
+      "KeyStage": 1,
+      "Lesson": 2,
+      "Level": 1,
+      "Target": 6,
+      "RequiredOperations": [
+        "+4",
+        "+2"
+      ],
+      "ExtraOperations": [
+        "+1",
+        "-1",
+        "-2",
+        "+2"
+      ]
+    },
+    {
+      "KeyStage": 1,
+      "Lesson": 2,
+      "Level": 2,
+      "Target": 12,
+      "RequiredOperations": [
+        "+5",
+        "+7"
+      ],
+      "ExtraOperations": [
+        "+1",
+        "+4",
+        "+9",
+        "+10",
+        "+13"
+      ]
+    },
+    {
+      "KeyStage": 1,
+      "Lesson": 2,
+      "Level": 3,
+      "Target": 10,
+      "RequiredOperations": [
+        "+19",
+        "-9"
+      ],
+      "ExtraOperations": [
+        "-5",
+        "+17",
+        "+12",
+        "-4",
+        "+18"
+      ]
+    },
+    {
+      "KeyStage": 1,
+      "Lesson": 2,
+      "Level": 4,
+      "Target": 99,
+      "RequiredOperations": [
+        "+89",
+        "+10"
+      ],
+      "ExtraOperations": [
+        "+80",
+        "+20",
+        "+15",
+        "+77",
+        "+9"
+      ]
+    },
+    {
+      "KeyStage": 1,
+      "Lesson": 2,
+      "Level": 5,
+      "Target": 11,
+      "RequiredOperations": [
+        "+17",
+        "-6"
+      ],
+      "ExtraOperations": [
+        "+14",
+        "+18",
+        "-2",
+        "-1"
+      ]
+    },
+    {
+      "KeyStage": 1,
+      "Lesson": 2,
+      "Level": 6,
+      "Target": 21,
+      "RequiredOperations": [
+        "+15",
+        "+3",
+        "+3"
+      ],
+      "ExtraOperations": [
+        "+2",
+        "+5",
+        "+20",
+        "+12",
+        "+14"
+      ]
+    },
+    {
+      "KeyStage": 1,
+      "Lesson": 2,
+      "Level": 7,
+      "Target": 31,
+      "RequiredOperations": [
+        "+39",
+        "-8"
+      ],
+      "ExtraOperations": [
+        "+30",
+        "+40",
+        "+25",
+        "+7",
+        "-5",
+        "-12",
+        "-8"
+      ]
+    },
+    {
+      "KeyStage": 1,
+      "Lesson": 2,
+      "Level": 8,
+      "Target": 53,
+      "RequiredOperations": [
+        "+46",
+        "+7"
+      ],
+      "ExtraOperations": [
+        "+38",
+        "+51",
+        "+43",
+        "+1",
+        "+9",
+        "+11",
+        "+3"
+      ]
+    },
+    {
+      "KeyStage": 1,
+      "Lesson": 2,
+      "Level": 9,
+      "Target": 60,
+      "RequiredOperations": [
+        "+36",
+        "+24"
+      ],
+      "ExtraOperations": [
+        "+29",
+        "+21",
+        "+33",
+        "+28",
+        "+40",
+        "+38"
+      ]
+    },
+    {
+      "KeyStage": 1,
+      "Lesson": 2,
+      "Level": 10,
+      "Target": 47,
+      "RequiredOperations": [
+        "+87",
+        "-40"
+      ],
+      "ExtraOperations": [
+        "+90",
+        "+82",
+        "+70",
+        "+85",
+        "-30",
+        "-35",
+        "-36",
+        "=48"
       ]
     },
     {

@@ -125,12 +125,16 @@ public class LevelLayout : NetworkBehaviour {
         }
 
         // Randomise where the blocking rock will be placed
-        var rnd = Random.Range(0, 2);
-        var opp = rnd == 0 ? 1 : 0;
+
+
 
         // Block the central path, but make sure there is still a route through
-        GeneratedLevelLayout[centerX - rnd, centerZ] = "x";
-        GeneratedLevelLayout[centerX - opp, centerZ] = "+";
+        GeneratedLevelLayout[centerX, centerZ] = "x";
+        GeneratedLevelLayout[centerX - 1, centerZ] = "x";
+
+        GeneratedLevelLayout[centerX + 1, centerZ] = "+";
+        GeneratedLevelLayout[centerX - 2, centerZ] = "+";
+
     }
 
     public string GetArrayString()

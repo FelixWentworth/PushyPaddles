@@ -24,7 +24,12 @@ public class PSL_GameConfig : MonoBehaviour
         if (PlatformSelection.ConnectionType == ConnectionType.Testing)
         {
             // Set to default setup
-            SetGameConfig(1, 1, "Maths", "All");
+            SetGameConfig(1, 2, "Maths", "All");
+        }
+        else
+        {
+            // TODO Get from config
+            SetGameConfig(1, 2, "Maths", "All");
         }
 
         Instance = this;

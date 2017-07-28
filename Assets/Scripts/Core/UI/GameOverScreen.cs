@@ -26,7 +26,7 @@ public class GameOverScreen : UIScreen
 
     public void SetText(bool victory, int timeTaken)
     {
-        ConditionText.text = victory ? Localization.Get("UI_END_LESSON_COMPLETE") : Localization.Get("UI_END_TIME_UP");
+        ConditionText.text = victory ? Localization.Get("UI_END_GAME_COMPLETE") : Localization.Get("UI_END_TIME_UP");
 
         var rounds = GameObject.Find("LevelManager").GetComponent<LevelManager>().RoundNumber;
         RoundsText.text = string.Format(Localization.Get("FORMATTED_UI_END_ROUNDS_COMPLETED"), rounds);
