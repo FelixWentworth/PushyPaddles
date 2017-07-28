@@ -104,6 +104,10 @@ public class PlatformSelection : MonoBehaviour
         Debug.Log(obj.scenario);
         Debug.Log(obj.maxPlayers);
         Debug.Log(obj.difficulty);
+
+        // TODO set time available
+        // Using 600 as default
+        PSL_LRSManager.Instance.SetTotalTime(600);
     }
 
     private void StartClient(Endpoint endpoint)

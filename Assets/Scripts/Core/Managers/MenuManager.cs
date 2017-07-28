@@ -160,18 +160,19 @@ public class MenuManager : NetworkBehaviour
     /// Notify the server to show game over for all clients
     /// </summary>
     [Server]
-    public void ShowGameOver()
+    public void ShowGameOver(bool victory, int timeTaken)
     {
-        RpcShowGameOver();
+        RpcShowGameOver(victory, timeTaken);
     }
 
     /// <summary>
     /// Notify clients from the server that they should be showing the game over screen
     /// </summary>
     [ClientRpc]
-    private void RpcShowGameOver()
+    private void RpcShowGameOver(bool victory, int timeTaken)
     {
         GameOverScreen.Show();
+        GameOverScreen.GetComponent<GameOverScreen>().SetText(victory, timeTaken);
     }
 
     /// <summary>

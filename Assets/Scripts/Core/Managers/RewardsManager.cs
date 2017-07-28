@@ -99,7 +99,7 @@ public class RewardsManager : MonoBehaviour
 
     public void Select()
     {
-        RewardSelected(_type, _playerIds[_currentId]);
+        RewardSelected(_type, _playerIds[_currentlyHighlighting]);
 
         Complete();
     }

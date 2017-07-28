@@ -77,7 +77,7 @@ public class GameManager : NetworkBehaviour
             }
             if (_level.IsGameOver)
             {
-                GameOver();
+                GameOver(false);
             }
 
             // Check if the game should be started
@@ -485,17 +485,15 @@ public class GameManager : NetworkBehaviour
             }
             else
             {
-                var challenge = _curriculum.GetNewChallenge(PSL_GameConfig.Instance.KeyStageLevel, PSL_GameConfig.Instance.LessonNumber);
-
+                CurriculumChallenge challenge = null;
                 if (newRound)
                 {
-                    challenge = _curriculum.GetNextChallenge(1, 1);
+                    challenge = _curriculum.GetNextChallenge(PSL_GameConfig.Instance.KeyStageLevel, PSL_GameConfig.Instance.LessonNumber);
                 }
                 if (challenge == null)
                 {
                     // Reached the end of the game
-                    //TODO show a victory screen
-                    GameOver();
+                    GameOver(true);
                 }
                 else
                 {
@@ -580,9 +578,9 @@ public class GameManager : NetworkBehaviour
     }
 
     [Server]
-    private void GameOver()
+    private void GameOver(bool victory)
     {
-        _menu.ShowGameOver();
+        _menu.ShowGameOver(victory, _level.SecondsTaken);
         PSL_LRSManager.Instance.GameCompleted(_level.SecondsTaken);
         PlatformSelection.UpdateSeverState(GameState.Stopped);
         RestartGame();

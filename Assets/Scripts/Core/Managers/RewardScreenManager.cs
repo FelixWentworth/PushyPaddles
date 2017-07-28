@@ -100,7 +100,7 @@ public class RewardScreenManager : UIScreen
 
         var player = manager.GetLocalPlayer();
 
-        player.GaveReward();
+        player.GaveReward(playerId);
 
         switch (type)
         {

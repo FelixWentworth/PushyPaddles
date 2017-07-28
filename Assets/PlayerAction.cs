@@ -11,5 +11,7 @@
     [PlayerAction(false, None)] PickedUpPlatform,
     [PlayerAction(false, PickedUpPlatform)] PlacedPlatform,
     [PlayerAction(false, None)] Idle,
-    [PlayerAction(true, None)] SetReward
+    [PlayerAction(true, None)] GaveRewardSelf,
+    [PlayerAction(true, None)] GaveRewardOther
+
 }

@@ -37,12 +37,13 @@ public class PSL_LRSManager : NetworkBehaviour
 
     // Our variables defined by the current game
     private int _totalRounds;
-    private int _timeLimit;
+    public int TimeLimit { get; private set; }
 
     #endregion
 
     void Awake()
     {
+        TimeLimit = 600;
         Instance = this;
 
         _tracking = GetComponent<PSL_SkillTracking>();
@@ -68,13 +69,21 @@ public class PSL_LRSManager : NetworkBehaviour
     /// <summary>
     /// Setupd the game variables
     /// </summary>
-    /// <param name="numRounds">Total number of rounds available</param>
     /// <param name="totalTime">Total time available</param>
     [Server]
-    public void Setup(int numRounds, int totalTime)
+    public void SetTotalTime(int totalTime)
+    {
+        TimeLimit = totalTime;
+    }
+
+    /// <summary>
+    /// Setupd the game variables
+    /// </summary>
+    /// <param name="numRounds">Total number of rounds available</param>
+    [Server]
+    public void SetNumRounds(int numRounds)
     {
         _totalRounds = numRounds;
-        _timeLimit = totalTime;
     }
 
     /// <summary>

@@ -1,172 +1,501 @@
 
 
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+
+Attempts: 427
+Chests Reached: 0
+Calculation Success Rate: -2147483648
+Rounds Complete: 0
+Time Taken: 0
+Problems Complete: 0
+Player: 3f741918-bc15-4f3a-88d3-49d42782bade, showed skill: TookTurns, with value: -3
+Player: 3f741918-bc15-4f3a-88d3-49d42782bade, showed skill: Shared, with value: 1
+
 Attempts: 1
 Chests Reached: 1
 Calculation Success Rate: 100
 Rounds Complete: 1
-Time Taken: 37
-Problems Complete: -2147483648
-
-Attempts: 7
-Chests Reached: 3
-Calculation Success Rate: 67
-Rounds Complete: 2
-Time Taken: 26
-Problems Complete: -2147483648
-
-Attempts: 9
-Chests Reached: 4
-Calculation Success Rate: 75
-Rounds Complete: 3
-Time Taken: 33
-Problems Complete: -2147483648
-
-Attempts: 11
-Chests Reached: 5
-Calculation Success Rate: 80
-Rounds Complete: 4
-Time Taken: 45
-Problems Complete: -2147483648
-Player: ff245a40-6a97-4bfb-a51a-333c9f82b78a, showed skill: TookTurns, with value: -2
-Player: 3228e028-2442-4b04-9c0e-9bed21c30075, showed skill: TookTurns, with value: -2
-Player: fb09022d-7b41-408b-bd2a-83f6b7b8c76d, showed skill: TookTurns, with value: -2
-Player: , showed skill: Cooperated, with value: 0
-Player: 3228e028-2442-4b04-9c0e-9bed21c30075, showed skill: Shared, with value: 0
-
-Attempts: 1
-Chests Reached: 1
-Calculation Success Rate: 100
-Rounds Complete: 1
-Time Taken: 19
-Problems Complete: -2147483648
-Player: 0c41c46a-7dbe-4230-9a29-716c3435da2e, showed skill: Shared, with value: 1
-
-Attempts: 1
-Chests Reached: 1
-Calculation Success Rate: 100
-Rounds Complete: 1
-Time Taken: 45
-Problems Complete: -2147483648
-Player: a0306654-243b-41f3-b457-04ef13683a86, showed skill: Shared, with value: 1
-
-Attempts: 1
-Chests Reached: 1
-Calculation Success Rate: 100
-Rounds Complete: 1
-Time Taken: 45
-Problems Complete: -2147483648
-Player: a0306654-243b-41f3-b457-04ef13683a86, showed skill: Shared, with value: 1
-Player: 86e23544-b24b-487a-9cf2-9db5ff56f8e3, showed skill: TookTurns, with value: -1
-Player: 86e23544-b24b-487a-9cf2-9db5ff56f8e3, showed skill: Shared, with value: 1
-
-Attempts: 6
-Chests Reached: 5
-Calculation Success Rate: 40
-Rounds Complete: 2
-Time Taken: 26
-Problems Complete: -2147483648
-Player: cb25455d-65d4-4a22-9257-4b7752a4e2e3, showed skill: Shared, with value: 1
-
-Attempts: 1
-Chests Reached: 1
-Calculation Success Rate: 100
-Rounds Complete: 1
-Time Taken: 44
-Problems Complete: -2147483648
-Player: a5081e08-c947-48b6-ad39-110ceebe90c8, showed skill: Shared, with value: 1
-
-Attempts: 1
-Chests Reached: 1
-Calculation Success Rate: 100
-Rounds Complete: 1
-Time Taken: 50
-Problems Complete: -2147483648
-Player: cd7af4b5-9af1-48f1-aa7b-d46ad19a3b03, showed skill: Shared, with value: 1
-
-Attempts: 1
-Chests Reached: 1
-Calculation Success Rate: 100
-Rounds Complete: 1
-Time Taken: 52
-Problems Complete: -2147483648
-Player: cd7af4b5-9af1-48f1-aa7b-d46ad19a3b03, showed skill: Shared, with value: 1
-Player: 1e555ef0-210d-481d-8732-0c9da644fd37, showed skill: Shared, with value: 1
+Time Taken: 49
+Problems Complete: 33
+Player: 3f741918-bc15-4f3a-88d3-49d42782bade, showed skill: TookTurns, with value: -3
+Player: 3f741918-bc15-4f3a-88d3-49d42782bade, showed skill: Shared, with value: 1
+Player: cf062006-3ab6-479a-aea1-30592cca2008, showed skill: Shared, with value: 1
 
 Attempts: 3
 Chests Reached: 2
 Calculation Success Rate: 100
 Rounds Complete: 2
-Time Taken: 11
-Problems Complete: -2147483648
-Player: cd7af4b5-9af1-48f1-aa7b-d46ad19a3b03, showed skill: Shared, with value: 1
-Player: 1e555ef0-210d-481d-8732-0c9da644fd37, showed skill: Shared, with value: 1
-Player: 45dd49f3-1256-4deb-ac89-1c54775d6aa2, showed skill: Shared, with value: 1
+Time Taken: 33
+Problems Complete: 67
+Player: 3f741918-bc15-4f3a-88d3-49d42782bade, showed skill: TookTurns, with value: -3
+Player: 3f741918-bc15-4f3a-88d3-49d42782bade, showed skill: Shared, with value: 1
+Player: cf062006-3ab6-479a-aea1-30592cca2008, showed skill: Shared, with value: 1
+Player: cf062006-3ab6-479a-aea1-30592cca2008, showed skill: TookTurns, with value: -3
+Player: c0fbe7e1-533f-4e5c-af48-eaffc047b144, showed skill: Shared, with value: 1
 
 Attempts: 5
 Chests Reached: 3
 Calculation Success Rate: 100
 Rounds Complete: 3
-Time Taken: 46
-Problems Complete: -2147483648
-Player: cd7af4b5-9af1-48f1-aa7b-d46ad19a3b03, showed skill: Shared, with value: 1
-Player: 1e555ef0-210d-481d-8732-0c9da644fd37, showed skill: Shared, with value: 1
-Player: 45dd49f3-1256-4deb-ac89-1c54775d6aa2, showed skill: Shared, with value: 1
-
-Attempts: 6
-Chests Reached: 3
-Calculation Success Rate: 100
-Rounds Complete: 3
-Time Taken: 600
-Problems Complete: -2147483648
-Player: 1bdc7ff6-6fc6-4ecb-8055-8dea6a3891a5, showed skill: Shared, with value: 1
+Time Taken: 59
+Problems Complete: 100
+Player: a83c1f7d-1f8b-484c-a9a5-fd8a9c3e4c31, showed skill: Shared, with value: 1
 
 Attempts: 1
 Chests Reached: 1
 Calculation Success Rate: 100
 Rounds Complete: 1
-Time Taken: 45
-Problems Complete: -2147483648
-Player: ff3f6087-f696-4d89-8e26-8281cc951780, showed skill: TookTurns, with value: -3
-
-Attempts: 1
-Chests Reached: 0
-Calculation Success Rate: -2147483648
-Rounds Complete: 0
-Time Taken: 600
-Problems Complete: -2147483648
-Player: b8cf0c7c-766f-4c46-b78e-389e1cc1ec64, showed skill: TookTurns, with value: -1
-Player: b8cf0c7c-766f-4c46-b78e-389e1cc1ec64, showed skill: Shared, with value: 1
-
-Attempts: 1
-Chests Reached: 1
-Calculation Success Rate: 100
-Rounds Complete: 1
-Time Taken: 14
-Problems Complete: -2147483648
-Player: 1cff320c-d320-4718-8b70-d2f97b157903, showed skill: Shared, with value: 1
-
-Attempts: 2
-Chests Reached: 1
-Calculation Success Rate: 100
-Rounds Complete: 1
-Time Taken: 6
-Problems Complete: -2147483648
-Player: 1cff320c-d320-4718-8b70-d2f97b157903, showed skill: Shared, with value: 1
-Player: 0290fecd-f9fb-4ec8-ac6f-64c6f050e307, showed skill: Shared, with value: 1
+Time Taken: 58
+Problems Complete: 33
+Player: a83c1f7d-1f8b-484c-a9a5-fd8a9c3e4c31, showed skill: Shared, with value: 1
+Player: a83c1f7d-1f8b-484c-a9a5-fd8a9c3e4c31, showed skill: TookTurns, with value: -3
+Player: 5ace15d2-ecf8-4433-b897-f6bf578b45a0, showed skill: Shared, with value: 1
 
 Attempts: 4
 Chests Reached: 2
 Calculation Success Rate: 100
 Rounds Complete: 2
-Time Taken: 42
-Problems Complete: -2147483648
-Player: 1cff320c-d320-4718-8b70-d2f97b157903, showed skill: Shared, with value: 1
-Player: 0290fecd-f9fb-4ec8-ac6f-64c6f050e307, showed skill: Shared, with value: 1
-Player: d76da2a4-955b-476d-a9f8-bd892c773b9c, showed skill: Shared, with value: 1
+Time Taken: 54
+Problems Complete: 67
+Player: a83c1f7d-1f8b-484c-a9a5-fd8a9c3e4c31, showed skill: Shared, with value: 1
+Player: a83c1f7d-1f8b-484c-a9a5-fd8a9c3e4c31, showed skill: TookTurns, with value: -3
+Player: 5ace15d2-ecf8-4433-b897-f6bf578b45a0, showed skill: Shared, with value: 1
+Player: a6fd551b-101c-42d2-a49a-ed306319b0c4, showed skill: TookTurns, with value: -1
+Player: a6fd551b-101c-42d2-a49a-ed306319b0c4, showed skill: Shared, with value: 1
 
 Attempts: 6
 Chests Reached: 3
 Calculation Success Rate: 100
 Rounds Complete: 3
-Time Taken: 36
-Problems Complete: -2147483648
+Time Taken: 134
+Problems Complete: 100
+Player: 21568aec-824b-4bf9-94ea-c03e714caaa1, showed skill: TookTurns, with value: -1
+Player: 4ae737c8-5508-44c0-a5f8-da223eb4b00d, showed skill: TookTurns, with value: -1
+Player: 4ae737c8-5508-44c0-a5f8-da223eb4b00d, showed skill: Shared, with value: 1
+
+Attempts: 1
+Chests Reached: 1
+Calculation Success Rate: 100
+Rounds Complete: 1
+Time Taken: 11
+Problems Complete: 33
+Player: 21568aec-824b-4bf9-94ea-c03e714caaa1, showed skill: TookTurns, with value: -1
+Player: 4ae737c8-5508-44c0-a5f8-da223eb4b00d, showed skill: TookTurns, with value: -1
+Player: 4ae737c8-5508-44c0-a5f8-da223eb4b00d, showed skill: Shared, with value: 1
+Player: 21568aec-824b-4bf9-94ea-c03e714caaa1, showed skill: Shared, with value: 1
+
+Attempts: 4
+Chests Reached: 2
+Calculation Success Rate: 100
+Rounds Complete: 2
+Time Taken: 59
+Problems Complete: 67
+Player: 21568aec-824b-4bf9-94ea-c03e714caaa1, showed skill: TookTurns, with value: -1
+Player: 4ae737c8-5508-44c0-a5f8-da223eb4b00d, showed skill: TookTurns, with value: -1
+Player: 4ae737c8-5508-44c0-a5f8-da223eb4b00d, showed skill: Shared, with value: 1
+Player: 21568aec-824b-4bf9-94ea-c03e714caaa1, showed skill: Shared, with value: 1
+Player: 53b62c2f-381b-49e1-b3ca-f0aba0982376, showed skill: Shared, with value: 1
+
+Attempts: 7
+Chests Reached: 4
+Calculation Success Rate: 75
+Rounds Complete: 3
+Time Taken: 175
+Problems Complete: 100

@@ -524,18 +524,33 @@ public class Player : MovingObject
         }
     }
 
-    public void GaveReward()
+    public void GaveReward(string id)
     {
         if (isLocalPlayer)
         {
-            CmdGaveReward();
+            if (id == PlayerID)
+            {
+                // gave reward to self
+                CmdGaveRewardSelf();
+            }
+            else
+            {
+                // Shared Reward
+                CmdGaveRewardOther();
+            }
         }
     }
 
     [Command]
-    private void CmdGaveReward()
+    private void CmdGaveRewardSelf()
     {
-        _gameManager.PlayerAction(PlayerAction.SetReward, PlayerID);
+        _gameManager.PlayerAction(PlayerAction.GaveRewardSelf, PlayerID);
+    }
+
+    [Command]
+    private void CmdGaveRewardOther()
+    {
+        _gameManager.PlayerAction(PlayerAction.GaveRewardOther, PlayerID);
     }
     #endregion
 

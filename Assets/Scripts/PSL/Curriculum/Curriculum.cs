@@ -33,6 +33,8 @@ public class Curriculum : MonoBehaviour {
         var challenges = _challenges.MathsProblems.Where(c => c.KeyStage == keyStage && c.Lesson == lesson).ToList();
 
         _levelIndex = challenges[0].Level;
+        PSL_LRSManager.Instance.SetNumRounds(challenges.Count);
+
         return challenges[0];
     }
 

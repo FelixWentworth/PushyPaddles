@@ -18,6 +18,8 @@
 {"Key":"UI_MAIN_LOADING","en-gb":"Loading","it":"XXXX","es":"Cargando","el":"Φόρτωση"},
 {"Key":"UI_MAIN_CONNECTING","en-gb":"Connecting","it":"XXXX","es":"Conectando","el":"Σύνδεση"},
 {"Key":"UI_END_TITLE","en-gb":"Game Over","it":"XXXX","es":"Fin del juego","el":"Τέλος Παιγνιδιού"},
+{"Key":"UI_END_LESSON_COMPLETE","en-gb":"Lesson Complete","it":"XXXX","es":"XXXX","el":"XXXX"},
+{"Key":"UI_END_TIME_TAKEN","en-gb":"Time Taken","it":"XXXX","es":"XXXX","el":"XXXX"},
 {"Key":"UI_END_TIME_UP","en-gb":"Time Up","it":"XXXX","es":"Tiempo agotado","el":"Τέλος Χρόνου"},
 {"Key":"UI_END_ROUNDS_COMPLETED","en-gb":"Rounds Completed","it":"XXXX","es":"Rondas completadas","el":"Ολοκλήρωση Γύρου"},
 {"Key":"UI_REWARDS_TITLE","en-gb":"Level Complete - Distribute Rewards","it":"XXXX","es":"Nivel completado - Distribuir recompensas","el":"Το επίπεδο ολοκληρώθηκε. Μοίρασε τις Ανταμοιβές!"},
