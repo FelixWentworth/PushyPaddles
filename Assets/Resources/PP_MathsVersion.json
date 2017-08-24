@@ -1,7 +1,7 @@
 {
   "MathsProblems": [
     {
-      "KeyStage": 1,
+      "Year": 1,
       "Lesson": 1,
       "Level": 1,
       "Target": 10,
@@ -17,7 +17,7 @@
       ]
     },
     {
-      "KeyStage": 1,
+      "Year": 1,
       "Lesson": 1,
       "Level": 2,
       "Target": 5,
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "KeyStage": 1,
+      "Year": 1,
       "Lesson": 1,
       "Level": 3,
       "Target": 3,
@@ -48,7 +48,7 @@
       ]
     },
     {
-      "KeyStage": 1,
+      "Year": 1,
       "Lesson": 2,
       "Level": 1,
       "Target": 6,
@@ -64,7 +64,7 @@
       ]
     },
     {
-      "KeyStage": 1,
+      "Year": 1,
       "Lesson": 2,
       "Level": 2,
       "Target": 12,
@@ -81,7 +81,7 @@
       ]
     },
     {
-      "KeyStage": 1,
+      "Year": 1,
       "Lesson": 2,
       "Level": 3,
       "Target": 10,
@@ -98,7 +98,7 @@
       ]
     },
     {
-      "KeyStage": 1,
+      "Year": 1,
       "Lesson": 2,
       "Level": 4,
       "Target": 99,
@@ -115,7 +115,7 @@
       ]
     },
     {
-      "KeyStage": 1,
+      "Year": 1,
       "Lesson": 2,
       "Level": 5,
       "Target": 11,
@@ -131,7 +131,7 @@
       ]
     },
     {
-      "KeyStage": 1,
+      "Year": 1,
       "Lesson": 2,
       "Level": 6,
       "Target": 21,
@@ -149,7 +149,7 @@
       ]
     },
     {
-      "KeyStage": 1,
+      "Year": 1,
       "Lesson": 2,
       "Level": 7,
       "Target": 31,
@@ -168,7 +168,7 @@
       ]
     },
     {
-      "KeyStage": 1,
+      "Year": 1,
       "Lesson": 2,
       "Level": 8,
       "Target": 53,
@@ -187,7 +187,7 @@
       ]
     },
     {
-      "KeyStage": 1,
+      "Year": 1,
       "Lesson": 2,
       "Level": 9,
       "Target": 60,
@@ -205,7 +205,7 @@
       ]
     },
     {
-      "KeyStage": 1,
+      "Year": 1,
       "Lesson": 2,
       "Level": 10,
       "Target": 47,
@@ -225,7 +225,7 @@
       ]
     },
     {
-      "KeyStage": 2,
+      "Year": 2,
       "Lesson": 2,
       "Level": 1,
       "Target": 5.5,

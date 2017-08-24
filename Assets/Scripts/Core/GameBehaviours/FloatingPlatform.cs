@@ -179,14 +179,11 @@ public class FloatingPlatform : MovingObject
         if (isServer)
         {
             RpcDisableTotal();
-
         }
 
         if (PickupValue == levelManager.Target)
         {
             var player = _playerOnPlatform.GetComponent<Player>();
-
-            
 
             if (isServer)
             {
@@ -202,9 +199,6 @@ public class FloatingPlatform : MovingObject
 
             CanFloat = false;
             Water.TouchedWater(this);
-
-
-
         }
         else
         {

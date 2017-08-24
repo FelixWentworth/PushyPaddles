@@ -3,9 +3,9 @@
 [Serializable]
 public class CurriculumChallenge
 {
-    public int KeyStage;
-    public int Lesson;
-    public int Level;
+    public string Year;
+    public string Lesson;
+    public string Level;
     public double Target;
 
     public string[] RequiredOperations;

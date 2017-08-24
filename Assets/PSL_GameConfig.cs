@@ -11,8 +11,8 @@ public class PSL_GameConfig : MonoBehaviour
     public static PSL_GameConfig Instance;
 
 
-    public int KeyStageLevel { get; private set; }
-    public int LessonNumber { get; private set; }
+    public string Level { get; private set; }
+    public string LessonNumber { get; private set; }
 
     // "Maths", "Obstacle"
     public string GameType { get; private set; }
@@ -24,20 +24,20 @@ public class PSL_GameConfig : MonoBehaviour
         if (PlatformSelection.ConnectionType == ConnectionType.Testing)
         {
             // Set to default setup
-            SetGameConfig(1, 2, "Maths", "All");
+            SetGameConfig("1", "2", "Maths", "All");
         }
         else
         {
             // TODO Get from config
-            SetGameConfig(1, 2, "Maths", "All");
+            SetGameConfig("1", "2", "Maths", "All");
         }
 
         Instance = this;
     }
 
-    public void SetGameConfig(int level, int lesson, string gameType, string rewardType)
+    public void SetGameConfig(string level, string lesson, string gameType, string rewardType)
     {
-        KeyStageLevel = level;
+        Level = level;
         LessonNumber = lesson;
         GameType = gameType;
         RewardType = rewardType;

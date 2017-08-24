@@ -42,11 +42,8 @@ public class AudioManager : MonoBehaviour
             var source = gameObject.AddComponent<AudioSource>();
             source.clip = audioClip.Clip;
             source.volume = audioClip.Volume;
+            source.loop = audioClip.Loop;
 
-            if (audioClip.Loop)
-            {
-                source.loop = true;
-            }
             if (audioClip.AutoPlay)
             {
                 source.Play();

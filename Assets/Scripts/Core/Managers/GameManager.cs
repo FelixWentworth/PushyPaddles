@@ -357,7 +357,7 @@ public class GameManager : NetworkBehaviour
         }
         else
         {
-            var challenge = _curriculum.GetNewChallenge(PSL_GameConfig.Instance.KeyStageLevel, PSL_GameConfig.Instance.LessonNumber);
+            var challenge = _curriculum.GetNewChallenge(PSL_GameConfig.Instance.Level, PSL_GameConfig.Instance.LessonNumber);
             GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
         }
 
@@ -488,7 +488,7 @@ public class GameManager : NetworkBehaviour
                 CurriculumChallenge challenge = null;
                 if (newRound)
                 {
-                    challenge = _curriculum.GetNextChallenge(PSL_GameConfig.Instance.KeyStageLevel, PSL_GameConfig.Instance.LessonNumber);
+                    challenge = _curriculum.GetNextChallenge(PSL_GameConfig.Instance.Level, PSL_GameConfig.Instance.LessonNumber);
                 }
                 if (challenge == null)
                 {
