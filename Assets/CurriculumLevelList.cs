@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class CurriculumLevelList : MonoBehaviour
@@ -16,14 +17,13 @@ public class CurriculumLevelList : MonoBehaviour
 
     private List<GameObject> _generatedObjects = new List<GameObject>();
 
-    private string _year;
+    private string _year = "1";
 
     // Use this for initialization
     void Start ()
     {
         _scrollRect = GetComponentInChildren<ScrollRect>();
 
-        _year = "2";
         ShowLevelsForYear(_year);
     }
 
@@ -40,14 +40,14 @@ public class CurriculumLevelList : MonoBehaviour
         foreach (var curriculumChallenge in lessons)
         {
             var description = curriculum.GetDescriptionForLesson(curriculumChallenge.Lesson);
-            AddElement("Lesson" + "\u00a0" + curriculumChallenge.Lesson, description.Description);
+            AddElement(curriculumChallenge.Lesson, description.Description);
         }
     }
 
     private void AddElement(string lesson, string description)
     {
         var go = Instantiate(LevelElement);
-        go.GetComponent<LevelElement>().Setup(lesson, description);
+        go.GetComponent<LevelElement>().Setup("Lesson" + "\u00a0" + lesson, description);
         go.GetComponent<LevelElement>().Button.onClick.AddListener(delegate { LessonSelected(lesson); });
 
         go.transform.SetParent(_scrollRect.content);
@@ -94,5 +94,12 @@ public class CurriculumLevelList : MonoBehaviour
     public void LessonSelected(string lesson)
     {
         Debug.Log("selected " + _year + ", " + lesson);
+
+        if (!ClientScene.ready)
+        {
+            ClientScene.Ready(NetworkManager.singleton.client.connection);
+        }
+        GameObject.Find("GameManager").GetComponent<GameManager>().GetLocalPlayer().SetLesson(_year, lesson);
+        GameObject.Find("MenuManager").GetComponent<MenuManager>().HideLessonSelect();
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 
 public class Player : MovingObject
 {
@@ -976,6 +975,25 @@ public class Player : MovingObject
 
         // Assign the reward
         player.StrengthModifier += increment;
+    }
+
+    public void SetLesson(string year, string lesson)
+    {
+        if (isLocalPlayer)
+        {
+            CmdSetLesson(year, lesson);
+        }
+    }
+
+    [Command]
+    public void CmdSetLesson(string year, string lesson)
+    {
+        if (_gameManager == null)
+        {
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        }
+            
+        _gameManager.SetLesson(year, lesson);
     }
 
     void OnCollisionEnter(Collision other)

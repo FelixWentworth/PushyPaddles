@@ -41,6 +41,7 @@ public class GameManager : NetworkBehaviour
     private DateTime _startTime;
 
     public bool ControlledByOrchestrator;
+    public bool LessonSelectionRequired = true;
 
     void Start()
     {
@@ -355,7 +356,7 @@ public class GameManager : NetworkBehaviour
         {
             GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<ObstacleGeneration>().Setup(3, "");
         }
-        else
+        else if (!LessonSelectionRequired)
         {
             var challenge = _curriculum.GetNewChallenge(PSL_GameConfig.Instance.Level, PSL_GameConfig.Instance.LessonNumber);
             GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
@@ -367,6 +368,19 @@ public class GameManager : NetworkBehaviour
         // Place the platform in the scene
         Platform.SetActive(true);
         NetworkServer.Spawn(Platform);
+    }
+
+    [Server]
+    public void SetLesson(string year, string lesson)
+    {
+        var challenge = _curriculum.GetChallengesForYear(year).FirstOrDefault(c => c.Lesson == lesson);
+
+        Debug.Log(challenge);
+
+        if (challenge != null)
+        {
+            GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
+        }
     }
 
     [Server]

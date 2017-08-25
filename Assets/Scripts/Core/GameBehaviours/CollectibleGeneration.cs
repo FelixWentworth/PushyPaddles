@@ -82,6 +82,9 @@ public class CollectibleGeneration : LevelLayout
         var depth = GeneratedLevelLayout.GetLength(1);
         var startDepth = 0;
 
+        // Make sure to remove the empty values in the array
+        challengeInfo = challengeInfo.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+
         for (var i = 0; i < challengeInfo.Length; i++)
         {
             // Decide the location
@@ -94,12 +97,39 @@ public class CollectibleGeneration : LevelLayout
 
             } while (GeneratedLevelLayout[x, z] != validPosition);
 
+            challengeInfo[i] = CheckIfOperandRequired("+", challengeInfo[i]);
+
             // Mark the position as used
             GeneratedLevelLayout[x, z] = challengeInfo[i];
 
             startDepth += (depth - z) / (challengeInfo.Length-i);
         }
 
+    }
+
+    private string CheckIfOperandRequired(string operand, string text)
+    {
+        var operationsToCheck = new char[] { '+', '-', '/', 'x'};
+        if (HasOperation(text, operationsToCheck))
+        {
+            return text;
+        }
+        else
+        {
+            return operand + text;
+        }
+    }
+
+    private bool HasOperation(string text, char[] operations)
+    {
+        foreach (var operation in operations)
+        {
+            if (text.Contains(operation))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     

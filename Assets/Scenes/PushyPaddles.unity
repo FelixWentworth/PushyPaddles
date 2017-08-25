@@ -3459,6 +3459,7 @@ MonoBehaviour:
   PlayerTwoSpawn: {fileID: 1260636930}
   PlayerThreeSpawn: {fileID: 571241758}
   ControlledByOrchestrator: 0
+  LessonSelectionRequired: 1
 --- !u!114 &787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3568,6 +3569,7 @@ MonoBehaviour:
   TitleScreen: {fileID: 935824590}
   CharacterSelectionScreen: {fileID: 1840464154}
   HowToPlayScreen: {fileID: 1116553564}
+  LessonSelectScreen: {fileID: 1559232052}
   LevelInfo: {fileID: 1698043228}
   WaitingForPlayersPrompt: {fileID: 2046117915}
 --- !u!114 &794

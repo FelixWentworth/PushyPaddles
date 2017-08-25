@@ -19,6 +19,7 @@ public class MenuManager : NetworkBehaviour
     public GameObject TitleScreen;
     public GameObject CharacterSelectionScreen;
     public GameObject HowToPlayScreen;
+    public GameObject LessonSelectScreen;
     public GameObject LevelInfo;
     public GameObject WaitingForPlayersPrompt;
 
@@ -97,6 +98,7 @@ public class MenuManager : NetworkBehaviour
 
         CharacterSelectionScreen.SetActive(false);
         HowToPlayScreen.SetActive(false);
+        LessonSelectScreen.SetActive(false);
         WaitingForPlayersPrompt.gameObject.SetActive(false);
 
         LevelInfo.SetActive(true);
@@ -138,7 +140,55 @@ public class MenuManager : NetworkBehaviour
     public void HideCharacterSelect()
     {
         CharacterSelectionScreen.SetActive(false);
+        CheckIfShouldSelectLesson();
     }
+
+    /// <summary>
+    /// Check if the player should select a lesson before playing or not
+    /// </summary>
+    public void CheckIfShouldSelectLesson()
+    {
+        // Lesson has not been defined previously
+        if (GameManager.LessonSelectionRequired)
+        {
+            // Is player 1, so they get to choose the lesson to do
+            if (GameManager.GetLocalPlayer().PlayerRole == Player.Role.Floater)
+            {
+                ShowLessonSelect();
+            }
+            else
+            {
+                if (!ClientScene.ready)
+                {
+                    ClientScene.Ready(NetworkManager.singleton.client.connection);
+                }
+            }
+        }
+        else
+        {
+            if (!ClientScene.ready)
+            {
+                ClientScene.Ready(NetworkManager.singleton.client.connection);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Show player the character selection screen
+    /// </summary>
+    public void ShowLessonSelect()
+    {
+        LessonSelectScreen.SetActive(true);
+    }
+
+    /// <summary>
+    /// Hide character select screen for the current player
+    /// </summary>
+    public void HideLessonSelect()
+    {
+        LessonSelectScreen.SetActive(false);
+    }
+
 
     /// <summary>
     /// Show all players the reward screen, only the player who reached the goal will be able to control this menu

@@ -499,3 +499,12 @@ Calculation Success Rate: 75
 Rounds Complete: 3
 Time Taken: 175
 Problems Complete: 100
+Player: b0e2e157-688d-4a47-bbd9-e829ed9d1bed, showed skill: TookTurns, with value: -3
+Player: b0e2e157-688d-4a47-bbd9-e829ed9d1bed, showed skill: Shared, with value: 1
+
+Attempts: 1
+Chests Reached: 1
+Calculation Success Rate: 100
+Rounds Complete: 1
+Time Taken: 46
+Problems Complete: -2147483648

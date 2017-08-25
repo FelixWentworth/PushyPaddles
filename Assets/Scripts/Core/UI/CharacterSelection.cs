@@ -37,10 +37,7 @@ public class CharacterSelection : MonoBehaviour
 
     public void SelectCharacter()
     {
-        if (!ClientScene.ready)
-        {
-            ClientScene.Ready(NetworkManager.singleton.client.connection);
-        }
+        
         _player.CmdSetModel(_currentModelIndex);
         DisableAll();
         GameObject.Find("MenuManager").GetComponent<MenuManager>().HideCharacterSelect();
