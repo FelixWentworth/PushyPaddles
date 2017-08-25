@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -30,8 +31,8 @@ public class CurriculumLevelList : MonoBehaviour
     public void ShowLevelsForYear(string year)
     {
         // get the array of challenges
-        _titleText.text = "Year " + year;
-             
+        _titleText.text = string.Format(Localization.Get("FORMATTED_UI_YEAR"), _year);
+
         var curriculum = GameObject.Find("CurriculumManager").GetComponent<Curriculum>();
         var challenges = curriculum.GetChallengesForYear(year);
 
@@ -47,7 +48,11 @@ public class CurriculumLevelList : MonoBehaviour
     private void AddElement(string lesson, string description)
     {
         var go = Instantiate(LevelElement);
-        go.GetComponent<LevelElement>().Setup("Lesson" + "\u00a0" + lesson, description);
+
+        var lessonText = string.Format(Localization.Get("FORMATTED_UI_LESSON"), lesson);
+        lessonText = lessonText.Replace(" ", "\u00a0");
+
+        go.GetComponent<LevelElement>().Setup(lessonText, description);
         go.GetComponent<LevelElement>().Button.onClick.AddListener(delegate { LessonSelected(lesson); });
 
         go.transform.SetParent(_scrollRect.content);
@@ -78,7 +83,7 @@ public class CurriculumLevelList : MonoBehaviour
         else
         {
             _year = tempYear.ToString();
-            _titleText.text = "Year " + _year;
+            _titleText.text = string.Format(Localization.Get("FORMATTED_UI_YEAR"), _year);
             RemoveElements();
 
         }
@@ -87,14 +92,12 @@ public class CurriculumLevelList : MonoBehaviour
         foreach (var curriculumChallenge in lessons)
         {
             var description = curriculum.GetDescriptionForLesson(curriculumChallenge.Lesson);
-            AddElement("Lesson" + "\u00a0" + curriculumChallenge.Lesson, description.Description);
+            AddElement(curriculumChallenge.Lesson, description.Description);
         }
     }
 
     public void LessonSelected(string lesson)
     {
-        Debug.Log("selected " + _year + ", " + lesson);
-
         if (!ClientScene.ready)
         {
             ClientScene.Ready(NetworkManager.singleton.client.connection);
