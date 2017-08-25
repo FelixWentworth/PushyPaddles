@@ -516,7 +516,7 @@ ParticleSystem:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1317525903809620}
   serializedVersion: 5
-  lengthInSec: 5
+  lengthInSec: 2
   simulationSpeed: 1
   looping: 1
   prewarm: 0
@@ -566,7 +566,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 674125517
+  randomSeed: 840315921
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -1011,7 +1011,7 @@ ParticleSystem:
     enabled: 1
     type: 9
     angle: 25
-    length: 1.0283943
+    length: 1.356073
     boxX: 1
     boxY: 1
     boxZ: 1
@@ -1063,7 +1063,7 @@ ParticleSystem:
     arc:
       value: 360
       mode: 0
-      spread: 0.5
+      spread: 0.25
       speed:
         serializedVersion: 2
         minMaxState: 0
@@ -1429,7 +1429,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 1, a: 0.06666667}
+        key0: {r: 1, g: 1, b: 1, a: 0.09803922}
         key1: {r: 1, g: 1, b: 1, a: 0}
         key2: {r: 1, g: 1, b: 1, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
