@@ -17588,7 +17588,7 @@ MonoBehaviour:
   - Name: Reached Chest
     Skill: 11
     Positive: 1
-    TriggerAction: 3
+    TriggerAction: 4
     PreviousAction: 0
     MultiplePlayers: 0
     Interval: -1
@@ -17623,7 +17623,7 @@ MonoBehaviour:
   - Name: Got Incorrect Calculation
     Skill: 9
     Positive: 0
-    TriggerAction: 5
+    TriggerAction: 6
     PreviousAction: 0
     MultiplePlayers: 0
     Interval: -1

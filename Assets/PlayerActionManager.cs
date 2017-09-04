@@ -56,11 +56,11 @@ public class PlayerActionManager : MonoBehaviour
             Removable = removable
         });
 
-        // remove actions older than largest interval
-        if (_largestInterval > 0)
-        { 
-            _playerActions.RemoveAll(a => (DateTime.Now - a.TimeStamp).Seconds > _largestInterval && a.Removable);
-        }
+        //// remove actions older than largest interval
+        //if (_largestInterval > 0)
+        //{ 
+        //    _playerActions.RemoveAll(a => (DateTime.Now - a.TimeStamp).Seconds > _largestInterval && a.Removable);
+        //}
 
         if (removeAction != null)
         {
