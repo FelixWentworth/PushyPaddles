@@ -187,13 +187,14 @@ public class PSL_LRSManager : NetworkBehaviour
     [Server]
     private void OutputTrackedData(string individualData, int timeTaken)
     {
-        StartCoroutine(WriteToFile("\n" + individualData + 
+        StartCoroutine(WriteToFile(individualData + 
                   "\nAttempts: " + _totalAttempts +
                   "\nChests Reached: " + _totalGoalReached +
                   "\nCalculation Success Rate: " + Mathf.RoundToInt(((float)_totalRoundComplete / (float)_totalGoalReached) * 100f) +
                   "\nRounds Complete: " + _totalRoundComplete +
                   "\nTime Taken: " + timeTaken +
-                  "\nProblems Complete: " + (Mathf.RoundToInt(((float)_totalRoundComplete / (float)_totalRounds) * 100f))));
+                 //"\nProblems Complete: " + (Mathf.RoundToInt(((float)_totalRoundComplete / (float)_totalRounds) * 100f)) +
+                  "\n\n"));
     }
     
 

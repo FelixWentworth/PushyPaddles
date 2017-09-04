@@ -3,7 +3,15 @@ using UnityEngine;
 
 public class PSL_LRSData
 {
-    private string _api = "";
+    private string _atosStoreAPI = "https://sta-psl.atosresearch.eu/store/api/getLRS/";
+    private string _matchId = "";
+
+    private string _atosStoreURL
+    {
+        get { return _atosStoreAPI + _matchId; }
+    }
+
+    private string _api = "http://{0}/data/xAPI/";
     private string _postExtension = "";
 
     private string _verbUrl = "http://prosociallearn.eu/plsxapi/verbs/";
@@ -18,10 +26,13 @@ public class PSL_LRSData
         data.Actor.ObjectType = "Agent";
         data.Actor.Account.Name = playerId;
         data.Verb.Id = _verbUrl + verb;
+
         data.Result.Score.Raw = value;
+
         data.Context.ContextActivities.Parent = new Object[1];
         data.Context.ContextActivities.Parent[0].Id = _gameId;
         data.Context.ContextActivities.Parent[0].ObjectType = "Activity";
+
         data.Object.Id = gameSituationId;
         data.Object.ObjectType = "Activity";
 
@@ -37,10 +48,9 @@ public class PSL_LRSData
     {
         var requestApi = _api + _postExtension;
         var body = JsonConvert.SerializeObject(data.Data);
-
-
+        
         var www = new WWW(requestApi);
-
+        
         // TODO send data
     }
 

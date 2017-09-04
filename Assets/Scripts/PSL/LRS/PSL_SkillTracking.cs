@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -74,7 +75,7 @@ public class PSL_SkillTracking : MonoBehaviour {
             var value = GetNormalizedValue(playerSkill.Key);
 
             // TODO send data to PLS
-            
+
         }   
     }
 
@@ -89,9 +90,7 @@ public class PSL_SkillTracking : MonoBehaviour {
 
             var value = GetNormalizedValue(playerSkill.Key);
 
-            data += string.Format("Player: {0}, showed skill: {1}, with value: {2}", id, skill, value) + "\n";
-
-            Debug.Log(data);
+            data += string.Format("\nPlayer: {0}, showed skill: {1}, with value: {2}", id, skill, value);
         }
         return data;
     }
