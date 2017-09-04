@@ -54,4 +54,5 @@
 {"Key":"UI_INSTRUCTION_MATHS_DESCRIPTION_C","en-gb":"Pushy Paddles Numeracy challenges 3 players to work together, solving mathematical equations through effective communication and cooperation.","it":"La sfida dei tre giocatori nel remare con forza grazie a calcoli matematici, risoluzione di equazioni sviluppate attraverso una vera cooperazione ed una concreta comunicazione","es":"Pushy Paddles Numeracy reta a tres jugadores a trabajar juntos resolviendo problemas matemáticos a través de la comunicación y la cooperación","el":"Το παιγνίδι Αριθμητικής Pushy Paddles, δημιουργεί για τους τρεις παίκτες την πρόκληση να συνεργαστούν και να επικοινωνήσουν αποτελεσματικά για την επίλυση μαθηματικών εξισώσεων."},
 {"Key":"UI_LESSON_TITLE","en-gb":"Select A Lesson","it":"XXXX","es":"XXXX","el":"XXXX"},
 {"Key":"FORMATTED_UI_LESSON","en-gb":"Lesson {0}","it":"XXXX","es":"XXXX","el":"XXXX"},
-{"Key":"FORMATTED_UI_YEAR","en-gb":"Year {0}","it":"XXXX","es":"XXXX","el":"XXXX"}]
+{"Key":"FORMATTED_UI_YEAR","en-gb":"Year {0}","it":"XXXX","es":"XXXX","el":"XXXX"},
+{"Key":"FORMATTED_UI_REWARDS_PLAYER_CHOOSING","en-gb":"{0} is choosing rewards","it":"XXXX","es":"XXXX","el":"XXXX"}]

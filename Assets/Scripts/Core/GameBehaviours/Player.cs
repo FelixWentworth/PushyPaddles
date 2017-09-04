@@ -805,18 +805,23 @@ public class Player : MovingObject
     }
 
     [ClientRpc]
-    public void RpcGoalReached()
+    public void RpcGoalReached(string player)
     {
-        StartCoroutine(FocusOnChest());
+        StartCoroutine(FocusOnChest(player));
     }
 
-    private IEnumerator FocusOnChest()
+    private IEnumerator FocusOnChest(string player)
     {
         yield return GameObject.Find("CameraManager").GetComponent<CameraManager>().TransitionToEnd();
 
         if (isLocalPlayer)
         {
             GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowRewards();
+        }
+        else
+        {
+            // TODO Show player selecting reward UI
+            GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowPlayerChoosingRewards(player);
         }
     }
 
@@ -876,6 +881,7 @@ public class Player : MovingObject
         {
             Destroy(reward);
         }
+        GameObject.Find("MenuManager").GetComponent<MenuManager>().HideRewards();
     }
 
     public void StartTimer()

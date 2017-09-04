@@ -129,7 +129,6 @@ public class RewardsManager : MonoBehaviour
             var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
             gameManager.GetLocalPlayer().NextRound();
-            gameManager.HideRewards();
         }
         else
         {

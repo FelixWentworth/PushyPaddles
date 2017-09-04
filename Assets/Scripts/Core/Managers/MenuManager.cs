@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using PlayGen.Unity.Utilities.Localization;
+using UnityEngine;
 using UnityEngine.Networking;
 
 public class MenuManager : NetworkBehaviour
@@ -22,6 +23,7 @@ public class MenuManager : NetworkBehaviour
     public GameObject LessonSelectScreen;
     public GameObject LevelInfo;
     public GameObject WaitingForPlayersPrompt;
+    public GameObject PlayerChoosingRewardsGameObject;
 
     void Start()
     {
@@ -93,6 +95,7 @@ public class MenuManager : NetworkBehaviour
         // Make sure that the screens are hidden but ready to be used
         RewardScreenManager.gameObject.SetActive(true);
         RewardScreenManager.Hide();
+        PlayerChoosingRewardsGameObject.SetActive(false);
         GameOverScreen.gameObject.SetActive(true);
         GameOverScreen.Hide();
 
@@ -197,13 +200,24 @@ public class MenuManager : NetworkBehaviour
     {
         RewardScreenManager.Show();
     }
-    
+
+    /// <summary>
+    /// Show all players the reward screen, only the player who reached the goal will be able to control this menu
+    /// </summary>
+    public void ShowPlayerChoosingRewards(string playerName)
+    {
+        PlayerChoosingRewardsGameObject.SetActive(true);
+        PlayerChoosingRewardsGameObject.GetComponent<FormattedText>()
+            .SetText(Localization.Get("FORMATTED_UI_REWARDS_PLAYER_CHOOSING"), new [] {playerName});
+    }
+
     /// <summary>
     /// Hide the rewards screen for all users
     /// </summary>
     public void HideRewards()
     {
         RewardScreenManager.Hide();
+        PlayerChoosingRewardsGameObject.SetActive(false);
     }
 
     /// <summary>

@@ -24,3 +24,14 @@ Rounds Complete: 2
 Time Taken: 38
 Problems Complete: -2147483648
 
+
+Player: 40f6c83a-1995-445b-a30a-d8c6918932e0, showed skill: Cooperated, with value: 1
+Player: 383e59f8-0225-4bc7-98c3-241cc81b3287, showed skill: Cooperated, with value: 1
+Player: ab186c29-b4a7-4b19-b087-56bd791a67be, showed skill: Cooperated, with value: 1
+Player: 40f6c83a-1995-445b-a30a-d8c6918932e0, showed skill: Shared, with value: -0.3333333
+Attempts: 1
+Chests Reached: 1
+Calculation Success Rate: 100
+Rounds Complete: 1
+Time Taken: 45
+

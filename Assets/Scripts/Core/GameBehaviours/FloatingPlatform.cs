@@ -191,11 +191,13 @@ public class FloatingPlatform : MovingObject
                 player.SyncForceMove(other.transform.Find("VicrtoryLocation").position,
                     player.transform.eulerAngles);
             }
+            // Get the name of the player who reached the chest
+            var playerName = _playerOnPlatform.SyncNickName;
 
             _playerOnPlatform = null;
 
             // Notify the players that a reward has been reached
-            player.RpcGoalReached();
+            player.RpcGoalReached(playerName);
 
             CanFloat = false;
             Water.TouchedWater(this);
