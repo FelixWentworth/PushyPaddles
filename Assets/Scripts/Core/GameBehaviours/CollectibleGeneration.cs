@@ -62,6 +62,11 @@ public class CollectibleGeneration : LevelLayout
         foreach (var collider1 in colliders)
         {
             collider1.enabled = true;
+            var mathsCollectible = collider1.GetComponent<MathsCollectible>();
+            if (mathsCollectible != null)
+            {
+                mathsCollectible.RpcReset();
+            }
         }
         RpcResetColliders();
     }

@@ -157,6 +157,7 @@ public class FloatingPlatform : MovingObject
             if (isServer)
             {
                 GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Pickup");
+                other.GetComponent<MathsCollectible>().RpcPlayCollectedAnimation();
             }
 
         }

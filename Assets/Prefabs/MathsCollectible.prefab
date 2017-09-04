@@ -39,6 +39,7 @@ GameObject:
   - component: {fileID: 114796704203461734}
   - component: {fileID: 114097811764103360}
   - component: {fileID: 114807889723783004}
+  - component: {fileID: 111936101524636038}
   m_Layer: 12
   m_Name: MathsCollectible
   m_TagString: Collectible
@@ -385,6 +386,21 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!111 &111936101524636038
+Animation:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1137053814282736}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: c0d4dce790479444ab8b5fada0d301aa, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: c0d4dce790479444ab8b5fada0d301aa, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!114 &114097811764103360
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -463,6 +479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95ede634d8260ac4b831e8bafcd654b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CollectedAnimation: {fileID: 111936101524636038}
   Operation: 
 --- !u!114 &114810339165685730
 MonoBehaviour:
