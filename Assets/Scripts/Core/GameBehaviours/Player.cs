@@ -559,13 +559,12 @@ public class Player : MovingObject
         SetAnimation();
         SetPaddle();
         SetPlatform();
-        PaddlePrompt.SetActive(_usedPaddle);
         if (_usePaddle)
         {
             if (PaddlePrompt.activeSelf)
             {
                 _usedPaddle = true;
-                
+                PaddlePrompt.SetActive(false);
             }
             _usePaddle = false;
             SpawnWaveEffect(transform.position);
