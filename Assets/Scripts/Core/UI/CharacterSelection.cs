@@ -1,16 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class CharacterSelection : MonoBehaviour
 {
-
-    public List<GameObject> AvailableCharacters;
+    private List<GameObject> AvailableCharacters = new List<GameObject>();
 
     private int _currentModelIndex;
 
     private Player _player;
+
+    void Awake()
+    {
+        var playerModel = transform.Find("SimplePeople").gameObject;
+
+        // -1 as model limbs are the last object in the list
+        for (var i = 0; i < playerModel.transform.childCount-1; i++)
+        {
+            AvailableCharacters.Add(playerModel.transform.GetChild(i).gameObject);
+        }
+    }
 
     // Use this for initialization
     public void Set(Player player)
