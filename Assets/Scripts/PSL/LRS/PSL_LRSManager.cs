@@ -202,14 +202,13 @@ public class PSL_LRSManager : NetworkBehaviour
         }
         else
         {
-
             StartCoroutine(WriteToFile("\nFinal Result for game\n" + individualData +
                                        "\nTotal Attempts: " + _totalAttempts +
-                                       "\nChests Reached: " + _totalGoalReached +
+                                       "\nChests Reached: " + (_totalGoalReached-1) +
                                        "\nCalculation Success Rate: " +
                                        Mathf.RoundToInt(
                                            ((float) _totalRoundComplete / (float) _totalGoalReached) * 100f) + "%" +
-                                       "\nRounds Complete: " + _totalRoundComplete +
+                                       "\nRounds Complete: " + (_totalRoundComplete-1) +
                                        "\nTotal Time Taken: " + timeTaken +
                                        //"\nProblems Complete: " + (Mathf.RoundToInt(((float)_totalRoundComplete / (float)_totalRounds) * 100f)) +
                                        "\n-----------------------------------------------------\n"));
