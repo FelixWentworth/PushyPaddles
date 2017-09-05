@@ -12,6 +12,7 @@ public class Player : MovingObject
     [SyncVar] public float StrengthModifier = 1f;
 
     [SyncVar] public bool HoldingPlatform;
+    [SyncVar] public bool ControlledByServer;
 
     [SyncVar] public int PlayerNum;
 
@@ -137,15 +138,14 @@ public class Player : MovingObject
 
     void Update()
     {
-       
+
         // Don't allow players to move whilst rewards are being distributed
         if (_gameManager == null)
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
-       
         if (!_gameManager.DistributingRewards)
-        {
+        { 
             if (isLocalPlayer)
             {
                 if (OnPlatform)
@@ -211,6 +211,11 @@ public class Player : MovingObject
                 UpdatePlayerPosition();
             }
         }
+        if (ControlledByServer)
+        {
+            UpdatePlayerPosition();
+        }
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             RestartGame();
@@ -395,6 +400,7 @@ public class Player : MovingObject
         RealPosition = position;
         RealRotation = rotation;
 
+        RpcUpdatePosition(position, rotation);
     }
 
     [Server]
@@ -402,6 +408,15 @@ public class Player : MovingObject
     {
         _gameManager.DistributingRewards = true;
         OnPlatform = onPlatform;
+    }
+    
+    [ClientRpc]
+    private void RpcUpdatePosition(Vector3 position, Vector3 rotation)
+    {
+        RealPosition = position;
+        RealRotation = rotation;
+
+        UpdatePlayerPosition();
     }
 
     [Command]
@@ -434,6 +449,8 @@ public class Player : MovingObject
     {
         transform.position = position;
         transform.eulerAngles = rotation;
+
+        ControlledByServer = false;
     }
 
     public void HitObstacle()
@@ -820,7 +837,7 @@ public class Player : MovingObject
         }
         else
         {
-            // TODO Show player selecting reward UI
+            // Show player selecting reward UI
             GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowPlayerChoosingRewards(player);
         }
     }
@@ -860,10 +877,10 @@ public class Player : MovingObject
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
-        _gameManager.DistributingRewards = false;
         _gameManager.NextRound();
         RpcResetCamera();
         RpcRemoveRewards();
+        _gameManager.DistributingRewards = false;
     }
 
     [ClientRpc]
