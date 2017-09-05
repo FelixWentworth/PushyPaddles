@@ -29,7 +29,7 @@ public class GameOverScreen : UIScreen
         ConditionText.text = victory ? Localization.Get("UI_END_GAME_COMPLETE") : Localization.Get("UI_END_TIME_UP");
 
         var rounds = GameObject.Find("LevelManager").GetComponent<LevelManager>().RoundNumber;
-        RoundsText.text = string.Format(Localization.Get("FORMATTED_UI_END_ROUNDS_COMPLETED"), rounds);
+        RoundsText.text = string.Format(Localization.Get("FORMATTED_UI_END_ROUNDS_COMPLETED"), rounds-1); // did not complete the current round
 
         TimeTakenText.text = Localization.Get("UI_END_TIME_TAKEN") + " " +  + (timeTaken / 60) + ":" + (timeTaken % 60);
     }

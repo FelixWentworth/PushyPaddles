@@ -113,7 +113,7 @@ public class PSL_LRSManager : NetworkBehaviour
         _timeTakenPerRound.Add(timeTaken);
         _totalRoundComplete += 1;
 
-        SendSkillData(false, timeTaken);
+        SendSkillData(false, false, timeTaken);
     }
 
     /// <summary>
@@ -123,7 +123,7 @@ public class PSL_LRSManager : NetworkBehaviour
     [Server]
     public void GameCompleted(int timeTaken)
     {
-        SendSkillData(false, timeTaken);
+        SendSkillData(false, true, timeTaken);
     }
 
     [Server]
@@ -133,7 +133,7 @@ public class PSL_LRSManager : NetworkBehaviour
     }
 
     [Server]
-    public void SendSkillData(bool usePLS, int timeTaken)
+    public void SendSkillData(bool usePLS, bool finalResult, int timeTaken)
     {
         if (usePLS)
         {
@@ -143,7 +143,7 @@ public class PSL_LRSManager : NetworkBehaviour
         else
         {
             var individualData = _tracking.OutputSkillData();
-            OutputTrackedData(individualData, timeTaken);
+            OutputTrackedData(individualData, finalResult, timeTaken);
         }
     }
 
@@ -185,16 +185,35 @@ public class PSL_LRSManager : NetworkBehaviour
     /// </summary>
     /// <param name="timeTaken"></param>
     [Server]
-    private void OutputTrackedData(string individualData, int timeTaken)
+    private void OutputTrackedData(string individualData, bool finalResult, int timeTaken)
     {
-        StartCoroutine(WriteToFile(individualData + 
-                  "\nAttempts: " + _totalAttempts +
-                  "\nChests Reached: " + _totalGoalReached +
-                  "\nCalculation Success Rate: " + Mathf.RoundToInt(((float)_totalRoundComplete / (float)_totalGoalReached) * 100f) +
-                  "\nRounds Complete: " + _totalRoundComplete +
-                  "\nTime Taken: " + timeTaken +
-                 //"\nProblems Complete: " + (Mathf.RoundToInt(((float)_totalRoundComplete / (float)_totalRounds) * 100f)) +
-                  "\n\n"));
+        if (!finalResult)
+        {
+            StartCoroutine(WriteToFile(individualData +
+                                       "\nAttempts: " + _totalAttempts +
+                                       "\nChests Reached: " + _totalGoalReached +
+                                       "\nCalculation Success Rate: " +
+                                       Mathf.RoundToInt(
+                                           ((float) _totalRoundComplete / (float) _totalGoalReached) * 100f) + "%" +
+                                       "\nRounds Complete: " + _totalRoundComplete +
+                                       "\nTime Taken: " + timeTaken +
+                                       //"\nProblems Complete: " + (Mathf.RoundToInt(((float)_totalRoundComplete / (float)_totalRounds) * 100f)) +
+                                       "\n\n"));
+        }
+        else
+        {
+
+            StartCoroutine(WriteToFile("\nFinal Result for game\n" + individualData +
+                                       "\nTotal Attempts: " + _totalAttempts +
+                                       "\nChests Reached: " + _totalGoalReached +
+                                       "\nCalculation Success Rate: " +
+                                       Mathf.RoundToInt(
+                                           ((float) _totalRoundComplete / (float) _totalGoalReached) * 100f) + "%" +
+                                       "\nRounds Complete: " + _totalRoundComplete +
+                                       "\nTotal Time Taken: " + timeTaken +
+                                       //"\nProblems Complete: " + (Mathf.RoundToInt(((float)_totalRoundComplete / (float)_totalRounds) * 100f)) +
+                                       "\n-----------------------------------------------------\n"));
+        }
     }
     
 
