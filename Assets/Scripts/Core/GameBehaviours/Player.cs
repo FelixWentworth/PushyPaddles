@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -386,7 +387,9 @@ public class Player : MovingObject
             SyncNickName = data.NickName;
             PlayerID = data.PlayerId;
             PSL_LRSManager.Instance.JoinedGame(data.MatchId, data.PlayerId);
+            PlatformSelection.UpdatePlayers(_gameManager.GetAllPlayers().Select(p =>p.PlayerID).ToList());
         }
+
     }
 
 
@@ -737,12 +740,13 @@ public class Player : MovingObject
     private void CmdTiltRaft(float direction)
     {
         GameObject.Find("Water").GetComponent<WaterBehaviour>().RaftTilt(this, direction);
-
     }
 
     [Command]
     public void CmdSetModel(int model)
     {
+        
+        Debug.Log("Player set model to: " + model);
         IsReady = true;
         
         _playerModel = model;

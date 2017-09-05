@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using PlayGen.Orchestrator.Common;
 using PlayGen.Orchestrator.Contracts;
@@ -68,6 +69,14 @@ public class PlatformSelection : MonoBehaviour
         }
     }
 
+    public static void EnsureServerState()
+    {
+        if (_instance._orchestratedServer.State < GameState.Started)
+        {
+            _instance._orchestratedServer.SetState(GameState.Started, true);
+        }
+    }
+
     private void ServerStateChange(GameState state)
     {
         ServerStateChanged(state);
@@ -115,11 +124,12 @@ public class PlatformSelection : MonoBehaviour
         _orchestrationClient.ConnectNetworkManager();
     }
 
-    public static void EnsureServerState()
+    public static void UpdatePlayers(List<string> playerIDs)
     {
-        if (_instance._orchestratedServer.State < GameState.Started)
+        if (_instance._orchestratedServer)
         {
-            _instance._orchestratedServer.SetState(GameState.Started, true);
+            _instance._orchestratedServer.UpdateConnectedPlayers(playerIDs);
         }
     }
+
 }

@@ -203,6 +203,8 @@ public class GameManager : NetworkBehaviour
 
         ChangeRoles();
 
+        // TODO check if needs a delay for player disconnection, may break otherwise
+        PlatformSelection.UpdatePlayers(_players.Select(p => p.PlayerID).ToList());
     }
 
     private bool AreAllPlayersReady()
@@ -266,6 +268,10 @@ public class GameManager : NetworkBehaviour
         return null;
     }
 
+    public List<Player> GetAllPlayers()
+    {
+        return _players;
+    }
     public List<string> GetPlayerIds()
     {
         if (_players.Count == 0)
