@@ -78,15 +78,15 @@ public class RewardScreenManager : UIScreen
             // Determine if the local player has control
             if (_player.PlayerRole == Player.Role.Floater)
             {
-                if (Input.GetKeyDown(KeyCode.A))
+                if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
                 {
                     RewardsManager.Left();
                 }
-                if (Input.GetKeyDown(KeyCode.D))
+                if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
                 {
                     RewardsManager.Right();
                 }
-                if (Input.GetKeyDown(KeyCode.S))
+                if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter))
                 {
                     RewardsManager.Select();
                 }
