@@ -148,7 +148,6 @@ public class FloatingPlatform : MovingObject
             }
             else
             {
-                
                 PickupValue = _levelManager.Evaluate(PickupValue + operation).ToString();
             }
 
@@ -177,10 +176,6 @@ public class FloatingPlatform : MovingObject
         
         yield return new WaitForSeconds(levelManager.TotalUI.AnimLength());
 
-        if (isServer)
-        {
-            RpcDisableTotal();
-        }
 
         if (PickupValue == levelManager.Target)
         {
@@ -189,8 +184,9 @@ public class FloatingPlatform : MovingObject
             if (isServer)
             {
                 player.SetGoalReached(false);
+                player.ControlledByServer = true;
                 player.SyncForceMove(other.transform.Find("VicrtoryLocation").position,
-                    player.transform.eulerAngles);
+                    Vector3.zero);
             }
             // Get the name of the player who reached the chest
             var playerName = _playerOnPlatform.SyncNickName;
@@ -212,6 +208,12 @@ public class FloatingPlatform : MovingObject
 
             CanFloat = false;
             Water.TouchedWater(this);
+        }
+
+
+        if (isServer)
+        {
+            RpcDisableTotal();
         }
     }
 
