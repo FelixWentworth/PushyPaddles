@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using PlayGen.Orchestrator.PSL.Common.LRS;
 using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -11,8 +12,6 @@ public class PSL_LRSManager : NetworkBehaviour
 #region Variables
 
     public static PSL_LRSManager Instance;
-
-    private PSL_SkillTracking _tracking;
     
     // Our variables needed for sending data
     [SerializeField] private string _url;
@@ -45,8 +44,6 @@ public class PSL_LRSManager : NetworkBehaviour
     {
         TimeLimit = 600;
         Instance = this;
-
-        _tracking = GetComponent<PSL_SkillTracking>();
     }
 
     #region public methods - game tracking
@@ -113,7 +110,7 @@ public class PSL_LRSManager : NetworkBehaviour
         _timeTakenPerRound.Add(timeTaken);
         _totalRoundComplete += 1;
 
-        SendSkillData(false, false, timeTaken);
+        SendSkillData(false, timeTaken);
     }
 
     /// <summary>
@@ -123,28 +120,25 @@ public class PSL_LRSManager : NetworkBehaviour
     [Server]
     public void GameCompleted(int timeTaken)
     {
-        SendSkillData(false, true, timeTaken);
+        SendSkillData(true, timeTaken);
     }
 
     [Server]
-    public void PlayerShowedSkill(string playerId, PSL_Verbs verb, int increment)
+    public void PlayerShowedSkill(string playerId, LRSSkillVerb verb, int increment)
     {
-        _tracking.AddSkill(playerId, verb, increment);
+        PlatformSelection.AddSkill(playerId, verb, increment);
     }
 
     [Server]
-    public void SendSkillData(bool usePLS, bool finalResult, int timeTaken)
+    public void SendSkillData(bool finalResult, int timeTaken)
     {
-        if (usePLS)
-        {
-            _tracking.SendSkillData();
-            SendTrackedData(timeTaken);
-        }
-        else
-        {
-            var individualData = _tracking.OutputSkillData();
-            OutputTrackedData(individualData, finalResult, timeTaken);
-        }
+        // Send to LRS
+        PlatformSelection.SendSkillData();
+        SendTrackedData(timeTaken);
+        
+        // Output to file
+        var individualData = PlatformSelection.OutputSkillData();
+        OutputTrackedData(individualData, finalResult, timeTaken);
     }
 
     #endregion

@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using PlayGen.Orchestrator.Common;
 using PlayGen.Orchestrator.Contracts;
+using PlayGen.Orchestrator.PSL.Common.LRS;
+using PlayGen.Orchestrator.PSL.Unity.Server;
 using PlayGen.Orchestrator.Unity.Common.Model;
 using PlayGen.Orchestratror.Unity.Client;
 using PlayGen.Orchestratror.Unity.Server;
-using PlayGen.Unity.AsyncUtilities;
 using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class PlatformSelection : MonoBehaviour
 {
@@ -22,7 +22,7 @@ public class PlatformSelection : MonoBehaviour
 
     public static Action<GameState> ServerStateChanged;
 
-    private OrchestratedGameServer _orchestratedServer;
+    private PSLOrchestratedGameServer _orchestratedServer;
     private OrchestrationClient _orchestrationClient;
 
     public struct PSLPlayerData
@@ -54,7 +54,7 @@ public class PlatformSelection : MonoBehaviour
         switch (_connectionType)
         {
             case ConnectionType.Server:
-                _orchestratedServer = FindObjectOfType<OrchestratedGameServer>();
+                _orchestratedServer = FindObjectOfType<PSLOrchestratedGameServer>();
                 _orchestratedServer.StateChanged += ServerStateChange;
                 _orchestratedServer.ConfigValidated += ConfigValidated;
                 _orchestratedServer.RegisteredWithOrchestrator += RegisteredWithOrchestrator;
@@ -132,4 +132,28 @@ public class PlatformSelection : MonoBehaviour
         }
     }
 
+    public static void AddSkill(string playerId, LRSSkillVerb verb, int increment)
+    {
+        if (_instance._orchestratedServer)
+        {
+            _instance._orchestratedServer.AddSkill(playerId, verb, increment);
+        }
+    }
+
+    public static void SendSkillData()
+    {
+        if (_instance._orchestratedServer)
+        {
+            _instance._orchestratedServer.SendStoredLRSData();
+        }
+    }
+
+    public static string OutputSkillData()
+    {
+        if (_instance._orchestratedServer)
+        {
+            return _instance._orchestratedServer.OutputSkillData();
+        }
+        return string.Empty;
+    }
 }

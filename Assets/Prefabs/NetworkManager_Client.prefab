@@ -49,18 +49,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1518853193208876}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1341596797, guid: 62862f23efb782446ac5b978b6653d3b, type: 3}
+  m_Script: {fileID: 1659741629, guid: 62862f23efb782446ac5b978b6653d3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SimulatePlatformIntegration: 0
   Standalone: 0
-  _sessionIdentifiers:
-  - Key: playerID
-    Value: fd76239c-0e9f-4883-95df-a94a9d3d39d9
-  - Key: playerNickName
-    Value: Bob
-  - Key: gameInstanceID
-    Value: d8da4436-fcad-403c-b9bd-d6eb0f88e0e2
+  _sessionIdentifiers: []
 --- !u!114 &114848141446279744
 MonoBehaviour:
   m_ObjectHideFlags: 1

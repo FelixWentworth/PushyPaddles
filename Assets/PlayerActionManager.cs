@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Configuration;
 using Microsoft.SqlServer.Server;
+using PlayGen.Orchestrator.PSL.Common.LRS;
 using PlayGen.Unity.AsyncUtilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -26,7 +27,7 @@ public class PlayerActionManager : MonoBehaviour
     {
         public string Name;
 
-        [Tooltip("Skill being shown")] public PSL_Verbs Skill;
+        [Tooltip("Skill being shown")] public LRSSkillVerb Skill;
         [Tooltip("Is the skill shown positive")] public bool Positive;
         [Tooltip("Action that must be met for criteria to be met")] public PlayerAction TriggerAction;
         [Tooltip("Action to check against for criteria to be met")] public PlayerAction PreviousAction;
@@ -97,7 +98,7 @@ public class PlayerActionManager : MonoBehaviour
 
     }
 
-    private void RecordSkillValue(PSL_Verbs verb, string playerId, bool positiveSkill)
+    private void RecordSkillValue(LRSSkillVerb verb, string playerId, bool positiveSkill)
     {
         Debug.Log("Player " + playerId + " showed Skill: " + verb);
         var increment = positiveSkill ? 1 : -1;
