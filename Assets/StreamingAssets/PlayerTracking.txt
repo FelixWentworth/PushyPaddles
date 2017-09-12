@@ -276,3 +276,12 @@ Calculation Success Rate: 100
 Rounds Complete: 11
 Time Taken: 445
 
+
+Final Result for game
+
+Total Attempts: 0
+Chests Reached: -1
+Calculation Success Rate: -2147483648%
+Rounds Complete: -1
+Total Time Taken: 0
+-----------------------------------------------------

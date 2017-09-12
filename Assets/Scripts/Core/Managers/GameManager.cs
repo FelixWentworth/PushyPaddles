@@ -567,6 +567,7 @@ public class GameManager : NetworkBehaviour
                 floaterIndex = i;
             }
             _players[i].SetRole(Player.Role.Paddler);
+            _players[i].RpcShowSwitchingRoles();
         }
         // increment to next player
         floaterIndex = floaterIndex >= _players.Count - 1 ? 0 : floaterIndex + 1;

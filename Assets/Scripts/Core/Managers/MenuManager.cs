@@ -24,6 +24,7 @@ public class MenuManager : NetworkBehaviour
     public GameObject LevelInfo;
     public GameObject WaitingForPlayersPrompt;
     public GameObject PlayerChoosingRewardsGameObject;
+    public GameObject SwitchingRolesPrompt;
 
     void Start()
     {
@@ -96,6 +97,7 @@ public class MenuManager : NetworkBehaviour
         RewardScreenManager.gameObject.SetActive(true);
         RewardScreenManager.Hide();
         PlayerChoosingRewardsGameObject.SetActive(false);
+        SwitchingRolesPrompt.SetActive(false);
         GameOverScreen.gameObject.SetActive(true);
         GameOverScreen.Hide();
 
@@ -218,6 +220,22 @@ public class MenuManager : NetworkBehaviour
     {
         RewardScreenManager.Hide();
         PlayerChoosingRewardsGameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Notify players that their role is switched
+    /// </summary>
+    public void ShowSwitchingRolesPrompt()
+    {
+        SwitchingRolesPrompt.SetActive(true);
+    }
+
+    /// <summary>
+    /// Hide the switching roles prompt
+    /// </summary>
+    public void HideSwitchingRolesPrompt()
+    {
+        SwitchingRolesPrompt.SetActive(false);
     }
 
     /// <summary>

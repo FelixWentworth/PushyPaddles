@@ -846,6 +846,22 @@ public class Player : MovingObject
         }
     }
 
+    [ClientRpc]
+    public void RpcShowSwitchingRoles()
+    {
+        StartCoroutine(ShowSwitchingRoles());
+    }
+    private IEnumerator ShowSwitchingRoles()
+    {
+        var menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+
+        menu.ShowSwitchingRolesPrompt();
+
+        yield return new WaitForSeconds(1.5f);
+
+        menu.HideSwitchingRolesPrompt();
+    }
+
     public void RestartGame()
     {
 
