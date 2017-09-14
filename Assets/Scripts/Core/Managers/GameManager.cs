@@ -22,7 +22,8 @@ public class GameManager : NetworkBehaviour
     public GameObject Platform;
     public GameObject PauseScreen;
 
-    private bool _generateRocks { get { return PSL_GameConfig.Instance.GameType == "Obstacle"; } }
+    private bool _generateRocks { get { return PSL_GameConfig.Instance.GameType == "Obstacle"; }
+    }
 
     public GameObject PlayerPrefab;
     private List<Player> _players = new List<Player>();
@@ -43,6 +44,9 @@ public class GameManager : NetworkBehaviour
     public bool ControlledByOrchestrator;
     public bool LessonSelectionRequired = true;
 
+    private bool _gameComplete;
+    private int _postGameRounds;
+
     void Start()
     {
         _startTime = DateTime.Now;
@@ -55,6 +59,11 @@ public class GameManager : NetworkBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Restart(true);
+        }
+
         if (isServer)
         {
             NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
@@ -78,7 +87,7 @@ public class GameManager : NetworkBehaviour
             }
             if (_level.IsGameOver)
             {
-                GameOver(false);
+                GameOver(_gameComplete);
             }
 
             // Check if the game should be started
@@ -503,6 +512,12 @@ public class GameManager : NetworkBehaviour
                 GameObject.Find("LevelColliders/SpawnedObjects")
                         .GetComponent<ObstacleGeneration>().GenerateNewLevel(_level.RoundNumber * 3);
             }
+            else if (_gameComplete)
+            {
+                _postGameRounds += 1;
+                GameObject.Find("LevelColliders/SpawnedObjects")
+                        .GetComponent<ObstacleGeneration>().GenerateNewLevel(_postGameRounds * 3);
+            }
             else
             {
                 CurriculumChallenge challenge = null;
@@ -513,7 +528,9 @@ public class GameManager : NetworkBehaviour
                 if (challenge == null)
                 {
                     // Reached the end of the game
-                    GameOver(true);
+                    // Dont show game over until the time has run out
+                    _gameComplete = true;
+                    Restart(newRound: true);
                 }
                 else
                 {

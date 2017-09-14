@@ -285,3 +285,21 @@ Calculation Success Rate: -2147483648%
 Rounds Complete: -1
 Total Time Taken: 0
 -----------------------------------------------------
+
+Final Result for game
+
+Total Attempts: 37
+Chests Reached: -1
+Calculation Success Rate: -2147483648%
+Rounds Complete: -1
+Total Time Taken: 600
+-----------------------------------------------------
+
+Final Result for game
+
+Total Attempts: 37
+Chests Reached: -1
+Calculation Success Rate: -2147483648%
+Rounds Complete: -1
+Total Time Taken: 600
+-----------------------------------------------------

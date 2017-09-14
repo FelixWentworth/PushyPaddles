@@ -124,17 +124,27 @@ public class LevelLayout : NetworkBehaviour {
             previousPosition = pathPosition;
         }
 
-        // Randomise where the blocking rock will be placed
 
-
-
-        // Block the central path, but make sure there is still a route through
+        // Block the path so players must work together
         GeneratedLevelLayout[centerX, centerZ] = "x";
         GeneratedLevelLayout[centerX - 1, centerZ] = "x";
 
+        // Make sure that their is still a path around the blocked area
+        // Left/Right
         GeneratedLevelLayout[centerX + 1, centerZ] = "+";
         GeneratedLevelLayout[centerX - 2, centerZ] = "+";
 
+        // Up/Down
+        GeneratedLevelLayout[centerX, centerZ+1] = "+";
+        GeneratedLevelLayout[centerX, centerZ-1] = "+";
+        GeneratedLevelLayout[centerX - 1, centerZ+1] = "+";
+        GeneratedLevelLayout[centerX - 1, centerZ-1] = "+";
+
+        // Diagonals
+        GeneratedLevelLayout[centerX + 1, centerZ+1] = "+";
+        GeneratedLevelLayout[centerX + 1, centerZ-1] = "+";
+        GeneratedLevelLayout[centerX - 2, centerZ+1] = "+";
+        GeneratedLevelLayout[centerX - 2, centerZ-1] = "+";
     }
 
     public string GetArrayString()
