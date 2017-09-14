@@ -31,7 +31,7 @@ public class GameOverScreen : UIScreen
         var rounds = GameObject.Find("LevelManager").GetComponent<LevelManager>().RoundNumber;
         RoundsText.text = string.Format(Localization.Get("FORMATTED_UI_END_ROUNDS_COMPLETED"), rounds-1); // did not complete the current round
 
-        TimeTakenText.text = Localization.Get("UI_END_TIME_TAKEN") + " " +  + (timeTaken / 60) + ":" + (timeTaken % 60);
+        TimeTakenText.text = Localization.Get("UI_END_TIME_TAKEN") + " " + (timeTaken / 60) + ":" + (timeTaken % 60).ToString("00");
     }
 
     /// <summary>

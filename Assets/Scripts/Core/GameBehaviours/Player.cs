@@ -343,6 +343,9 @@ public class Player : MovingObject
     {
         _hasMoved = true;
 
+        x *= Time.deltaTime * 60;
+        z *= Time.deltaTime * 60;
+
         x *= MovementSpeed * SpeedModifier * DirectionModifier;
         z *= MovementSpeed * SpeedModifier * DirectionModifier;
 

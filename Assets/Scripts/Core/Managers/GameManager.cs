@@ -55,6 +55,7 @@ public class GameManager : NetworkBehaviour
         Platform.SetActive(false);
 #endif
         PauseScreen.SetActive(false);
+
     }
 
     void Update()
@@ -72,6 +73,10 @@ public class GameManager : NetworkBehaviour
             if (_level == null)
             {
                 _level = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+                if (_level != null)
+                {
+                    _level.MathsVersion = !_generateRocks;
+                }
             }
             if (_menu == null)
             {
@@ -123,7 +128,7 @@ public class GameManager : NetworkBehaviour
 
                 }
             }
-
+            
         }
 
 
@@ -529,7 +534,9 @@ public class GameManager : NetworkBehaviour
                 {
                     // Reached the end of the game
                     // Dont show game over until the time has run out
+                    _generatingLevel = false;
                     _gameComplete = true;
+                    _level.MathsVersion = false;
                     Restart(newRound: true);
                 }
                 else

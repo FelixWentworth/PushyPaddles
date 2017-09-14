@@ -303,3 +303,333 @@ Calculation Success Rate: -2147483648%
 Rounds Complete: -1
 Total Time Taken: 600
 -----------------------------------------------------
+
+Attempts: 1
+Chests Reached: 1
+Calculation Success Rate: 100%
+Rounds Complete: 1
+Time Taken: 47
+
+
+Attempts: 1
+Chests Reached: 1
+Calculation Success Rate: 100%
+Rounds Complete: 1
+Time Taken: 44
+
+
+Attempts: 3
+Chests Reached: 2
+Calculation Success Rate: 100%
+Rounds Complete: 2
+Time Taken: 49
+
+
+Attempts: 5
+Chests Reached: 3
+Calculation Success Rate: 100%
+Rounds Complete: 3
+Time Taken: 35
+
+
+Attempts: 7
+Chests Reached: 4
+Calculation Success Rate: 100%
+Rounds Complete: 4
+Time Taken: 57
+
+
+Attempts: 9
+Chests Reached: 5
+Calculation Success Rate: 100%
+Rounds Complete: 5
+Time Taken: 33
+
+
+Attempts: 11
+Chests Reached: 6
+Calculation Success Rate: 100%
+Rounds Complete: 6
+Time Taken: 36
+
+
+Attempts: 13
+Chests Reached: 7
+Calculation Success Rate: 100%
+Rounds Complete: 7
+Time Taken: 32
+
+
+Attempts: 15
+Chests Reached: 8
+Calculation Success Rate: 100%
+Rounds Complete: 8
+Time Taken: 33
+
+
+Attempts: 17
+Chests Reached: 9
+Calculation Success Rate: 100%
+Rounds Complete: 9
+Time Taken: 30
+
+
+Attempts: 19
+Chests Reached: 10
+Calculation Success Rate: 100%
+Rounds Complete: 10
+Time Taken: 35
+
+
+Attempts: 21
+Chests Reached: 11
+Calculation Success Rate: 100%
+Rounds Complete: 11
+Time Taken: 32
+
+
+Attempts: 23
+Chests Reached: 12
+Calculation Success Rate: 100%
+Rounds Complete: 12
+Time Taken: 55
+
+
+Final Result for game
+
+Total Attempts: 26
+Chests Reached: 13
+Calculation Success Rate: 86%
+Rounds Complete: 11
+Total Time Taken: 600
+-----------------------------------------------------
+
+Final Result for game
+
+Total Attempts: 27
+Chests Reached: 13
+Calculation Success Rate: 86%
+Rounds Complete: 11
+Total Time Taken: 600
+-----------------------------------------------------
+
+Final Result for game
+
+Total Attempts: 28
+Chests Reached: 13
+Calculation Success Rate: 86%
+Rounds Complete: 11
+Total Time Taken: 600
+-----------------------------------------------------
+
+Final Result for game
+
+Total Attempts: 29
+Chests Reached: 13
+Calculation Success Rate: 86%
+Rounds Complete: 11
+Total Time Taken: 600
+-----------------------------------------------------
+
+Attempts: 1
+Chests Reached: 1
+Calculation Success Rate: 100%
+Rounds Complete: 1
+Time Taken: 44
+
+
+Attempts: 1
+Chests Reached: 1
+Calculation Success Rate: 100%
+Rounds Complete: 1
+Time Taken: 50
+
+
+Attempts: 3
+Chests Reached: 2
+Calculation Success Rate: 100%
+Rounds Complete: 2
+Time Taken: 26
+
+
+Attempts: 5
+Chests Reached: 3
+Calculation Success Rate: 100%
+Rounds Complete: 3
+Time Taken: 49
+
+
+Attempts: 1
+Chests Reached: 1
+Calculation Success Rate: 100%
+Rounds Complete: 1
+Time Taken: 44
+
+
+Attempts: 3
+Chests Reached: 2
+Calculation Success Rate: 100%
+Rounds Complete: 2
+Time Taken: 29
+
+
+Attempts: 6
+Chests Reached: 4
+Calculation Success Rate: 75%
+Rounds Complete: 3
+Time Taken: 0
+
+
+Attempts: 8
+Chests Reached: 5
+Calculation Success Rate: 80%
+Rounds Complete: 4
+Time Taken: 34
+
+
+Attempts: 10
+Chests Reached: 6
+Calculation Success Rate: 83%
+Rounds Complete: 5
+Time Taken: 38
+
+
+Attempts: 12
+Chests Reached: 7
+Calculation Success Rate: 86%
+Rounds Complete: 6
+Time Taken: 30
+
+
+Attempts: 15
+Chests Reached: 9
+Calculation Success Rate: 78%
+Rounds Complete: 7
+Time Taken: 2
+
+
+Attempts: 17
+Chests Reached: 10
+Calculation Success Rate: 80%
+Rounds Complete: 8
+Time Taken: 31
+
+
+Attempts: 19
+Chests Reached: 11
+Calculation Success Rate: 82%
+Rounds Complete: 9
+Time Taken: 30
+
+
+Attempts: 21
+Chests Reached: 12
+Calculation Success Rate: 83%
+Rounds Complete: 10
+Time Taken: 32
+
+
+Attempts: 23
+Chests Reached: 13
+Calculation Success Rate: 85%
+Rounds Complete: 11
+Time Taken: 30
+
+
+Attempts: 26
+Chests Reached: 14
+Calculation Success Rate: 86%
+Rounds Complete: 12
+Time Taken: 27
+
+
+Attempts: 28
+Chests Reached: 15
+Calculation Success Rate: 87%
+Rounds Complete: 13
+Time Taken: 31
+
+
+Attempts: 30
+Chests Reached: 16
+Calculation Success Rate: 88%
+Rounds Complete: 14
+Time Taken: 27
+
+
+Attempts: 2
+Chests Reached: 1
+Calculation Success Rate: 100%
+Rounds Complete: 1
+Time Taken: 54
+
+
+Attempts: 4
+Chests Reached: 2
+Calculation Success Rate: 100%
+Rounds Complete: 2
+Time Taken: 32
+
+
+Attempts: 6
+Chests Reached: 3
+Calculation Success Rate: 100%
+Rounds Complete: 3
+Time Taken: 32
+
+
+Attempts: 9
+Chests Reached: 4
+Calculation Success Rate: 100%
+Rounds Complete: 4
+Time Taken: 43
+
+
+Attempts: 11
+Chests Reached: 5
+Calculation Success Rate: 100%
+Rounds Complete: 5
+Time Taken: 31
+
+
+Attempts: 14
+Chests Reached: 6
+Calculation Success Rate: 100%
+Rounds Complete: 6
+Time Taken: 1
+
+
+Attempts: 16
+Chests Reached: 7
+Calculation Success Rate: 100%
+Rounds Complete: 7
+Time Taken: 35
+
+
+Attempts: 19
+Chests Reached: 9
+Calculation Success Rate: 89%
+Rounds Complete: 8
+Time Taken: 55
+
+
+Attempts: 21
+Chests Reached: 10
+Calculation Success Rate: 90%
+Rounds Complete: 9
+Time Taken: 36
+
+
+Attempts: 23
+Chests Reached: 11
+Calculation Success Rate: 91%
+Rounds Complete: 10
+Time Taken: 31
+
+
+Attempts: 26
+Chests Reached: 12
+Calculation Success Rate: 92%
+Rounds Complete: 11
+Time Taken: 58
+

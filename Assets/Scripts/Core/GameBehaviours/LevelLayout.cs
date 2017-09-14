@@ -259,7 +259,7 @@ public class LevelLayout : NetworkBehaviour {
             for (var j = 0; j < GeneratedLevelLayout.GetLength(1); j++)
             {
                 // Check that the space has extra content that should be shown for the collectible
-                if (GeneratedLevelLayout[i, j] != "c" && GeneratedLevelLayout[i,j] != "x" && GeneratedLevelLayout[i,j] != "+")
+                if (GeneratedLevelLayout[i, j] != "c" && GeneratedLevelLayout[i,j] != "x" && GeneratedLevelLayout[i,j] != "+" && GeneratedLevelLayout[i, j] != "s")
                 {
                     // Create an object
                     var location = new Vector3(MinX + i, -0.5f, MinZ + j);

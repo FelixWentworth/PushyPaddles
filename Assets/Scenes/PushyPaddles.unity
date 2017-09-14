@@ -1441,6 +1441,7 @@ Transform:
   - {fileID: 1817565996}
   - {fileID: 805880840}
   - {fileID: 1116018690}
+  - {fileID: 320944394}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1608,6 +1609,7 @@ Transform:
   - {fileID: 220}
   - {fileID: 587841471}
   - {fileID: 1223638123}
+  - {fileID: 1658281810}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5898,7 +5900,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 265459929}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0.228}
+  m_LocalPosition: {x: 0, y: 0, z: 0.15}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children:
   - {fileID: 401705012}
@@ -5909,7 +5911,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: -0.6}
-  m_SizeDelta: {x: 120, y: 180}
+  m_SizeDelta: {x: 800, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &265459931
 Canvas:
@@ -6314,6 +6316,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TextToFormat: {fileID: 1026173038}
+--- !u!1 &320944393
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 320944394}
+  - component: {fileID: 320944395}
+  m_Layer: 0
+  m_Name: QualitySettingsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &320944394
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 320944393}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 297}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &320944395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 320944393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 594a73737c8a3684eb16208489d03406, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &333769514
 GameObject:
   m_ObjectHideFlags: 0
@@ -6479,6 +6521,16 @@ Prefab:
     - target: {fileID: 4071276302902040, guid: 4b2e2a3473ff7b64696ef301e4ad2aab, type: 2}
       propertyPath: m_LocalPosition.y
       value: -0.719
+      objectReference: {fileID: 0}
+    - target: {fileID: 65049604808091906, guid: 4b2e2a3473ff7b64696ef301e4ad2aab,
+        type: 2}
+      propertyPath: m_Size.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 65049604808091906, guid: 4b2e2a3473ff7b64696ef301e4ad2aab,
+        type: 2}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4b2e2a3473ff7b64696ef301e4ad2aab, type: 2}
@@ -6912,7 +6964,7 @@ MonoBehaviour:
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 1
+    m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'Current Total: xxx'
@@ -7122,6 +7174,7 @@ MonoBehaviour:
   RoundStarted: 0
   Target: 
   Current: 
+  MathsVersion: 0
 --- !u!114 &433650799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12535,7 +12588,7 @@ MonoBehaviour:
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 1
+    m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'Target: xxx'
@@ -18208,6 +18261,75 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.47776377, y: 0.0000017285347, z: 0.06453794}
     m_Extent: {x: 1.5229813, y: 1.6845057, z: 0.53112626}
   m_DirtyAABB: 0
+--- !u!1 &1658281809
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1658281810}
+  - component: {fileID: 1658281812}
+  - component: {fileID: 1658281811}
+  m_Layer: 11
+  m_Name: Waterfall
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1658281810
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1658281809}
+  m_LocalRotation: {x: -0, y: -0, z: 0.70710677, w: 0.7071068}
+  m_LocalPosition: {x: 20.26, y: 4.33, z: 26.97}
+  m_LocalScale: {x: 1.7229029, y: 6.0301595, z: 1.7229025}
+  m_Children: []
+  m_Father: {fileID: 357}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90.00001}
+--- !u!23 &1658281811
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1658281809}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &1658281812
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1658281809}
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1673565419
 GameObject:
   m_ObjectHideFlags: 0
@@ -18992,7 +19114,7 @@ MonoBehaviour:
   - Name: Backgriound
     Clip: {fileID: 8300000, guid: d9ced655c31d9904c8a632dffd4ee870, type: 3}
     Volume: 0.6
-    AutoPlay: 1
+    AutoPlay: 0
     Loop: 1
   - Name: Splash
     Clip: {fileID: 8300000, guid: 1c2f71f47777488438167efd9645e499, type: 3}

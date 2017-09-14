@@ -167,17 +167,19 @@ public class FloatingPlatform : MovingObject
     {
         var levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
 
-        if (isServer)
+        if (levelManager.MathsVersion)
         {
-            GameObject.Find("SpawnedObjects").GetComponent<CollectibleGeneration>().ResetColliders();
-                
-            RpcShowTotal(PickupValue == levelManager.Target);
+            if (isServer)
+            {
+                GameObject.Find("SpawnedObjects").GetComponent<CollectibleGeneration>().ResetColliders();
+
+                RpcShowTotal(PickupValue == levelManager.Target);
+            }
+
+            yield return new WaitForSeconds(levelManager.TotalUI.AnimLength());
         }
-        
-        yield return new WaitForSeconds(levelManager.TotalUI.AnimLength());
 
-
-        if (PickupValue == levelManager.Target)
+        if (PickupValue == levelManager.Target || !levelManager.MathsVersion)
         {
             var player = _playerOnPlatform.GetComponent<Player>();
 
@@ -211,7 +213,7 @@ public class FloatingPlatform : MovingObject
         }
 
 
-        if (isServer)
+        if (isServer && levelManager.MathsVersion)
         {
             RpcDisableTotal();
         }

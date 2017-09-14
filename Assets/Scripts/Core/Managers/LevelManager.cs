@@ -21,6 +21,8 @@ public class LevelManager : NetworkBehaviour
     [SyncVar] public string Target = "";
     [SyncVar] public string Current = "";
 
+    [SyncVar] public bool MathsVersion;
+
     public bool IsGameOver
     {
         get { return _timeRemaining <= 0f; }
@@ -127,9 +129,18 @@ public class LevelManager : NetworkBehaviour
         var second = totalTime % 60;
 
         TimeRemainingText.text = minute + ":" + second.ToString("00");
-
-        TargetText.text = Target != "" ? string.Format(Localization.Get("FORMATTED_UI_GAME_TARGET"), Target): "";
-        CurrentText.text = Current != "" ? string.Format(Localization.Get("FORMATTED_UI_GAME_CURRENT"), Current): "";
+        if (MathsVersion)
+        {
+            TargetText.text = Target != "" ? string.Format(Localization.Get("FORMATTED_UI_GAME_TARGET"), Target) : "";
+            CurrentText.text = Current != ""
+                ? string.Format(Localization.Get("FORMATTED_UI_GAME_CURRENT"), Current)
+                : "";
+        }
+        else
+        {
+            TargetText.text = Localization.Get("UI_GAME_OBJECTIVE");
+            CurrentText.text = "";
+        }
     }
 
     [Server]
