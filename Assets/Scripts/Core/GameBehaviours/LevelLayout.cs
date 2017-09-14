@@ -125,26 +125,43 @@ public class LevelLayout : NetworkBehaviour {
         }
 
 
-        // Block the path so players must work together
-        GeneratedLevelLayout[centerX, centerZ] = "x";
-        GeneratedLevelLayout[centerX - 1, centerZ] = "x";
+        // Block the path so players must work together s = sign location
+        GeneratedLevelLayout[centerX, centerZ] = "s";
+        GeneratedLevelLayout[centerX - 1, centerZ] = "s";
 
         // Make sure that their is still a path around the blocked area
+        bool right = GeneratedLevelLayout[centerX, centerZ - 2] == "+" ||
+                     GeneratedLevelLayout[centerX + 1, centerZ - 2] == "+";
+
+
         // Left/Right
+        if (right)
+        {
         GeneratedLevelLayout[centerX + 1, centerZ] = "+";
-        GeneratedLevelLayout[centerX - 2, centerZ] = "+";
+
+        }
+        else
+        {
+            GeneratedLevelLayout[centerX - 2, centerZ] = "+";
+        }
 
         // Up/Down
-        GeneratedLevelLayout[centerX, centerZ+1] = "+";
-        GeneratedLevelLayout[centerX, centerZ-1] = "+";
-        GeneratedLevelLayout[centerX - 1, centerZ+1] = "+";
-        GeneratedLevelLayout[centerX - 1, centerZ-1] = "+";
+        if (right)
+        {
+            GeneratedLevelLayout[centerX, centerZ+1] = "+";
+            GeneratedLevelLayout[centerX, centerZ - 1] = "+";
+        }
+        else
+        {
+            GeneratedLevelLayout[centerX - 1, centerZ + 1] = "+";
+            GeneratedLevelLayout[centerX - 1, centerZ - 1] = "+";
+        }
 
         // Diagonals
-        GeneratedLevelLayout[centerX + 1, centerZ+1] = "+";
-        GeneratedLevelLayout[centerX + 1, centerZ-1] = "+";
-        GeneratedLevelLayout[centerX - 2, centerZ+1] = "+";
-        GeneratedLevelLayout[centerX - 2, centerZ-1] = "+";
+        GeneratedLevelLayout[centerX + 1, centerZ + 1] = "+";
+        GeneratedLevelLayout[centerX + 1, centerZ - 1] = "+";
+        GeneratedLevelLayout[centerX - 2, centerZ + 1] = "+";
+        GeneratedLevelLayout[centerX - 2, centerZ - 1] = "+";
     }
 
     public string GetArrayString()
