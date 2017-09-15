@@ -633,3 +633,10 @@ Calculation Success Rate: 92%
 Rounds Complete: 11
 Time Taken: 58
 
+
+Attempts: 1
+Chests Reached: 1
+Calculation Success Rate: 100%
+Rounds Complete: 1
+Time Taken: 7
+

@@ -3463,7 +3463,6 @@ MonoBehaviour:
   PlayerTwoSpawn: {fileID: 1260636930}
   PlayerThreeSpawn: {fileID: 571241758}
   ControlledByOrchestrator: 0
-  LessonSelectionRequired: 1
 --- !u!114 &787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13541,6 +13540,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fef4df28f4536d46bd59078c12f54d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Curriculum: {fileID: 0}
 --- !u!1 &1116553564
 GameObject:
   m_ObjectHideFlags: 0
