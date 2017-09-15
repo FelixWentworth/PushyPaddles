@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework.Internal;
 using PlayGen.Orchestrator.Common;
 using PlayGen.Orchestrator.Contracts;
 using PlayGen.Orchestrator.PSL.Common.LRS;
@@ -132,7 +131,7 @@ public class PlatformSelection : MonoBehaviour
             case 3:
                 return GetRandomInRange(.66f, 1f, availableLessons);
             default:
-                return 1;
+                return "1";
         }
     }
 
