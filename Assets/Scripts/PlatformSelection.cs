@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework.Internal;
 using PlayGen.Orchestrator.Common;
 using PlayGen.Orchestrator.Contracts;
 using PlayGen.Orchestrator.PSL.Common.LRS;
@@ -108,15 +109,40 @@ public class PlatformSelection : MonoBehaviour
 
     private void RegisteredWithOrchestrator(GameRegistrationResponse obj)
     {
-        Debug.Log(obj.language);
+        if (obj.scenario != "Default" || obj.scenario != "Custom")
+        { 
+            PSL_GameConfig.Instance.SetGameConfig(obj.scenario, GetLessonFromDifficulty(obj.scenario, obj.difficulty), "Maths", "All");
+        }
+        PSL_LRSManager.Instance.SetTotalTime(Convert.ToInt16(obj.maxTime));
         Localization.UpdateLanguage(obj.language);
-        Debug.Log(obj.scenario);
-        Debug.Log(obj.maxPlayers);
-        Debug.Log(obj.difficulty);
+    }
 
-        // TODO set time available
-        // Using 600 as default
-        PSL_LRSManager.Instance.SetTotalTime(600);
+    private string GetLessonFromDifficulty(string year, int difficulty)
+    {
+        year = year.Replace("year", "");
+        year = year.Replace(" ", "");
+        var availableLessons = PSL_GameConfig.Instance.GetLessonCountForScenario(year);
+
+        switch (difficulty)
+        {
+            case 1:
+                return GetRandomInRange(0f, .33f, availableLessons);
+            case 2:
+                return GetRandomInRange(.33f, .66f, availableLessons);
+            case 3:
+                return GetRandomInRange(.66f, 1f, availableLessons);
+            default:
+                return 1;
+        }
+    }
+
+    private string GetRandomInRange(float min, float max, int range)
+    {
+        var low = Convert.ToInt16(range * min);
+        var high = Convert.ToInt16(range * max);
+
+        return UnityEngine.Random.Range(low, high + 1).ToString();
+
     }
 
     private void StartClient(Endpoint endpoint)

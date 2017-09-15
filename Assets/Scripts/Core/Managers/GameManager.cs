@@ -42,7 +42,6 @@ public class GameManager : NetworkBehaviour
     private DateTime _startTime;
 
     public bool ControlledByOrchestrator;
-    public bool LessonSelectionRequired = true;
 
     private bool _gameComplete;
     private int _postGameRounds;
@@ -376,7 +375,7 @@ public class GameManager : NetworkBehaviour
         {
             GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<ObstacleGeneration>().Setup(3, "");
         }
-        else if (!LessonSelectionRequired)
+        else if (!PSL_GameConfig.Instance.LessonSelectionRequired)
         {
             var challenge = _curriculum.GetNewChallenge(PSL_GameConfig.Instance.Level, PSL_GameConfig.Instance.LessonNumber);
             GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
@@ -536,6 +535,7 @@ public class GameManager : NetworkBehaviour
                     // Dont show game over until the time has run out
                     _generatingLevel = false;
                     _gameComplete = true;
+                    _level.RoundNumber -= 1;
                     _level.MathsVersion = false;
                     Restart(newRound: true);
                 }

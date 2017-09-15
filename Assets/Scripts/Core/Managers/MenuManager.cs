@@ -154,7 +154,7 @@ public class MenuManager : NetworkBehaviour
     public void CheckIfShouldSelectLesson()
     {
         // Lesson has not been defined previously
-        if (GameManager.LessonSelectionRequired)
+        if (PSL_GameConfig.Instance.LessonSelectionRequired)
         {
             // Is player 1, so they get to choose the lesson to do
             if (GameManager.GetLocalPlayer().PlayerRole == Player.Role.Floater)

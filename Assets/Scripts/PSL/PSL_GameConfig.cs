@@ -10,7 +10,6 @@ public class PSL_GameConfig : MonoBehaviour
     /// </summary>
     public static PSL_GameConfig Instance;
 
-
     public string Level { get; private set; }
     public string LessonNumber { get; private set; }
 
@@ -19,20 +18,21 @@ public class PSL_GameConfig : MonoBehaviour
     // "Positive", "All"
     public string RewardType { get; private set; }
 
+    public bool LessonSelectionRequired { get; private set; }
+
+    public Curriculum Curriculum;
+
     void Awake()
     {
-        if (PlatformSelection.ConnectionType == ConnectionType.Testing)
-        {
-            // Set to default setup
-            SetGameConfig("1", "2", "Maths", "All");
-        }
-        else
-        {
-            // TODO Get from config
-            SetGameConfig("1", "2", "Maths", "All");
-        }
-
         Instance = this;
+
+        // Set lesson selection required as no lesson has beem set yet
+        LessonSelectionRequired = true;
+    }
+
+    public int GetLessonCountForScenario(string year)
+    {
+        return Curriculum.GetChallengesForYear(year).Length;
     }
 
     public void SetGameConfig(string level, string lesson, string gameType, string rewardType)
@@ -41,5 +41,7 @@ public class PSL_GameConfig : MonoBehaviour
         LessonNumber = lesson;
         GameType = gameType;
         RewardType = rewardType;
+
+        LessonSelectionRequired = false;
     }
 }
