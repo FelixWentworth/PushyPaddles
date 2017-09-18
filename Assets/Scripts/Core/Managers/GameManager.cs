@@ -94,24 +94,27 @@ public class GameManager : NetworkBehaviour
                 GameOver(_gameComplete);
             }
 
-            // Check if the game should be started
-            if (!_level.RoundStarted)
-            {
-                // Set the sync var variable
-                AllPlayersReady = AreAllPlayersReady();
+            //// Check if the game should be started
+            //if (!_level.RoundStarted)
+            //{
+            // Set the sync var variable
+            AllPlayersReady = AreAllPlayersReady();
 
-                if (AllPlayersReady)
-                {
-                    // TODO change to waiting for start and wait for Orchestrator to start game
-                    PlatformSelection.UpdateSeverState(GameState.Started);
-                    StartGameTimer();
-                }
-                else
-                {
-                    PlatformSelection.UpdateSeverState(GameState.WaitingForPlayers);
-                }
+            if (AllPlayersReady)
+            {
+                // TODO change to waiting for start and wait for Orchestrator to start game
+                PlatformSelection.UpdateSeverState(GameState.Started);
+                StartGameTimer();
+                ResumeGame();
             }
-            else if (!ControlledByOrchestrator)
+            else
+            {
+                PlatformSelection.UpdateSeverState(GameState.WaitingForPlayers);
+                PauseGame();
+            }
+            //}
+            //
+            if (!ControlledByOrchestrator)
             {
                 AllPlayersReady = _players.Count >= 3;
                 if (!AllPlayersReady)

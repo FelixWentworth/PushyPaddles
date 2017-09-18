@@ -640,3 +640,124 @@ Calculation Success Rate: 100%
 Rounds Complete: 1
 Time Taken: 7
 
+
+Attempts: 2
+Chests Reached: 1
+Calculation Success Rate: 100%
+Rounds Complete: 1
+Time Taken: 3
+
+
+Attempts: 5
+Chests Reached: 2
+Calculation Success Rate: 100%
+Rounds Complete: 2
+Time Taken: 47
+
+
+Attempts: 1
+Chests Reached: 1
+Calculation Success Rate: 100%
+Rounds Complete: 1
+Time Taken: 39
+
+
+Attempts: 1
+Chests Reached: 1
+Calculation Success Rate: 100%
+Rounds Complete: 1
+Time Taken: 1
+
+
+Attempts: 1
+Chests Reached: 1
+Calculation Success Rate: 100%
+Rounds Complete: 1
+Time Taken: 52
+
+
+Attempts: 3
+Chests Reached: 2
+Calculation Success Rate: 100%
+Rounds Complete: 2
+Time Taken: 34
+
+
+Attempts: 5
+Chests Reached: 3
+Calculation Success Rate: 100%
+Rounds Complete: 3
+Time Taken: 36
+
+
+Attempts: 7
+Chests Reached: 4
+Calculation Success Rate: 100%
+Rounds Complete: 4
+Time Taken: 33
+
+
+Attempts: 9
+Chests Reached: 5
+Calculation Success Rate: 100%
+Rounds Complete: 5
+Time Taken: 34
+
+
+Attempts: 11
+Chests Reached: 6
+Calculation Success Rate: 100%
+Rounds Complete: 6
+Time Taken: 39
+
+
+Attempts: 13
+Chests Reached: 7
+Calculation Success Rate: 100%
+Rounds Complete: 7
+Time Taken: 31
+
+
+Attempts: 15
+Chests Reached: 8
+Calculation Success Rate: 100%
+Rounds Complete: 8
+Time Taken: 34
+
+
+Attempts: 17
+Chests Reached: 9
+Calculation Success Rate: 100%
+Rounds Complete: 9
+Time Taken: 44
+
+
+Attempts: 19
+Chests Reached: 10
+Calculation Success Rate: 100%
+Rounds Complete: 10
+Time Taken: 33
+
+
+Attempts: 22
+Chests Reached: 12
+Calculation Success Rate: 92%
+Rounds Complete: 11
+Time Taken: 3
+
+
+Final Result for game
+
+Total Attempts: 24
+Chests Reached: 11
+Calculation Success Rate: 92%
+Rounds Complete: 10
+Total Time Taken: 600
+-----------------------------------------------------
+
+Attempts: 1
+Chests Reached: 1
+Calculation Success Rate: 100%
+Rounds Complete: 1
+Time Taken: 49
+
