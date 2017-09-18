@@ -158,8 +158,8 @@ public class MainMenu : MonoBehaviour
             {
                 if (connected)
                 {
-                    LoadingScreen.Complete();
                     _menuManager.HideMenu();
+                    LoadingScreen.Complete();
                     _connecting = false;
                 }
             }

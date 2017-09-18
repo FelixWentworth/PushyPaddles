@@ -28,6 +28,12 @@ public class LoadingScreen : UIScreen
 
     public void Complete()
     {
+        StartCoroutine(WaitToHide());
+    }
+
+    private IEnumerator WaitToHide()
+    {
+        yield return new WaitForSeconds(0.5f);
         Hide();
     }
 

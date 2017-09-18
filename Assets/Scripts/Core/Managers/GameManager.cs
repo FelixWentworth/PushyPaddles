@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
 using UnityEngine.SceneManagement;
+using QualitySettings = UnityEngine.QualitySettings;
 
 public class GameManager : NetworkBehaviour
 {
@@ -55,6 +56,12 @@ public class GameManager : NetworkBehaviour
 #endif
         PauseScreen.SetActive(false);
 
+
+        if (isServer)
+        {
+            // Set the quality settings to lowest
+            UnityEngine.QualitySettings.SetQualityLevel(0);
+        }
     }
 
     void Update()
