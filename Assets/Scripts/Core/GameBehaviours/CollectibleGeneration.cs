@@ -85,7 +85,7 @@ public class CollectibleGeneration : LevelLayout
     public void CreateLevel(string[] challengeInfo, string validPosition)
     {
         var depth = GeneratedLevelLayout.GetLength(1);
-        var startDepth = 0;
+        var startDepth = Random.Range(0, 2);
 
         // Make sure to remove the empty values in the array
         challengeInfo = challengeInfo.Where(x => !string.IsNullOrEmpty(x)).ToArray();
@@ -101,13 +101,17 @@ public class CollectibleGeneration : LevelLayout
                 x = Random.Range(0, GeneratedLevelLayout.GetLength(0));
 
             } while (GeneratedLevelLayout[x, z] != validPosition);
-
             challengeInfo[i] = CheckIfOperandRequired("+", challengeInfo[i]);
 
             // Mark the position as used
             GeneratedLevelLayout[x, z] = challengeInfo[i];
 
-            startDepth += (depth - z) / (challengeInfo.Length-i);
+            // Avoid division by 0 TODO handle in for loop properly
+            if (i + 1 < challengeInfo.Length)
+            {
+                var max = ((depth - z) / (challengeInfo.Length - (i + 1)));
+                startDepth += Random.Range(1, max);
+            }
         }
 
     }
