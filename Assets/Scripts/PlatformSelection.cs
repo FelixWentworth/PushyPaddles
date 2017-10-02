@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using PlayGen.Orchestrator.Common;
 using PlayGen.Orchestrator.Contracts;
@@ -113,7 +114,19 @@ public class PlatformSelection : MonoBehaviour
             PSL_GameConfig.Instance.SetGameConfig(obj.scenario, GetLessonFromDifficulty(obj.scenario, obj.difficulty), "Maths", "All");
         }
         PSL_LRSManager.Instance.SetTotalTime(Convert.ToInt16(obj.maxTime));
-        Localization.UpdateLanguage(obj.language);
+
+        Localization.UpdateLanguage("en");
+
+        // Set language
+        var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures & ~CultureTypes.NeutralCultures);
+        if (allCultures.Any(c => c.Name.Equals(obj.language, StringComparison.OrdinalIgnoreCase)))
+        {
+            Localization.UpdateLanguage(obj.language);
+        }
+        else if (allCultures.Any(c => c.EnglishName.Equals(obj.language, StringComparison.OrdinalIgnoreCase)))
+        {
+            Localization.UpdateLanguage(allCultures.First(c => c.EnglishName.Equals(obj.language, StringComparison.OrdinalIgnoreCase)));
+        }
     }
 
     private string GetLessonFromDifficulty(string year, int difficulty)

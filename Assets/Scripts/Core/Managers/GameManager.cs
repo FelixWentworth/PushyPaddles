@@ -185,6 +185,7 @@ public class GameManager : NetworkBehaviour
         //NetworkManager.singleton.OnClientConnect(connection);
 
         _menu.HideMenu();
+        RpcSetLanguage(Localization.SelectedLanguage.Name);
         StartCoroutine(JoinGame(netMsg));
     }
 
@@ -228,6 +229,12 @@ public class GameManager : NetworkBehaviour
 
         // TODO check if needs a delay for player disconnection, may break otherwise
         PlatformSelection.UpdatePlayers(_players.Select(p => p.PlayerID).ToList());
+    }
+
+    [ClientRpc]
+    private void RpcSetLanguage(string language)
+    {
+        Localization.UpdateLanguage(language);
     }
 
     private bool AreAllPlayersReady()
