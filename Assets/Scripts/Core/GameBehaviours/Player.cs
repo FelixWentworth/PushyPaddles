@@ -115,10 +115,17 @@ public class Player : MovingObject
 
         if (!isServer && isLocalPlayer)
         {
+            // Client needs to be ready to send command
+            if (!ClientScene.ready)
+            {
+                ClientScene.Ready(NetworkManager.singleton.client.connection);
+            }
+
             GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowHowToPlay();
 
             var platformSelection = GameObject.Find("PlatformManager").GetComponent<PlatformSelection>();
             _playerData = platformSelection.PlayerData;
+            CmdSetPlayerData(_playerData);
         }
     }
 
@@ -139,7 +146,6 @@ public class Player : MovingObject
 
     void Update()
     {
-
         // Don't allow players to move whilst rewards are being distributed
         if (_gameManager == null)
         {
@@ -217,10 +223,10 @@ public class Player : MovingObject
             UpdatePlayerPosition();
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            RestartGame();
-        }
+        //if (Input.GetKeyDown(KeyCode.R))
+        //{
+        //    RestartGame();
+        //}
 
         if (_raft == null)
         {

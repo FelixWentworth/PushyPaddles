@@ -35,6 +35,8 @@ public class PlatformSelection : MonoBehaviour
 
     public PSLPlayerData PlayerData { get; private set; }
 
+    private List<string> _connectedPlayerIds = new List<string>();
+
     void Awake()
     {
         if (_instance)
@@ -64,6 +66,19 @@ public class PlatformSelection : MonoBehaviour
                 _orchestrationClient = FindObjectOfType<OrchestrationClient>();
                 _orchestrationClient.PlayerIdentified += PlayerIdentified;
                 _orchestrationClient.EndpointLocated += StartClient;
+
+                var language = !string.IsNullOrEmpty(CultureInfo.CurrentUICulture.Name) && !Equals(CultureInfo.CurrentUICulture.Parent, CultureInfo.InvariantCulture) ? CultureInfo.CurrentUICulture.Parent : CultureInfo.CurrentUICulture;
+                var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
+
+                if (!string.IsNullOrEmpty(language.Name) && allCultures.Any(c => c.Name.Equals(Application.systemLanguage.ToString(), StringComparison.OrdinalIgnoreCase)))
+                {
+                    Localization.UpdateLanguage(CultureInfo.CurrentUICulture);
+                }
+                else if (allCultures.Any(c => c.EnglishName.Equals(Application.systemLanguage.ToString(), StringComparison.OrdinalIgnoreCase)))
+                {
+                    Localization.UpdateLanguage(allCultures.First(c => c.EnglishName.Equals(Application.systemLanguage.ToString(), StringComparison.OrdinalIgnoreCase)));
+                }
+
                 break;
             case ConnectionType.Testing:
                 break;
@@ -100,6 +115,7 @@ public class PlatformSelection : MonoBehaviour
             PlayerId = obj.playerID,
             NickName = obj.playerNickName
         };
+        Debug.Log("Set Player Id");
     }
 
     private void ConfigValidated()

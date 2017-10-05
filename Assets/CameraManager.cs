@@ -27,21 +27,21 @@ public class CameraManager : MonoBehaviour
         anim.Play();
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            if (_end)
-            {
-                StartCoroutine(TransitionToStart());
-            }
-            else
-            {
-                StartCoroutine(TransitionToEnd());
-            }
-            _end = !_end;
-        }
-    }
+    //void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.C))
+    //    {
+    //        if (_end)
+    //        {
+    //            StartCoroutine(TransitionToStart());
+    //        }
+    //        else
+    //        {
+    //            StartCoroutine(TransitionToEnd());
+    //        }
+    //        _end = !_end;
+    //    }
+    //}
 
     public IEnumerator TransitionToEnd()
     {

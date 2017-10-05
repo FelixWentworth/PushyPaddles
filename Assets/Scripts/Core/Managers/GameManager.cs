@@ -62,15 +62,14 @@ public class GameManager : NetworkBehaviour
             // Set the quality settings to lowest
             UnityEngine.QualitySettings.SetQualityLevel(0);
         }
+        else
+        {
+            PauseScreen.SetActive(true);
+        }
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Restart(true);
-        }
-
         if (isServer)
         {
             NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
@@ -105,24 +104,24 @@ public class GameManager : NetworkBehaviour
             //if (!_level.RoundStarted)
             //{
             // Set the sync var variable
+
             AllPlayersReady = AreAllPlayersReady();
 
-            if (AllPlayersReady)
+            if (!ControlledByOrchestrator || PlatformSelection.ConnectionType == ConnectionType.Testing)
             {
-                // TODO change to waiting for start and wait for Orchestrator to start game
-                PlatformSelection.UpdateSeverState(GameState.Started);
-                StartGameTimer();
-                ResumeGame();
-            }
-            else
-            {
-                PlatformSelection.UpdateSeverState(GameState.WaitingForPlayers);
-                PauseGame();
-            }
-            //}
-            //
-            if (!ControlledByOrchestrator)
-            {
+                if (AllPlayersReady)
+                {
+                    PlatformSelection.UpdateSeverState(GameState.Started);
+                    StartGameTimer();
+                    ResumeGame();
+                }
+                else
+                {
+                    PlatformSelection.UpdateSeverState(GameState.WaitingForPlayers);
+                    PauseGame();
+                }
+                //}
+                //
                 AllPlayersReady = _players.Count >= 3;
                 if (!AllPlayersReady)
                 {
@@ -663,3 +662,4 @@ public class GameManager : NetworkBehaviour
         GUI.Label(new Rect(10, 10, 100, 20), Mathf.RoundToInt(1 / Time.deltaTime).ToString());
     }
 }
+
