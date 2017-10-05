@@ -62,7 +62,6 @@ public class MainMenu : MonoBehaviour
             }
             else if (PlatformSelection.ConnectionType == ConnectionType.Client)
             {
-                //TODO LOCALIZE
                 LoadingScreen.ShowScreen(Localization.Get("UI_MAIN_CONNECTING"), null);
                 _connecting = true;
             }

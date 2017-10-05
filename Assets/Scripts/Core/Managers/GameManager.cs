@@ -47,6 +47,9 @@ public class GameManager : NetworkBehaviour
     private bool _gameComplete;
     private int _postGameRounds;
 
+    private float _noPlayerTimer = 0f;
+    private const float _maxInactiveTime = 30f;
+
     void Start()
     {
         _startTime = DateTime.Now;
@@ -136,7 +139,20 @@ public class GameManager : NetworkBehaviour
 
                 }
             }
-            
+
+            // end game when no players after a certain time
+            if (_players.Count == 0)
+            {
+                _noPlayerTimer += Time.deltaTime;
+                if (_noPlayerTimer > _maxInactiveTime)
+                {
+                    Application.Quit();
+                }
+            }
+            else
+            {
+                _noPlayerTimer = 0f;
+            }
         }
 
 

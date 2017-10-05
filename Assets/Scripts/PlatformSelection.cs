@@ -131,7 +131,7 @@ public class PlatformSelection : MonoBehaviour
         }
         PSL_LRSManager.Instance.SetTotalTime(Convert.ToInt16(obj.maxTime));
 
-        Localization.UpdateLanguage("en");
+        Localization.Get("GAME_NAME");
 
         // Set language
         var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures & ~CultureTypes.NeutralCultures);
