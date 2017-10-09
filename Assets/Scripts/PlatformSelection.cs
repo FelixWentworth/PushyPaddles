@@ -72,17 +72,23 @@ public class PlatformSelection : MonoBehaviour
                 _orchestrationClient.PlayerIdentified += PlayerIdentified;
                 _orchestrationClient.EndpointLocated += StartClient;
 
+                Localization.Get("GAME_NAME");
+                Debug.Log("My language is " + Localization.SelectedLanguage.Name);
+
                 var language = !string.IsNullOrEmpty(CultureInfo.CurrentUICulture.Name) && !Equals(CultureInfo.CurrentUICulture.Parent, CultureInfo.InvariantCulture) ? CultureInfo.CurrentUICulture.Parent : CultureInfo.CurrentUICulture;
                 var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
 
                 if (!string.IsNullOrEmpty(language.Name) && allCultures.Any(c => c.Name.Equals(Application.systemLanguage.ToString(), StringComparison.OrdinalIgnoreCase)))
                 {
-                    Localization.UpdateLanguage(CultureInfo.CurrentUICulture);
+                    Localization.UpdateLanguage(CultureInfo.CurrentUICulture.Name);
                 }
                 else if (allCultures.Any(c => c.EnglishName.Equals(Application.systemLanguage.ToString(), StringComparison.OrdinalIgnoreCase)))
                 {
-                    Localization.UpdateLanguage(allCultures.First(c => c.EnglishName.Equals(Application.systemLanguage.ToString(), StringComparison.OrdinalIgnoreCase)));
+                    Localization.UpdateLanguage(allCultures.First(c => c.EnglishName.Equals(Application.systemLanguage.ToString(), StringComparison.OrdinalIgnoreCase)).Name);
                 }
+
+                Debug.Log("My language is now " + Localization.SelectedLanguage.Name);
+
 
                 break;
             case ConnectionType.Testing:
@@ -139,48 +145,52 @@ public class PlatformSelection : MonoBehaviour
         { 
             PSL_GameConfig.SetGameConfig(obj.scenario, GetLessonFromDifficulty(obj.scenario, obj.difficulty), "Maths", "All");
         }
-        PSL_LRSManager.Instance.SetTotalTime(Convert.ToInt16(obj.maxTime));
+        PSL_LRSManager.Instance.SetTotalTime(Convert.ToInt16(obj.maxTime * 60));
 
         Localization.Get("GAME_NAME");
 
         // Set language
-        var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures & ~CultureTypes.NeutralCultures);
+        var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
         if (allCultures.Any(c => c.Name.Equals(obj.language, StringComparison.OrdinalIgnoreCase)))
         {
             Localization.UpdateLanguage(obj.language);
         }
         else if (allCultures.Any(c => c.EnglishName.Equals(obj.language, StringComparison.OrdinalIgnoreCase)))
         {
-            Localization.UpdateLanguage(allCultures.First(c => c.EnglishName.Equals(obj.language, StringComparison.OrdinalIgnoreCase)));
+            Localization.UpdateLanguage(allCultures.First(c => c.EnglishName.Equals(obj.language, StringComparison.OrdinalIgnoreCase)).Name);
         }
-        Debug.Log(Localization.SelectedLanguage);
 
     }
 
     private string GetLessonFromDifficulty(string year, int difficulty)
     {
         year = year.Substring(5, year.Length-5);
+        var startIndex = PSL_GameConfig.GetFirstLessonIndexForYear(year);
         var availableLessons = PSL_GameConfig.GetLessonCountForScenario(year);
+
+        Debug.Log(availableLessons + " available lessons, starting at index: " + startIndex);
+
         switch (difficulty)
         {
             case 1:
-                return GetRandomInRange(0f, .33f, availableLessons);
+                return GetRandomInRange(0f, .33f, startIndex, availableLessons);
             case 2:
-                return GetRandomInRange(.33f, .66f, availableLessons);
+                return GetRandomInRange(.33f, .66f, startIndex, availableLessons);
             case 3:
-                return GetRandomInRange(.66f, 1f, availableLessons);
+                return GetRandomInRange(.66f, 1f, startIndex, availableLessons);
             default:
                 return "1";
         }
     }
 
-    private string GetRandomInRange(float min, float max, int range)
+    private string GetRandomInRange(float min, float max, int rangeStart, int range)
     {
         var low = Convert.ToInt16(range * min);
         var high = Convert.ToInt16(range * max);
 
-        return UnityEngine.Random.Range(low, high + 1).ToString();
-
+        var rand = UnityEngine.Random.Range(low, high);
+        rand += rangeStart;
+        return rand.ToString();
     }
 
     private void StartClient(Endpoint endpoint)

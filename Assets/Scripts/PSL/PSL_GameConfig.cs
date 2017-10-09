@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -27,6 +29,20 @@ public class PSL_GameConfig : MonoBehaviour
     {
         // Set lesson selection required as no lesson has beem set yet
         LessonSelectionRequired = true;
+    }
+
+    public static int GetFirstLessonIndexForYear(string year)
+    {
+        var challengesAvailable = Curriculum.GetChallengesForYear(year);
+        var first = Convert.ToInt32(challengesAvailable[0].Lesson);
+        for (int i = 1; i < challengesAvailable.Length; i++)
+        {
+            if (Convert.ToInt32(challengesAvailable[i].Lesson) < first)
+            {
+                first = Convert.ToInt32(challengesAvailable[i].Lesson);
+            }
+        }
+        return first;
     }
 
     public static int GetLessonCountForScenario(string year)

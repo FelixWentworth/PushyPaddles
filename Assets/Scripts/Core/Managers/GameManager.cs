@@ -209,6 +209,7 @@ public class GameManager : NetworkBehaviour
         //NetworkManager.singleton.OnClientConnect(connection);
 
         _menu.HideMenu();
+        Debug.Log("Setting Client language to: " + Localization.SelectedLanguage.Name);
         RpcSetLanguage(Localization.SelectedLanguage.Name);
         StartCoroutine(JoinGame(netMsg));
     }
@@ -230,7 +231,7 @@ public class GameManager : NetworkBehaviour
         }
         // Remove player from the list
         _players.Remove(player);
-        Debug.Log("(D) Current Players: " + _players.Count);
+        Debug.Log("(D} Current Players: " + _players.Count);
 
 
         if (player.HoldingPlatform)
@@ -256,9 +257,10 @@ public class GameManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void RpcSetLanguage(string language)
+    public void RpcSetLanguage(string language)
     {
         Localization.UpdateLanguage(language);
+        Debug.Log("Set Language from server to: " + language);
     }
 
     private bool AreAllPlayersReady()

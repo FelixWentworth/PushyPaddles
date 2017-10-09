@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -126,6 +127,7 @@ public class Player : MovingObject
             var platformSelection = GameObject.Find("PlatformManager").GetComponent<PlatformSelection>();
             _playerData = platformSelection.PlayerData;
             CmdSetPlayerData(_playerData);
+            _playerText.text = _playerData.NickName;
         }
     }
 
@@ -397,6 +399,7 @@ public class Player : MovingObject
             PlayerID = data.PlayerId;
             PSL_LRSManager.Instance.JoinedGame(data.MatchId, data.PlayerId);
             PlatformSelection.UpdatePlayers(_gameManager.GetAllPlayers().Select(p =>p.PlayerID).ToList());
+            _gameManager.RpcSetLanguage(Localization.SelectedLanguage.Name);
         }
 
     }
