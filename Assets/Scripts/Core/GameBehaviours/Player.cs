@@ -1044,7 +1044,7 @@ public class Player : MovingObject
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
             
-        PSL_GameConfig.Instance.SetGameConfig(year, lesson, "Maths", "Any");
+        PSL_GameConfig.SetGameConfig(year, lesson, "Maths", "Any");
         _gameManager.SetLesson(year, lesson);
     }
 

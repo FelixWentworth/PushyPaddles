@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
+using Newtonsoft.Json;
 using PlayGen.Orchestrator.Common;
 using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
@@ -20,10 +21,12 @@ public class GameManager : NetworkBehaviour
     [SyncVar]
     public bool AllPlayersReady;
 
+    [SyncVar] public bool LessonSelectRequired;
+
     public GameObject Platform;
     public GameObject PauseScreen;
 
-    private bool _generateRocks { get { return PSL_GameConfig.Instance.GameType == "Obstacle"; }
+    private bool _generateRocks { get { return PSL_GameConfig.GameType == "Obstacle"; }
     }
 
     public GameObject PlayerPrefab;
@@ -139,6 +142,11 @@ public class GameManager : NetworkBehaviour
 
                 }
             }
+            if (ControlledByOrchestrator && AllPlayersReady && PlatformSelection.GetGameState() == GameState.Started)
+            {
+                StartGameTimer();
+                ResumeGame();
+            }
 
             // end game when no players after a certain time
             if (_players.Count == 0)
@@ -153,6 +161,7 @@ public class GameManager : NetworkBehaviour
             {
                 _noPlayerTimer = 0f;
             }
+            LessonSelectRequired = PSL_GameConfig.LessonSelectionRequired;
         }
 
 
@@ -179,7 +188,7 @@ public class GameManager : NetworkBehaviour
     [Server]
     public void OnConnected(NetworkMessage netMsg)
     {
-        OnConnected(netMsg.conn); ;
+        OnConnected(netMsg.conn);
     }
 
     [Server]
@@ -195,7 +204,7 @@ public class GameManager : NetworkBehaviour
         }
 
         var connection = netMsg;
-        Debug.Log("Has connectionL " + NetworkServer.connections.Contains(connection));
+        Debug.Log("Has connection " + NetworkServer.connections.Contains(connection));
         Debug.Log("(C) Current Players: " + _players.Count);
         //NetworkManager.singleton.OnClientConnect(connection);
 
@@ -407,9 +416,9 @@ public class GameManager : NetworkBehaviour
         {
             GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<ObstacleGeneration>().Setup(3, "");
         }
-        else if (!PSL_GameConfig.Instance.LessonSelectionRequired)
+        else if (!PSL_GameConfig.LessonSelectionRequired)
         {
-            var challenge = _curriculum.GetNewChallenge(PSL_GameConfig.Instance.Level, PSL_GameConfig.Instance.LessonNumber);
+            var challenge = Curriculum.GetNewChallenge(PSL_GameConfig.Level, PSL_GameConfig.LessonNumber);
             GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
         }
 
@@ -424,9 +433,7 @@ public class GameManager : NetworkBehaviour
     [Server]
     public void SetLesson(string year, string lesson)
     {
-        var challenge = _curriculum.GetChallengesForYear(year).FirstOrDefault(c => c.Lesson == lesson);
-
-        Debug.Log(challenge);
+        var challenge = Curriculum.GetChallengesForYear(year).FirstOrDefault(c => c.Lesson == lesson);
 
         if (challenge != null)
         {
@@ -441,9 +448,7 @@ public class GameManager : NetworkBehaviour
         player.SyncNickName = Localization.Get("UI_GAME_PLAYER") + (playerIndex + 1);
         player.SetRole(playerIndex == 0 ? Player.Role.Floater : Player.Role.Paddler);
     }
-
-
-
+    
     [Server]
     public void StartTimer()
     {
@@ -559,7 +564,7 @@ public class GameManager : NetworkBehaviour
                 CurriculumChallenge challenge = null;
                 if (newRound)
                 {
-                    challenge = _curriculum.GetNextChallenge(PSL_GameConfig.Instance.Level, PSL_GameConfig.Instance.LessonNumber);
+                    challenge = _curriculum.GetNextChallenge(PSL_GameConfig.Level, PSL_GameConfig.LessonNumber);
                 }
                 if (challenge == null)
                 {
@@ -662,6 +667,8 @@ public class GameManager : NetworkBehaviour
         PlatformSelection.UpdateSeverState(GameState.Stopped);
         RestartGame();
     }
+    
+
 
     public void HideRewards()
     {

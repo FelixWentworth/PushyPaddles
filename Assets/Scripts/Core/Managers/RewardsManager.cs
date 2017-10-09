@@ -29,9 +29,9 @@ public class RewardsManager : MonoBehaviour
     public void ShowReward(int playerCount, List<string> ids, List<RewardScreenManager.RewardIcons> rewards,
         int rewardsToGive)
     {
-        _rewardsRemaining = rewardsToGive;
+        _rewardsRemaining = rewardsToGive;//
         // Check if we only care about positive rewards
-        if (PSL_GameConfig.Instance.RewardType == "Positive")
+        if (PSL_GameConfig.RewardType == "Positive")
         {
             rewards = rewards.Where(r => r.Positive).ToList();
         }

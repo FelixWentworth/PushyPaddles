@@ -54,8 +54,6 @@ public class CharacterSelection : MonoBehaviour
             ClientScene.Ready(NetworkManager.singleton.client.connection);
         }
         
-        Debug.Log("TEST" + _player);
-        Debug.Log("TEST INDEX" + _currentModelIndex);
         _player.CmdSetModel(_currentModelIndex);
         DisableAll();
         GameObject.Find("MenuManager").GetComponent<MenuManager>().HideCharacterSelect();

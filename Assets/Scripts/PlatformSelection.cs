@@ -46,6 +46,11 @@ public class PlatformSelection : MonoBehaviour
         }
         _instance = this;
         DontDestroyOnLoad(this);
+    }
+
+    void Start()
+    {
+        
         ConnectionType = _connectionType;
 
         var manager = _platformManagers.FirstOrDefault(p => p.ConnectionType == _connectionType);
@@ -107,6 +112,11 @@ public class PlatformSelection : MonoBehaviour
         }
     }
 
+    public static GameState GetGameState()
+    {
+        return _instance._orchestratedServer.State;
+    }
+
     private void PlayerIdentified(SessionIdentifier obj)
     {
         PlayerData = new PSLPlayerData()
@@ -125,9 +135,9 @@ public class PlatformSelection : MonoBehaviour
 
     private void RegisteredWithOrchestrator(GameRegistrationResponse obj)
     {
-        if (obj.scenario != "Default" || obj.scenario != "Custom")
+        if (obj.scenario != "Default" && obj.scenario != "Custom")
         { 
-            PSL_GameConfig.Instance.SetGameConfig(obj.scenario, GetLessonFromDifficulty(obj.scenario, obj.difficulty), "Maths", "All");
+            PSL_GameConfig.SetGameConfig(obj.scenario, GetLessonFromDifficulty(obj.scenario, obj.difficulty), "Maths", "All");
         }
         PSL_LRSManager.Instance.SetTotalTime(Convert.ToInt16(obj.maxTime));
 
@@ -143,14 +153,14 @@ public class PlatformSelection : MonoBehaviour
         {
             Localization.UpdateLanguage(allCultures.First(c => c.EnglishName.Equals(obj.language, StringComparison.OrdinalIgnoreCase)));
         }
+        Debug.Log(Localization.SelectedLanguage);
+
     }
 
     private string GetLessonFromDifficulty(string year, int difficulty)
     {
-        year = year.Replace("year", "");
-        year = year.Replace(" ", "");
-        var availableLessons = PSL_GameConfig.Instance.GetLessonCountForScenario(year);
-
+        year = year.Substring(5, year.Length-5);
+        var availableLessons = PSL_GameConfig.GetLessonCountForScenario(year);
         switch (difficulty)
         {
             case 1:

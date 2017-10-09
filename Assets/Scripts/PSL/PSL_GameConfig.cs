@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class PSL_GameConfig : MonoBehaviour
 {
@@ -8,40 +10,38 @@ public class PSL_GameConfig : MonoBehaviour
     /// <summary>
     /// Values that should be set through PSL that determine how the game should be player
     /// </summary>
-    public static PSL_GameConfig Instance;
 
-    public string Level { get; private set; }
-    public string LessonNumber { get; private set; }
+    public static string Level;
+    public static string LessonNumber;
 
     // "Maths", "Obstacle"
-    public string GameType { get; private set; }
+    public static string GameType;
     // "Positive", "All"
-    public string RewardType { get; private set; }
+    public static string RewardType;
 
-    public bool LessonSelectionRequired { get; private set; }
+    public static bool LessonSelectionRequired;
 
     public Curriculum Curriculum;
 
     void Awake()
     {
-        Instance = this;
-
         // Set lesson selection required as no lesson has beem set yet
         LessonSelectionRequired = true;
     }
 
-    public int GetLessonCountForScenario(string year)
-    {
+    public static int GetLessonCountForScenario(string year)
+    {   
         return Curriculum.GetChallengesForYear(year).Length;
     }
 
-    public void SetGameConfig(string level, string lesson, string gameType, string rewardType)
+    public static void SetGameConfig(string level, string lesson, string gameType, string rewardType)
     {
+        Debug.Log(string.Format("Setting game config, {0} {1} {2} {3}", level, lesson, gameType, rewardType));
         Level = level;
         LessonNumber = lesson;
         GameType = gameType;
         RewardType = rewardType;
 
         LessonSelectionRequired = false;
-    }
+    } 
 }

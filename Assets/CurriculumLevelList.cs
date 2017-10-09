@@ -34,7 +34,7 @@ public class CurriculumLevelList : MonoBehaviour
         _titleText.text = string.Format(Localization.Get("FORMATTED_UI_YEAR"), _year);
 
         var curriculum = GameObject.Find("CurriculumManager").GetComponent<Curriculum>();
-        var challenges = curriculum.GetChallengesForYear(year);
+        var challenges = Curriculum.GetChallengesForYear(year);
 
         var lessons = challenges.Where(c => c.Level == "1");
 
@@ -74,7 +74,7 @@ public class CurriculumLevelList : MonoBehaviour
 
         // check if there are any challenges for this year
         var curriculum = GameObject.Find("CurriculumManager").GetComponent<Curriculum>();
-        var challenges = curriculum.GetChallengesForYear(tempYear.ToString());
+        var challenges = Curriculum.GetChallengesForYear(tempYear.ToString());
 
         if (challenges == null || challenges.Length == 0)
         {

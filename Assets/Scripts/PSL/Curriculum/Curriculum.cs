@@ -9,19 +9,21 @@ public class Curriculum : MonoBehaviour {
         Maths
     }
 
-    [SerializeField] private Subject _subject;
+    private static Subject _subject = Subject.Maths;
 
-    [SerializeField] private string _fileName;
+    private static string _fileName = "Content";
 
-    [SerializeField] private string _descriptionFileName;
+    private static string _descriptionFileName = "ContentDescriptions";
 
-    private CurriculumChallenges _challenges;
-    private CurriculumDescriptions _descriptions;
+    private static CurriculumChallenges _challenges;
+    private static CurriculumDescriptions _descriptions;
 
-    private string _levelIndex;
+    private static string _levelIndex;
 
-    public CurriculumChallenge GetNewChallenge(string year, string lesson)
+    public static CurriculumChallenge GetNewChallenge(string year, string lesson)
     {
+        year = year.Substring(5, year.Length - 5);
+
         if (_challenges == null || _challenges.MathsProblems.Length == 0)
         {
             GetChallengeData();
@@ -33,7 +35,6 @@ public class Curriculum : MonoBehaviour {
         }
 
         var challenges = _challenges.MathsProblems.Where(c => c.Year == year && c.Lesson == lesson).ToList();
-
         _levelIndex = challenges[0].Level;
         PSL_LRSManager.Instance.SetNumRounds(challenges.Count);
 
@@ -48,6 +49,8 @@ public class Curriculum : MonoBehaviour {
     /// <returns>Next challenge, or null if reached end</returns>
     public CurriculumChallenge GetNextChallenge(string year, string lesson)
     {
+        year = year.Substring(5, year.Length - 5);
+
         if (_challenges == null || _challenges.MathsProblems.Length == 0)
         {
             GetChallengeData();
@@ -71,20 +74,19 @@ public class Curriculum : MonoBehaviour {
     /// </summary>
     /// <param name="year"></param>
     /// <returns></returns>
-    public CurriculumChallenge[] GetChallengesForYear(string year)
+    public static CurriculumChallenge[] GetChallengesForYear(string year)
     {
+
         if (_challenges == null || _challenges.MathsProblems.Length == 0)
         {
             GetChallengeData();
         }
-
         if (_challenges.MathsProblems.Length == 0)
         {
             return null;
         }
 
-        var challenges = _challenges.MathsProblems.Where(c => c.Year == year).ToArray();
-
+        var challenges = _challenges.MathsProblems.Where(c => c.Year == year && c.Level == "1").ToArray();
         return challenges;
     }
 
@@ -112,14 +114,17 @@ public class Curriculum : MonoBehaviour {
 
 
 
-    private void GetChallengeData()
+    private static void GetChallengeData()
     {
+
         var data = Resources.Load<TextAsset>(_fileName);
         if (data == null)
         {
+            Debug.Log("no Data");
             return;
         }
 
+        
         _challenges = JsonUtility.FromJson<CurriculumChallenges>(data.text);
     }
 
