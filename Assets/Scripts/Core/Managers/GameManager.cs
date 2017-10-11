@@ -70,6 +70,8 @@ public class GameManager : NetworkBehaviour
         }
         else
         {
+            // Set the quality settings to lowest
+            UnityEngine.QualitySettings.SetQualityLevel(5);
             PauseScreen.SetActive(true);
         }
     }
