@@ -12,6 +12,8 @@ public class GameOverScreen : UIScreen
     public Text ConditionText;
     public Text TimeTakenText;
 
+    public GameObject PlayAgainButton;
+    public GameObject QuitButton;
 
     public override void Show()
     {
@@ -34,6 +36,12 @@ public class GameOverScreen : UIScreen
         TimeTakenText.text = Localization.Get("UI_END_TIME_TAKEN") + " " + (timeTaken / 60) + ":" + (timeTaken % 60).ToString("00");
     }
 
+    public void SetButtonsEnabled(bool enabled)
+    {
+        PlayAgainButton.SetActive(enabled);
+        QuitButton.SetActive(enabled);
+    }
+
     /// <summary>
     /// Disconnect from the current game
     /// </summary>
@@ -53,12 +61,13 @@ public class GameOverScreen : UIScreen
 
         if (player != null)
         {
-            ni.connectionToServer.Disconnect();
+            NetworkManager.singleton.StopClient();
         }
         else if (ni.isServer)
         {
             NetworkManager.singleton.StopServer();
         }
+
         // Load the current scene
         SceneManager.LoadScene(0);
     }

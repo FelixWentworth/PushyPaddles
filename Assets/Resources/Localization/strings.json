@@ -39,7 +39,7 @@
 {"Key":"UI_GAME_PAUSED","en":"Game Paused","it":"Gioco in pausa","es":"Juego en pausa","el":"Παύση Παιγνιδιού"},
 {"Key":"UI_GAME_TARGET","en":"Target","it":"Bersaglio","es":"Objetivo","el":"Στόχος"},
 {"Key":"UI_GAME_WAITING_FOR_PLAYERS","en":"Waiting for other players…","it":"In attesa di altri giocatori","es":"Esperando a otros jugadores...","el":"Περιμένουμε τους άλλους παίκτες..."},
-{"Key":"FORMATTED_UI_END_ROUNDS_COMPLETED","en":"Rounds Completed: {0}","it":"LIvelli completati","es":"Partidas completadas","el":"Έχουν ολοκληρωθεί {0} γύροι"},
+{"Key":"FORMATTED_UI_END_ROUNDS_COMPLETED","en":"Rounds Completed: {0}","it":"LIvelli completati: {0}","es":"Partidas completadas: {0}","el":"Έχουν ολοκληρωθεί {0} γύροι"},
 {"Key":"FORMATTED_UI_GAME_ROUND","en":"Round: {0}","it":"Livello {0}","es":"Partida: {0}","el":"Γύρος: {0}"},
 {"Key":"FORMATTED_UI_GAME_PLAYER","en":"Player {0}","it":"Giocatore {0}","es":"Jugador: {0}","el":"Παίκτης {0}"},
 {"Key":"FORMATTED_UI_GAME_TARGET","en":"Target: {0}","it":"Bersaglio {0}","es":"Objetivo: {0}","el":"Στόχος: {0}"},

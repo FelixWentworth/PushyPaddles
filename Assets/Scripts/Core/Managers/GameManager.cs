@@ -19,6 +19,8 @@ public class GameManager : NetworkBehaviour
     [SyncVar]
     private bool _gamePlaying = false;
     [SyncVar]
+    private bool _gameWon = false;
+    [SyncVar]
     public bool AllPlayersReady;
 
     [SyncVar] public bool LessonSelectRequired;
@@ -70,8 +72,8 @@ public class GameManager : NetworkBehaviour
         }
         else
         {
-            // Set the quality settings to lowest
-            UnityEngine.QualitySettings.SetQualityLevel(5);
+            // Set the default quality setting
+            UnityEngine.QualitySettings.SetQualityLevel(3);
             PauseScreen.SetActive(true);
         }
     }
@@ -144,11 +146,19 @@ public class GameManager : NetworkBehaviour
 
                 }
             }
-            if (ControlledByOrchestrator && AllPlayersReady && PlatformSelection.GetGameState() == GameState.Started)
+            if (ControlledByOrchestrator && PlatformSelection.GetGameState() == GameState.Started)
             {
-                StartGameTimer();
-                ResumeGame();
+                if (_players.Count < 3)
+                {
+                    PauseGame();
+                }
+                else if (AllPlayersReady)
+                {
+                    StartGameTimer();
+                    ResumeGame();
+                }
             }
+            
 
             // end game when no players after a certain time
             if (_players.Count == 0)
@@ -485,17 +495,20 @@ public class GameManager : NetworkBehaviour
     {
         // End the game
         _gamePlaying = false;
+        _menu.ShowGameOver(_gameWon, _level.SecondsTaken, ControlledByOrchestrator);
+        PSL_LRSManager.Instance.GameCompleted(_level.SecondsTaken);
 
-        RpcStopGame();
-
-        ClearPlayerObjects();
+        if (!ControlledByOrchestrator)
+        {
+            RpcStopGame();
+            ClearPlayerObjects();
+        }
     }
 
     [ClientRpc]
     private void RpcStopGame()
     {
         NetworkManager.singleton.StopClient();
-
     }
 
     [ClientRpc]
@@ -666,10 +679,17 @@ public class GameManager : NetworkBehaviour
     [Server]
     private void GameOver(bool victory)
     {
-        _menu.ShowGameOver(victory, _level.SecondsTaken);
-        PSL_LRSManager.Instance.GameCompleted(_level.SecondsTaken);
-        PlatformSelection.UpdateSeverState(GameState.Stopped);
-        RestartGame();
+        //PSL_LRSManager.Instance.GameCompleted(_level.SecondsTaken);
+        _gameWon = victory;
+        if (ControlledByOrchestrator)
+        {
+            PlatformSelection.UpdateSeverState(GameState.Stopped);
+        }
+        else
+        {
+            _menu.ShowGameOver(victory, _level.SecondsTaken, false);
+            RestartGame();
+        }
     }
     
 

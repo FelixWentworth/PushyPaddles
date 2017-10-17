@@ -242,19 +242,20 @@ public class MenuManager : NetworkBehaviour
     /// Notify the server to show game over for all clients
     /// </summary>
     [Server]
-    public void ShowGameOver(bool victory, int timeTaken)
+    public void ShowGameOver(bool victory, int timeTaken, bool controlledByOrchestrator)
     {
-        RpcShowGameOver(victory, timeTaken);
+        RpcShowGameOver(victory, timeTaken, controlledByOrchestrator);
     }
 
     /// <summary>
     /// Notify clients from the server that they should be showing the game over screen
     /// </summary>
     [ClientRpc]
-    private void RpcShowGameOver(bool victory, int timeTaken)
+    private void RpcShowGameOver(bool victory, int timeTaken, bool controlledByOrchestrator)
     {
         GameOverScreen.Show();
         GameOverScreen.GetComponent<GameOverScreen>().SetText(victory, timeTaken);
+        GameOverScreen.GetComponent<GameOverScreen>().SetButtonsEnabled(!controlledByOrchestrator);
     }
 
     /// <summary>

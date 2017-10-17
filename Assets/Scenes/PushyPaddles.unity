@@ -2997,13 +2997,13 @@ RectTransform:
   - {fileID: 184682319}
   - {fileID: 749}
   - {fileID: 742}
-  - {fileID: 1007416787}
   - {fileID: 935824591}
   - {fileID: 1840464155}
   - {fileID: 1116553565}
   - {fileID: 1559232053}
   - {fileID: 836105746}
   - {fileID: 1628888973}
+  - {fileID: 1007416787}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8895,7 +8895,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 1a7a891116e2b4abb85e8e212d16eb65, type: 2}
       propertyPath: m_RootOrder
-      value: 8
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 19800000, guid: 1a7a891116e2b4abb85e8e212d16eb65, type: 2}
       propertyPath: randomSeed
@@ -11237,7 +11237,7 @@ RectTransform:
   m_Children:
   - {fileID: 1723699705}
   m_Father: {fileID: 753}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -12195,7 +12195,7 @@ RectTransform:
   - {fileID: 491495551}
   - {fileID: 833715903}
   m_Father: {fileID: 753}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -12717,7 +12717,7 @@ RectTransform:
   - {fileID: 404372085}
   - {fileID: 1597329049}
   m_Father: {fileID: 753}
-  m_RootOrder: 8
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -12749,6 +12749,8 @@ MonoBehaviour:
   RoundsText: {fileID: 1764512019}
   ConditionText: {fileID: 825732952}
   TimeTakenText: {fileID: 1949760131}
+  PlayAgainButton: {fileID: 903751902}
+  QuitButton: {fileID: 404372084}
 --- !u!114 &1007416790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14287,7 +14289,7 @@ RectTransform:
   - {fileID: 484287321}
   - {fileID: 358618128}
   m_Father: {fileID: 753}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -18616,7 +18618,7 @@ RectTransform:
   - {fileID: 1186394383}
   - {fileID: 1520702247}
   m_Father: {fileID: 753}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -19169,7 +19171,7 @@ RectTransform:
   - {fileID: 36798756}
   - {fileID: 1484353901}
   m_Father: {fileID: 753}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -20180,7 +20182,7 @@ MonoBehaviour:
   - Name: Backgriound
     Clip: {fileID: 8300000, guid: d9ced655c31d9904c8a632dffd4ee870, type: 3}
     Volume: 0.6
-    AutoPlay: 0
+    AutoPlay: 1
     Loop: 1
   - Name: Splash
     Clip: {fileID: 8300000, guid: 1c2f71f47777488438167efd9645e499, type: 3}
@@ -20768,7 +20770,7 @@ RectTransform:
   - {fileID: 2136312105}
   - {fileID: 870580751}
   m_Father: {fileID: 753}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}

@@ -31,6 +31,7 @@ public class FloatingPlatform : MovingObject
         PlayerCanInteract = false;
         PlayerCanHit = true;
         CanRespawn = true;
+        CanMove = true;
 
         _mesh = transform.GetChild(0).GetComponent<MeshRenderer>();
 
@@ -60,6 +61,7 @@ public class FloatingPlatform : MovingObject
 
         _playerOnPlatform = null;
         CanPickUp = true;
+        CanMove = true;
         OnWater = false;
         if (isServer)
         {
@@ -79,7 +81,7 @@ public class FloatingPlatform : MovingObject
         {
             _levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
         }
-        if (_playerOnPlatform != null && isServer)
+        if (_playerOnPlatform != null && isServer && CanMove)
         {
             // On Water
             _playerOnPlatform.GetComponent<Rigidbody>().useGravity = false;
@@ -118,6 +120,7 @@ public class FloatingPlatform : MovingObject
             _playerOnPlatform = null;
 
             CanFloat = false;
+            CanMove = false;
             Water.TouchedWater(this);
 
             if (isServer)
@@ -130,7 +133,7 @@ public class FloatingPlatform : MovingObject
         {
             PSL_LRSManager.Instance.ChestReached();
             _playerOnPlatform.GetComponent<Player>().ReachedChest();
-
+            CanMove = false;
             StartCoroutine(GoalReached(other.gameObject));
         }
         else if (other.gameObject.tag == "Collectible")

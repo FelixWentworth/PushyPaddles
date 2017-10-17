@@ -10,6 +10,7 @@ public class MovingObject : NetworkBehaviour
     public float RespawnTime = 1f;
 
     public bool CanFloat;
+    public bool CanMove;
     public bool CanRespawn;
     // If the player can use the action button on this object
     public bool PlayerCanInteract;
