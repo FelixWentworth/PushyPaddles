@@ -58,4 +58,9 @@ public class AudioManager : MonoBehaviour
         var source = _audioSources[name];
         source.Play();
     }
+
+    public void ToggleSound()
+    {
+        Camera.main.GetComponent<AudioListener>().enabled = !Camera.main.GetComponent<AudioListener>().enabled;
+    }
 }
