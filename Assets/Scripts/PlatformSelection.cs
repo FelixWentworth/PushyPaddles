@@ -120,7 +120,14 @@ public class PlatformSelection : MonoBehaviour
 
     public static GameState GetGameState()
     {
-        return _instance._orchestratedServer.State;
+        if (PlatformSelection.ConnectionType != ConnectionType.Testing)
+        {
+            return _instance._orchestratedServer.State;
+        }
+        else
+        {
+            return GameState.Started;
+        }
     }
 
     private void PlayerIdentified(SessionIdentifier obj)

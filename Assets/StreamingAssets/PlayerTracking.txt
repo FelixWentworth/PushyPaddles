@@ -817,3 +817,24 @@ Calculation Success Rate: 100%
 Rounds Complete: 1
 Time Taken: 50
 
+
+Attempts: 6
+Chests Reached: 2
+Calculation Success Rate: 50%
+Rounds Complete: 1
+Time Taken: 36
+
+
+Attempts: 8
+Chests Reached: 3
+Calculation Success Rate: 67%
+Rounds Complete: 2
+Time Taken: 18
+
+
+Attempts: 11
+Chests Reached: 4
+Calculation Success Rate: 75%
+Rounds Complete: 3
+Time Taken: 4
+

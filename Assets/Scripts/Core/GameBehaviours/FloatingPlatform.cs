@@ -123,10 +123,10 @@ public class FloatingPlatform : MovingObject
             CanMove = false;
             Water.TouchedWater(this);
 
+            
             if (isServer)
             {
                 GameObject.Find("SpawnedObjects").GetComponent<CollectibleGeneration>().ResetColliders();
-                
             }
         }
         else if (other.gameObject.tag == "Treasure")
@@ -174,8 +174,6 @@ public class FloatingPlatform : MovingObject
         {
             if (isServer)
             {
-                GameObject.Find("SpawnedObjects").GetComponent<CollectibleGeneration>().ResetColliders();
-
                 RpcShowTotal(PickupValue == levelManager.Target);
             }
 
@@ -213,6 +211,10 @@ public class FloatingPlatform : MovingObject
 
             CanFloat = false;
             Water.TouchedWater(this);
+            if (isServer)
+            {
+                GameObject.Find("SpawnedObjects").GetComponent<CollectibleGeneration>().ResetColliders();
+            }
         }
 
 

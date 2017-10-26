@@ -91,13 +91,19 @@ public class LevelLayout : NetworkBehaviour {
         GeneratedLevelLayout[midpoint - 1, 0] = "+";
 
         // Set midpoint of the last row as end point
-        GeneratedLevelLayout[midpoint, GeneratedLevelLayout.GetLength(1) - 1] = "+";
-        GeneratedLevelLayout[midpoint - 1, GeneratedLevelLayout.GetLength(1) - 1] = "+";
+        GeneratedLevelLayout[midpoint, GeneratedLevelLayout.GetLength(1) - 1] = "s";
+        GeneratedLevelLayout[midpoint - 1, GeneratedLevelLayout.GetLength(1) - 1] = "s";
+
 
         var previousPosition = midpoint;
 
         var centerX = GeneratedLevelLayout.GetLength(0) / 2;
         var centerZ = GeneratedLevelLayout.GetLength(1) / 2;
+
+        GeneratedLevelLayout[centerX + 1, centerZ] = "s";
+        GeneratedLevelLayout[centerX - 2, centerZ] = "s";
+        GeneratedLevelLayout[centerX + 1, centerZ - 1] = "s";
+        GeneratedLevelLayout[centerX - 2, centerZ - 1] = "s";
 
         // Iterate through the array to create a path
         for (var j = 1; j < GeneratedLevelLayout.GetLength(1); j++)
@@ -130,38 +136,52 @@ public class LevelLayout : NetworkBehaviour {
         GeneratedLevelLayout[centerX - 1, centerZ] = "s";
 
         // Make sure that their is still a path around the blocked area
-        bool right = GeneratedLevelLayout[centerX, centerZ - 2] == "+" ||
-                     GeneratedLevelLayout[centerX + 1, centerZ - 2] == "+";
+        //bool right = GeneratedLevelLayout[centerX, centerZ - 2] == "s" ||
+        //             GeneratedLevelLayout[centerX + 1, centerZ - 2] == "s";
+
+        GeneratedLevelLayout[centerX, centerZ - 1] = "s";
+        GeneratedLevelLayout[centerX - 1, centerZ - 1] = "s";
+        GeneratedLevelLayout[centerX, centerZ + 1] = "s";
+        GeneratedLevelLayout[centerX - 1, centerZ + 1] = "s";
+        GeneratedLevelLayout[centerX - 2, centerZ + 1] = "s";
+        GeneratedLevelLayout[centerX + 1, centerZ + 1] = "s";
+
+        //// Left/Right
+        //if (right)
+        //{
+        //    GeneratedLevelLayout[centerX + 1, centerZ] = "+";
+
+        //}
+        //else
+        //{
+        //    GeneratedLevelLayout[centerX - 2, centerZ] = "+";
+        //}
+
+        //// Up/Down
+        //if (right)
+        //{
+        //    GeneratedLevelLayout[centerX, centerZ - 1] = "+";
+        //}
+        //else
+        //{
+        //    GeneratedLevelLayout[centerX - 1, centerZ - 1] = "+";
+        //}
+
+        //// Diagonals
+        //if (right)
+        //{
+        //    GeneratedLevelLayout[centerX + 1, centerZ + 1] = "s";
+        //    GeneratedLevelLayout[centerX + 1, centerZ - 1] = "s";
+        //}
+        //else
+        //{
+        //    GeneratedLevelLayout[centerX - 2, centerZ + 1] = "s";
+        //    GeneratedLevelLayout[centerX - 2, centerZ - 1] = "s";
+        //}
 
 
-        // Left/Right
-        if (right)
-        {
-        GeneratedLevelLayout[centerX + 1, centerZ] = "+";
 
-        }
-        else
-        {
-            GeneratedLevelLayout[centerX - 2, centerZ] = "+";
-        }
 
-        // Up/Down
-        if (right)
-        {
-            GeneratedLevelLayout[centerX, centerZ+1] = "+";
-            GeneratedLevelLayout[centerX, centerZ - 1] = "+";
-        }
-        else
-        {
-            GeneratedLevelLayout[centerX - 1, centerZ + 1] = "+";
-            GeneratedLevelLayout[centerX - 1, centerZ - 1] = "+";
-        }
-
-        // Diagonals
-        GeneratedLevelLayout[centerX + 1, centerZ + 1] = "+";
-        GeneratedLevelLayout[centerX + 1, centerZ - 1] = "+";
-        GeneratedLevelLayout[centerX - 2, centerZ + 1] = "+";
-        GeneratedLevelLayout[centerX - 2, centerZ - 1] = "+";
     }
 
     public string GetArrayString()

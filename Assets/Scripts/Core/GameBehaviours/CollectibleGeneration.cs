@@ -36,10 +36,25 @@ public class CollectibleGeneration : LevelLayout
 
     }
 
+    [Server]
+    public void Reset(int numCollectibles, CurriculumChallenge curriculumInfo)
+    {
+        // Clear the current level
+        ClearChildren();
+
+        CreateLevel(curriculumInfo.RequiredOperations, "+");
+        CreateLevel(curriculumInfo.ExtraOperations, "c");
+
+        // Generate the collectibles based on the level array
+        GenerateCollectibles(CollectibleGameObject);
+        GenerateObstacles();
+
+        GameObject.Find("LevelManager").GetComponent<LevelManager>().Target = curriculumInfo.Target.ToString();
+    }
+
     public override void NewSetup<T>(int numCollectibles, T info)
     {
-        base.Setup<T>(numCollectibles, info);
-
+        base.NewSetup<T>(numCollectibles, info);
         if (info.GetType() != typeof(CurriculumChallenge))
         {
             return;
@@ -52,23 +67,29 @@ public class CollectibleGeneration : LevelLayout
         CreateLevel(curriculumInfo.RequiredOperations, "+");
         CreateLevel(curriculumInfo.ExtraOperations, "c");
 
+        GenerateCollectibles(CollectibleGameObject);
+        GenerateObstacles();
+
         GameObject.Find("LevelManager").GetComponent<LevelManager>().Target = curriculumInfo.Target.ToString();
     }
 
     [Server]
     public void ResetColliders()
     {
-        var colliders = ObstacleParent.GetComponentsInChildren<Collider>();
-        foreach (var collider1 in colliders)
-        {
-            collider1.enabled = true;
-            var mathsCollectible = collider1.GetComponent<MathsCollectible>();
-            if (mathsCollectible != null)
-            {
-                mathsCollectible.RpcReset();
-            }
-        }
-        RpcResetColliders();
+        //var colliders = ObstacleParent.GetComponentsInChildren<Collider>();
+        //foreach (var collider1 in colliders)
+        //{
+        //    collider1.enabled = true;
+        //    var mathsCollectible = collider1.GetComponent<MathsCollectible>();
+        //    if (mathsCollectible != null)
+        //    {
+        //        mathsCollectible.RpcReset();
+        //    }
+        //}
+        //RpcResetColliders();
+
+        GameObject.Find("GameManager").GetComponent<GameManager>().ResetRound();
+
     }
 
     [ClientRpc]
@@ -86,7 +107,6 @@ public class CollectibleGeneration : LevelLayout
     {
         var depth = GeneratedLevelLayout.GetLength(1);
         var startDepth = Random.Range(0, 2);
-
         // Make sure to remove the empty values in the array
         challengeInfo = challengeInfo.Where(x => !string.IsNullOrEmpty(x)).ToArray();
 
@@ -94,15 +114,22 @@ public class CollectibleGeneration : LevelLayout
         {
             // Decide the location
             var x = 0;
-            var z = 0;
+            var z = startDepth;
+            
+            // check if start depth has valid positions
+            while (!CheckDepthValid(z, validPosition))
+            {
+                // if no valid position, move forward the start depth
+                z += 1; 
+            }    
+
             do
             {
-                z = startDepth;
                 x = Random.Range(0, GeneratedLevelLayout.GetLength(0));
 
             } while (GeneratedLevelLayout[x, z] != validPosition);
-            challengeInfo[i] = CheckIfOperandRequired("+", challengeInfo[i]);
 
+            challengeInfo[i] = CheckIfOperandRequired("+", challengeInfo[i]);
             // Mark the position as used
             GeneratedLevelLayout[x, z] = challengeInfo[i];
 
@@ -114,6 +141,18 @@ public class CollectibleGeneration : LevelLayout
             }
         }
 
+    }
+
+    private bool CheckDepthValid(int depth, string validPosition)
+    {
+        for (var i = 0; i < GeneratedLevelLayout.GetLength(0); i++)
+        {
+            if (GeneratedLevelLayout[i, depth] == validPosition)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private string CheckIfOperandRequired(string operand, string text)

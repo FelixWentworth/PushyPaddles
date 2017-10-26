@@ -18,6 +18,8 @@ public class Curriculum : MonoBehaviour {
     private static CurriculumChallenges _challenges;
     private static CurriculumDescriptions _descriptions;
 
+    private static CurriculumChallenge _currentChallenge;
+
     private static string _levelIndex;
 
     public static CurriculumChallenge GetNewChallenge(string year, string lesson)
@@ -37,7 +39,7 @@ public class Curriculum : MonoBehaviour {
         var challenges = _challenges.MathsProblems.Where(c => c.Year == year && c.Lesson == lesson).ToList();
         _levelIndex = challenges[0].Level;
         PSL_LRSManager.Instance.SetNumRounds(challenges.Count);
-
+        _currentChallenge = challenges[0];
         return challenges[0];
     }
 
@@ -64,9 +66,20 @@ public class Curriculum : MonoBehaviour {
         _levelIndex = (Convert.ToInt16(_levelIndex) + 1).ToString();
 
         var challenge = _challenges.MathsProblems.FirstOrDefault(c => c.Year == year && c.Lesson == lesson && c.Level == _levelIndex);
-
+        _currentChallenge = challenge;
         return challenge;
 
+    }
+
+    /// <summary>
+    /// Return the currnt challenge for the key stage and lesson
+    /// </summary>
+    /// <param name="year">Target key stage</param>
+    /// <param name="lesson">Target lesson number</param>
+    /// <returns>Next challenge, or null if reached end</returns>
+    public CurriculumChallenge GetCurrentChallenge()
+    {
+        return _currentChallenge;
     }
 
     /// <summary>

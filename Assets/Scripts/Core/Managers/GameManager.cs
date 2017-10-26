@@ -53,7 +53,7 @@ public class GameManager : NetworkBehaviour
     private int _postGameRounds;
 
     private float _noPlayerTimer = 0f;
-    private const float _maxInactiveTime = 30f;
+    private const float _maxInactiveTime = 300f;
 
     void Start()
     {
@@ -146,9 +146,9 @@ public class GameManager : NetworkBehaviour
 
                 }
             }
-            if (ControlledByOrchestrator && PlatformSelection.GetGameState() == GameState.Started)
+            if (ControlledByOrchestrator && (PlatformSelection.GetGameState() == GameState.Started || PlatformSelection.GetGameState() == GameState.WaitingForPlayers))
             {
-                if (_players.Count < 3)
+                if (!AllPlayersReady)
                 {
                     PauseGame();
                 }
@@ -178,10 +178,14 @@ public class GameManager : NetworkBehaviour
 
 
 
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            ready = true;
-        }
+        //if (Input.GetKeyDown(KeyCode.F1))
+        //{
+        //    ready = true;
+        //}
+        //if (Input.GetKeyDown(KeyCode.R))
+        //{
+        //    ResetRound();
+        //}
 #if USE_PROSOCIAL_EVENTS
         PauseScreen.SetActive(!_gamePlaying);
 #else
@@ -616,6 +620,29 @@ public class GameManager : NetworkBehaviour
             {
                 platform.GetComponent<FloatingPlatform>().Respawn();
             }
+            _generatingLevel = false;
+        }
+    }
+
+    [Server]
+    public void ResetRound()
+    {
+        if (!_generatingLevel)
+        {
+            _generatingLevel = true;
+            
+            // Reset the obstacles
+            if (_generateRocks)
+            {
+                GameObject.Find("LevelColliders/SpawnedObjects")
+                    .GetComponent<ObstacleGeneration>().GenerateNewLevel(_level.RoundNumber * 3);
+            }
+            else
+            {
+                var currentChallenge = _curriculum.GetCurrentChallenge();
+                GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().NewSetup(0, currentChallenge);
+            }
+
             _generatingLevel = false;
         }
     }
