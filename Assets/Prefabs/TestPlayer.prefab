@@ -2069,6 +2069,7 @@ MonoBehaviour:
   RotationSpeed: 1.5
   RespawnTime: 1
   CanFloat: 0
+  CanMove: 0
   CanRespawn: 1
   PlayerCanInteract: 0
   PlayerCanHit: 0
@@ -2087,6 +2088,8 @@ MonoBehaviour:
   Platform: {fileID: 1771560936683538}
   PaddlePrompt: {fileID: 1867064793162566}
   WaveEffect: {fileID: 1685054297778542, guid: 348301707d91f2d47b8a70133d8b5994, type: 2}
+  OnScreenControls: {fileID: 1412610885320508, guid: bc8f916a82b35544d991e10c7541ede4,
+    type: 2}
   PlayerRole: 1
   _animState: 0
   IsReady: 0

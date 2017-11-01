@@ -13,6 +13,7 @@ TagManager:
   - PlatformPlaceLeft
   - PlatformPlaceRight
   - Reward
+  - TouchControls
   layers:
   - Default
   - TransparentFX

@@ -24,6 +24,8 @@ public class Player : MovingObject
 
     public GameObject WaveEffect;
 
+    public GameObject OnScreenControls;
+
     public enum Role
     {
         Unassigned = 0,
@@ -78,6 +80,7 @@ public class Player : MovingObject
     private GameManager _gameManager;
 
     private InstructionManager _instructionManager;
+    private Controls_UI _controls;
     private bool _hasMoved;
     private bool _usedPaddle;
     private GameObject _raft;
@@ -89,6 +92,7 @@ public class Player : MovingObject
 
     public override void Start()
     {
+
         CanFloat = false;
         PlayerCanInteract = false;
         PlayerCanHit = false;
@@ -116,6 +120,9 @@ public class Player : MovingObject
 
         if (!isServer && isLocalPlayer)
         {
+//#if UNITY_ANDROID || UNITY_IPHONE
+            SetupOnScreenControls();
+//#endif
             // Client needs to be ready to send command
             if (!ClientScene.ready)
             {
@@ -140,7 +147,54 @@ public class Player : MovingObject
             CmdSyncRespawn(transform.eulerAngles);
         }
     }
+    //
+//#if UNITY_ANDROID || UNITY_IPHONE
+    private void SetupOnScreenControls()
+    {
+        var go = Instantiate(OnScreenControls);
+        _controls = go.GetComponent<Controls_UI>();
 
+        _controls.ListenTo(MoveLeft, MoveRight, MoveUp, MoveDown, StopMoving, Interact);
+        _controls.SetPlayer(this);
+        if (_instructionManager == null)
+        {
+            _instructionManager = GameObject.Find("PlayerInstructionManager").GetComponent<InstructionManager>();
+        }
+        _instructionManager.SetUIControls(_controls);
+    }
+
+    private void MoveLeft()
+    {
+        Move(gameObject, -1, 0);
+    }
+    private void MoveRight()
+    {
+        Move(gameObject, 1, 0);
+
+    }
+    private void MoveUp()
+    {
+        Move(gameObject, 0, 1);
+
+    }
+    private void MoveDown()
+    {
+        Move(gameObject, 0, -1);
+    }
+
+    private void StopMoving()
+    {
+        if (_animationState != AnimationState.IDLE)
+        {
+            CmdChangeState((int)AnimationState.IDLE);
+        }
+    }
+    private void Interact()
+    {
+        InteractPressed();
+    }
+
+//#endif
     public override void OnStartLocalPlayer()
     {
         GameObject.Find("CharacterSelection").GetComponent<CharacterSelection>().Set(this);
@@ -314,9 +368,17 @@ public class Player : MovingObject
             _instructionManager.DisableInsctructions();
             if (PlayerRole == Role.Paddler && !PaddlePrompt.activeSelf && !_usedPaddle)
             {
-                var multiplier = transform.position.x < 0 ? 1f : -1f;
-                PaddlePrompt.transform.localScale = new Vector3(PaddlePrompt.transform.localScale.x, PaddlePrompt.transform.localScale.y, PaddlePrompt.transform.localScale.z * multiplier);
-                PaddlePrompt.SetActive(true);
+                if (_controls != null)
+                {
+                    _controls.AnimateInteract(true);
+                }
+                else
+                {
+                    var multiplier = transform.position.x < 0 ? 1f : -1f;
+                    PaddlePrompt.transform.localScale = new Vector3(PaddlePrompt.transform.localScale.x, PaddlePrompt.transform.localScale.y, PaddlePrompt.transform.localScale.z * multiplier);
+                    PaddlePrompt.SetActive(true);
+                }
+
             }
         }
     }
@@ -593,6 +655,10 @@ public class Player : MovingObject
         SetPlatform();
         if (_usePaddle)
         {
+            if (_controls != null)
+            {
+                _controls.AnimateInteract(false);
+            }
             if (PaddlePrompt.activeSelf)
             {
                 _usedPaddle = true;
@@ -614,44 +680,48 @@ public class Player : MovingObject
         
         if (isLocalPlayer && !Respawning && Input.GetKeyDown(KeyCode.Space))
         {
-
-            if (_floatingPlatform.CanPickUp && !_floatingPlatform.OnWater && _floatingPlatform.InRange(gameObject) && !HoldingPlatform)
-            {
-                // Pickup Plaftorm
-                CmdPickupPlatform(_raft);
-                return;
-            }
-            
-            // Make sure the player is looking in the correct direction
-            transform.LookAt(PlayerRole == Role.Floater
-                ? new Vector3(transform.position.x, transform.position.y, 100f)
-                : new Vector3(0f, transform.position.y, transform.position.z));
-
-            if (HoldingPlatform)
-            {
-                if (_floatingPlatform.CanBePlacedInWater() && PlayerRole == Role.Floater)
-                {
-                    // Place in water
-                    CmdDropPlatform(_raft);
-                    CmdPlacePlatformInWater(_raft, gameObject);
-                }
-                else if (_floatingPlatform.CanBePlacedOnLand() && PlayerRole == Role.Paddler)
-                {
-                    // Drop Platform
-                    CmdDropPlatform(_raft);
-                }
-            }
-            else
-            {
-
-                // Use paddle in water
-                CmdUsePaddle(_playerData.PlayerId);
-            }
+            InteractPressed();
         }
 
         /////////////////////////////
         // End Local Player Controls
         /////////////////////////////
+    }
+
+    private void InteractPressed()
+    {
+        if (_floatingPlatform.CanPickUp && !_floatingPlatform.OnWater && _floatingPlatform.InRange(gameObject) && !HoldingPlatform)
+        {
+            // Pickup Plaftorm
+            CmdPickupPlatform(_raft);
+            return;
+        }
+
+        // Make sure the player is looking in the correct direction
+        transform.LookAt(PlayerRole == Role.Floater
+            ? new Vector3(transform.position.x, transform.position.y, 100f)
+            : new Vector3(0f, transform.position.y, transform.position.z));
+
+        if (HoldingPlatform)
+        {
+            if (_floatingPlatform.CanBePlacedInWater() && PlayerRole == Role.Floater)
+            {
+                // Place in water
+                CmdDropPlatform(_raft);
+                CmdPlacePlatformInWater(_raft, gameObject);
+            }
+            else if (_floatingPlatform.CanBePlacedOnLand() && PlayerRole == Role.Paddler)
+            {
+                // Drop Platform
+                CmdDropPlatform(_raft);
+            }
+        }
+        else
+        {
+
+            // Use paddle in water
+            CmdUsePaddle(_playerData.PlayerId);
+        }
     }
 
     private void SpawnWaveEffect(Vector3 playerPos)

@@ -8,6 +8,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/PushyPaddles.unity
     guid: a70b4912cad30a2439560f3a235b59e2
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/AlternateControls.unity
     guid: 72af66501d727094d8e61816b0eb893f

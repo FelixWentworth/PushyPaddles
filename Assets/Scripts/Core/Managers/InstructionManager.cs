@@ -17,9 +17,16 @@ public class InstructionManager : MonoBehaviour
 
     [SerializeField] private GameObject _interactPress;
 
+    private Controls_UI _controls;
+
     void Awake()
     {
         DisableInsctructions();
+    }
+
+    public void SetUIControls(Controls_UI controls)
+    {
+        _controls = controls;
     }
 
     /// <summary>
@@ -50,10 +57,18 @@ public class InstructionManager : MonoBehaviour
         _bridgeControl.SetActive(false);
         _leftControl.SetActive(false);
         _rightControl.SetActive(false);
+        if (_controls != null)
+        {
+            _controls.AnimateControls(false);
+        }
     }
 
     public void DisableInteractInstruction()
     {
+        if (_controls != null)
+        {
+            _controls.AnimateInteract(false);
+        }
         _interactPress.SetActive(false);
     }
 
@@ -68,32 +83,39 @@ public class InstructionManager : MonoBehaviour
         DisableInteractInstruction();
 
         // Show the correct controls, check they are not active prior to avoid resetting animations
-        switch (role)
+        if (_controls != null)
         {
-            case Player.Role.Floater:
-                if (!_bridgeControl.activeSelf)
-                {
-                    _bridgeControl.SetActive(true);
-                }
-                break;
-            case Player.Role.Paddler:
-                if (xPos <= 0)
-                {
-                    if (!_leftControl.activeSelf)
+            _controls.AnimateControls(true);
+        }
+        else
+        {
+            switch (role)
+            {
+                case Player.Role.Floater:
+                    if (!_bridgeControl.activeSelf)
                     {
-                        _leftControl.SetActive(true);
+                        _bridgeControl.SetActive(true);
                     }
-                }
-                else
-                {
-                    if (!_rightControl.activeSelf)
+                    break;
+                case Player.Role.Paddler:
+                    if (xPos <= 0)
                     {
-                        _rightControl.SetActive(true);
+                        if (!_leftControl.activeSelf)
+                        {
+                            _leftControl.SetActive(true);
+                        }
                     }
-                }
-                break;
-            default:
-                throw new ArgumentOutOfRangeException("role", role, null);
+                    else
+                    {
+                        if (!_rightControl.activeSelf)
+                        {
+                            _rightControl.SetActive(true);
+                        }
+                    }
+                    break;
+               default:
+                    throw new ArgumentOutOfRangeException("role", role, null);
+            }
         }
     }
 
@@ -151,9 +173,16 @@ public class InstructionManager : MonoBehaviour
     /// </summary>
     public void ShowInteractIndicator()
     {
-        if (!_interactPress.activeSelf)
+        if (_controls != null)
         {
-            _interactPress.SetActive(true);
+            _controls.AnimateInteract(true);
+        }
+        else
+        {
+            if (!_interactPress.activeSelf)
+            {
+                _interactPress.SetActive(true);
+            }
         }
     }
 }
