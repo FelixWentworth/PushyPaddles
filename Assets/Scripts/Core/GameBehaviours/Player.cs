@@ -120,9 +120,7 @@ public class Player : MovingObject
 
         if (!isServer && isLocalPlayer)
         {
-//#if UNITY_ANDROID || UNITY_IPHONE
-            SetupOnScreenControls();
-//#endif
+
             // Client needs to be ready to send command
             if (!ClientScene.ready)
             {
@@ -148,7 +146,7 @@ public class Player : MovingObject
         }
     }
     //
-//#if UNITY_ANDROID || UNITY_IPHONE
+#if UNITY_ANDROID || UNITY_IPHONE
     private void SetupOnScreenControls()
     {
         var go = Instantiate(OnScreenControls);
@@ -162,15 +160,33 @@ public class Player : MovingObject
         }
         _instructionManager.SetUIControls(_controls);
     }
+#endif
 
     private void MoveLeft()
     {
-        Move(gameObject, -1, 0);
+        if (!OnPlatform)
+        {
+            Move(gameObject, -1, 0);
+        }
+        else
+        {
+            UpdatePlayerPosition();
+            // slowly tilt the platform
+            CmdTiltRaft(-1);
+        }
     }
     private void MoveRight()
     {
-        Move(gameObject, 1, 0);
-
+        if (!OnPlatform)
+        {
+            Move(gameObject, 1, 0);
+        }
+        else
+        {
+            UpdatePlayerPosition();
+            // slowly tilt the platform
+            CmdTiltRaft(1);
+        }
     }
     private void MoveUp()
     {
@@ -234,6 +250,12 @@ public class Player : MovingObject
                         // Game Paused, Cannot move
                         return;
                     }
+                    #if UNITY_ANDROID || UNITY_IPHONE
+                    if (_controls == null)
+                    {
+                        SetupOnScreenControls();
+                    }
+                    #endif
                     if (!_rigidbody.useGravity)
                     {
                         // when the player has full control, they should be affected by gravity
