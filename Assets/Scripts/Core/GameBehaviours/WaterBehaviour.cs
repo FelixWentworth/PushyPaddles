@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -78,9 +79,16 @@ public class WaterBehaviour : NetworkBehaviour
         MoveFloatingObject(go.gameObject, newPosition);
     }
 
-    [Server]
+    [ServerAccess]
     private void MoveFloatingObject(GameObject go, Vector3 pos)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         go.transform.position = pos;
         // Clamp the x axis
         ClampX(go.gameObject);
@@ -116,9 +124,16 @@ public class WaterBehaviour : NetworkBehaviour
     }
 
     // Only allow the server to run this as to avoid players exploiting
-    [Server]
+    [ServerAccess]
     public void PaddleUsed(Player player, float playerModifier)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         switch (player.PlayerRole)
         {
             case Player.Role.Paddler:
@@ -176,9 +191,16 @@ public class WaterBehaviour : NetworkBehaviour
         _paddleStrength = 0f;
     }
 
-    [Server]
+    [ServerAccess]
     public void RaftTilt(Player player, float tilt)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         var raftTilt = player.RaftControlModifier * tilt;
 
         _raftTilt = raftTilt;

@@ -166,6 +166,13 @@ public class MainMenu : MonoBehaviour
         
     }
 
+    public void SinglePlayer()
+    {
+        SP_Manager.Instance.Get<SP_GameManager>().ForceActive();
+        SP_Manager.Instance.Get<SP_GameManager>().CreatePlayers();
+        _menuManager.HideMenu();
+    }
+
     public void CancelClient()
     {
         NetworkManager.singleton.StopClient();

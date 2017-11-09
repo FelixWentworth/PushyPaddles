@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -18,9 +19,15 @@ public class ObstacleGeneration : LevelLayout
         CreateLevel(numObstacles);
     }
 
-    [Server]
+    [ServerAccess]
     public void CreateLevel(int numObstacles)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         // Clear the current level
         ClearChildren();
 

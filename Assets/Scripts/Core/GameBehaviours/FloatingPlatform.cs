@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.UI;
@@ -159,7 +160,14 @@ public class FloatingPlatform : MovingObject
             if (isServer)
             {
                 GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Pickup");
-                other.GetComponent<MathsCollectible>().RpcPlayCollectedAnimation();
+                if (isServer)
+                {
+                    other.GetComponent<MathsCollectible>().RpcPlayCollectedAnimation();
+                }
+                else if (SP_Manager.Instance.IsSinglePlayer())
+                {
+                    other.GetComponent<MathsCollectible>().ClientPlayCollectedAnimation();
+                }
             }
 
         }
@@ -175,6 +183,10 @@ public class FloatingPlatform : MovingObject
             if (isServer)
             {
                 RpcShowTotal(PickupValue == levelManager.Target);
+            }
+            else if (SP_Manager.Instance.IsSinglePlayer())
+            {
+                ClientShowTotal(PickupValue == levelManager.Target);
             }
 
             yield return new WaitForSeconds(levelManager.TotalUI.AnimLength());
@@ -197,7 +209,14 @@ public class FloatingPlatform : MovingObject
             _playerOnPlatform = null;
 
             // Notify the players that a reward has been reached
-            player.RpcGoalReached(playerName);
+            if (isServer)
+            {
+                player.RpcGoalReached(playerName);
+            }
+            else if (SP_Manager.Instance.IsSinglePlayer())
+            {
+                player.ClientGoalReached(playerName);
+            }
 
             CanFloat = false;
             Water.TouchedWater(this);
@@ -218,20 +237,37 @@ public class FloatingPlatform : MovingObject
         }
 
 
-        if (isServer && levelManager.MathsVersion)
+        if (isServer && levelManager.MathsVersion && !SP_Manager.Instance.IsSinglePlayer())
         {
             RpcDisableTotal();
+        }
+        else if (SP_Manager.Instance.IsSinglePlayer() && levelManager.MathsVersion)
+        {
+            ClientDisableTotal();
         }
     }
 
     [ClientRpc]
     private void RpcShowTotal (bool victory)
     {
+        ClientShowTotal(victory);
+    }
+
+    [ClientAccess]
+    private void ClientShowTotal(bool victory)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ClientAccess)method.GetCustomAttributes(typeof(ClientAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         var levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
 
         levelManager.TotalUI.GetComponent<RectTransform>().localScale = Vector3.zero;
         levelManager.TotalUI.gameObject.SetActive(true);
-        levelManager.TotalUI.Show(Localization.Get("UI_GAME_TOTAL"), PickupValue, victory );
+        levelManager.TotalUI.Show(Localization.Get("UI_GAME_TOTAL"), PickupValue, victory);
 
         if (victory)
         {
@@ -244,11 +280,26 @@ public class FloatingPlatform : MovingObject
 
     }
 
+
     [ClientRpc]
     private void RpcDisableTotal()
     {
+        ClientDisableTotal();
+    }
+
+    [ClientAccess]
+    private void ClientDisableTotal()
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ClientAccess)method.GetCustomAttributes(typeof(ClientAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         var levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
         levelManager.TotalUI.gameObject.SetActive(false);
+
     }
 
     public bool InRange(GameObject other)

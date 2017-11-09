@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
 using Random = UnityEngine.Random;
@@ -36,9 +37,15 @@ public class CollectibleGeneration : LevelLayout
 
     }
 
-    [Server]
+    [ServerAccess]
     public void Reset(int numCollectibles, CurriculumChallenge curriculumInfo)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         // Clear the current level
         ClearChildren();
 
@@ -73,9 +80,15 @@ public class CollectibleGeneration : LevelLayout
         GameObject.Find("LevelManager").GetComponent<LevelManager>().Target = curriculumInfo.Target.ToString();
     }
 
-    [Server]
+    [ServerAccess]
     public void ResetColliders()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         //var colliders = ObstacleParent.GetComponentsInChildren<Collider>();
         //foreach (var collider1 in colliders)
         //{
@@ -95,6 +108,19 @@ public class CollectibleGeneration : LevelLayout
     [ClientRpc]
     private void RpcResetColliders()
     {
+        ClientResetColliders();
+    }
+
+    [ClientAccess]
+    private void ClientResetColliders()
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ClientAccess)method.GetCustomAttributes(typeof(ClientAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         var colliders = ObstacleParent.GetComponentsInChildren<Collider>();
         foreach (var collider1 in colliders)
         {
@@ -102,9 +128,15 @@ public class CollectibleGeneration : LevelLayout
         }
     }
 
-    [Server]
+    [ServerAccess]
     public void CreateLevel(string[] challengeInfo, string validPosition)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         var depth = GeneratedLevelLayout.GetLength(1);
         var startDepth = Random.Range(0, 2);
         // Make sure to remove the empty values in the array

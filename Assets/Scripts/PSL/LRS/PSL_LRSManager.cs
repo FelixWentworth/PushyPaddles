@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using PlayGen.Orchestrator.PSL.Common.LRS;
 using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
@@ -52,9 +53,16 @@ public class PSL_LRSManager : NetworkBehaviour
     /// </summary>
     /// <param name="matchId">The current match id as defined in the orchestrator</param>
     /// <param name="playerId">The current player id as defined in the orchestrator</param>
-    [Server]
+    [ServerAccess]
     public void JoinedGame(string matchId, string playerId)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         _matchId = matchId;
 
         // Make sure the player has not rejoined without being removed properly
@@ -67,9 +75,16 @@ public class PSL_LRSManager : NetworkBehaviour
     /// Setupd the game variables
     /// </summary>
     /// <param name="totalTime">Total time available</param>
-    [Server]
+    [ServerAccess]
     public void SetTotalTime(int totalTime)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         TimeLimit = totalTime;
     }
 
@@ -77,36 +92,64 @@ public class PSL_LRSManager : NetworkBehaviour
     /// Setupd the game variables
     /// </summary>
     /// <param name="numRounds">Total number of rounds available</param>
-    [Server]
+    [ServerAccess]
     public void SetNumRounds(int numRounds)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         _totalRounds = numRounds;
     }
 
     /// <summary>
     /// Players are attempting the level again
     /// </summary>
-    [Server]
+    [ServerAccess]
     public void NewAttempt()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         _totalAttempts += 1;
     }
 
     /// <summary>
     /// Players have made it to the chest
     /// </summary>
-    [Server]
+    [ServerAccess]
     public void ChestReached()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         _totalGoalReached += 1;
     }
 
     /// <summary>
     /// Players have made it to the new round
     /// </summary>
-    [Server]
+    [ServerAccess]
     public void NewRound(int timeTaken)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         _timeTakenPerRound.Add(timeTaken);
         _totalRoundComplete += 1;
 
@@ -117,21 +160,42 @@ public class PSL_LRSManager : NetworkBehaviour
     /// Game has been completed
     /// </summary>
     /// <param name="allChallengesComplete">Are all challenges in mode completed</param>
-    [Server]
+    [ServerAccess]
     public void GameCompleted(int timeTaken)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         SendSkillData(true, timeTaken);
     }
 
-    [Server]
+    [ServerAccess]
     public void PlayerShowedSkill(string playerId, LRSSkillVerb verb, int increment)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         PlatformSelection.AddSkill(playerId, verb, increment);
     }
 
-    [Server]
+    [ServerAccess]
     public void SendSkillData(bool finalResult, int timeTaken)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         // Send to LRS
         PlatformSelection.SendSkillData();
         SendTrackedData(timeTaken);
@@ -149,9 +213,16 @@ public class PSL_LRSManager : NetworkBehaviour
     /// Send all the data to the LRS
     /// </summary>
     /// <param name="timeTaken">Time taken to complete all rounds</param>
-    [Server]
+    [ServerAccess]
     private void SendTrackedData(int timeTaken)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         if (_url == "")
         {
             return;
@@ -178,9 +249,16 @@ public class PSL_LRSManager : NetworkBehaviour
     /// Output the tracked data to log
     /// </summary>
     /// <param name="timeTaken"></param>
-    [Server]
+    [ServerAccess]
     private void OutputTrackedData(string individualData, bool finalResult, int timeTaken)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         if (!finalResult)
         {
             StartCoroutine(WriteToFile(individualData +
@@ -210,36 +288,52 @@ public class PSL_LRSManager : NetworkBehaviour
     }
     
 
-    [Server]
+    [ServerAccess]
     private IEnumerator SendPlayerData(WWWForm data, string playerId)
     {
-        data.AddField("PlayerId", playerId);
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (attr.HasAccess)
+        {
 
-        var www = new WWW(_url, data);
-        yield return www;
+            data.AddField("PlayerId", playerId);
+
+            var www = new WWW(_url, data);
+            yield return www;
+        }
     }
 
-    [Server]
+    [ServerAccess]
     private IEnumerator WriteToFile(string message)
     {
-        var path = Application.streamingAssetsPath + "/" + _logFileName;
-
-        if (Application.platform == RuntimePlatform.WindowsEditor ||
-            Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WSAPlayerX86 ||
-            Application.platform == RuntimePlatform.WSAPlayerX64 || Application.platform == RuntimePlatform.LinuxPlayer)
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (attr.HasAccess)
         {
-            path = "file:///" + path;
-        }
 
-        var www = new WWW(path);
 
-        yield return www;
-        if (www.text != null)
-        {
-            var newtext = www.text + message;
-            using (var sw = new StreamWriter(Application.streamingAssetsPath + "/" + _logFileName))
+
+            var path = Application.streamingAssetsPath + "/" + _logFileName;
+
+            if (Application.platform == RuntimePlatform.WindowsEditor ||
+                Application.platform == RuntimePlatform.WindowsPlayer ||
+                Application.platform == RuntimePlatform.WSAPlayerX86 ||
+                Application.platform == RuntimePlatform.WSAPlayerX64 ||
+                Application.platform == RuntimePlatform.LinuxPlayer)
             {
-                sw.Write(newtext);
+                path = "file:///" + path;
+            }
+
+            var www = new WWW(path);
+
+            yield return www;
+            if (www.text != null)
+            {
+                var newtext = www.text + message;
+                using (var sw = new StreamWriter(Application.streamingAssetsPath + "/" + _logFileName))
+                {
+                    sw.Write(newtext);
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -222,9 +223,15 @@ public class LevelLayout : NetworkBehaviour {
 
    
 
-    [Server]
+    [ServerAccess]
     public void ClearChildren()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         var children = ObstacleParent.GetComponentsInChildren<Transform>();
         foreach (var child in children)
         {
@@ -239,9 +246,15 @@ public class LevelLayout : NetworkBehaviour {
         }
     }
 
-    [Server]
+    [ServerAccess]
     public void GenerateObstacles()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         for (var i = 0; i < GeneratedLevelLayout.GetLength(0); i++)
         {
             for (var j = 0; j < GeneratedLevelLayout.GetLength(1); j++)
@@ -256,9 +269,15 @@ public class LevelLayout : NetworkBehaviour {
         }
     }
 
-    [Server]
+    [ServerAccess]
     private void CreateObstacle(Vector3 position, Transform parent)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         var rockNumber = Random.Range(0, RockGameObjects.Length);
         var yRotation = Random.Range(0, 4) * 90f;
 
@@ -271,9 +290,15 @@ public class LevelLayout : NetworkBehaviour {
         NetworkServer.Spawn(go);
     }
 
-    [Server]
+    [ServerAccess]
     public void GenerateCollectibles(GameObject collectible)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         for (var i = 0; i < GeneratedLevelLayout.GetLength(0); i++)
         {
             for (var j = 0; j < GeneratedLevelLayout.GetLength(1); j++)
@@ -289,9 +314,16 @@ public class LevelLayout : NetworkBehaviour {
         }
     }
 
-    [Server]
+    [ServerAccess]
     private void CreateCollectible(GameObject gameObject, Vector3 position, Transform parent, string info)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         var go = Instantiate(gameObject, position, Quaternion.identity);
 
         go.transform.SetParent(parent, false);

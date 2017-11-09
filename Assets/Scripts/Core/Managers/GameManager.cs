@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Policy;
 using Newtonsoft.Json;
 using PlayGen.Orchestrator.Common;
@@ -80,7 +81,7 @@ public class GameManager : NetworkBehaviour
 
     void Update()
     {
-        if (isServer)
+        if (isServer || SP_Manager.Instance.IsSinglePlayer())
         {
             NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
             NetworkServer.RegisterHandler(MsgType.Disconnect, OnDisconnected);
@@ -107,7 +108,8 @@ public class GameManager : NetworkBehaviour
             }
             if (_level.IsGameOver)
             {
-                GameOver(_gameComplete);
+                // TODO uncomment
+                //GameOver(_gameComplete);
             }
 
             //// Check if the game should be started
@@ -116,7 +118,18 @@ public class GameManager : NetworkBehaviour
             // Set the sync var variable
 
             AllPlayersReady = AreAllPlayersReady();
-
+            if (SP_Manager.Instance.IsSinglePlayer())
+            {
+                if (AllPlayersReady)
+                {
+                    StartGameTimer();
+                    ResumeGame();
+                }
+                else
+                {
+                    PauseGame();
+                }
+            }
             if (!ControlledByOrchestrator || PlatformSelection.ConnectionType == ConnectionType.Testing)
             {
                 if (AllPlayersReady)
@@ -194,22 +207,40 @@ public class GameManager : NetworkBehaviour
 
     }
 
-    [Server]
+    [ServerAccess]
     void RestartGame()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         _level.ResetRound();
         Restart();
     }
 
-    [Server]
+    [ServerAccess]
     public void OnConnected(NetworkMessage netMsg)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         OnConnected(netMsg.conn);
     }
 
-    [Server]
+    [ServerAccess]
     public void OnConnected(NetworkConnection netMsg)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         if (_menu == null)
         {
             _menu = GameObject.Find("MenuManager").GetComponent<MenuManager>();
@@ -226,19 +257,38 @@ public class GameManager : NetworkBehaviour
 
         _menu.HideMenu();
         Debug.Log("Setting Client language to: " + Localization.SelectedLanguage.Name);
-        RpcSetLanguage(Localization.SelectedLanguage.Name);
+        if (SP_Manager.Instance.IsSinglePlayer())
+        {
+            ClientSetLanguage(Localization.SelectedLanguage.Name);
+        }
+        else
+        {
+            RpcSetLanguage(Localization.SelectedLanguage.Name);
+        }
         StartCoroutine(JoinGame(netMsg));
     }
 
-    [Server]
+    [ServerAccess]
     public void OnDisconnected(NetworkMessage netMsg)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         OnDisconnected(netMsg.conn);
     }
 
-    [Server]
+    [ServerAccess]
     public void OnDisconnected(NetworkConnection netMsg)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         Debug.Log("Disconnected: " + netMsg.connectionId);
         var player = _players.Find(p => p.ConnectionId == netMsg.connectionId);
         if (player == null)
@@ -275,12 +325,29 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     public void RpcSetLanguage(string language)
     {
+        ClientSetLanguage(language);
+    }
+
+    [ClientAccess]
+    public void ClientSetLanguage(string language)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ClientAccess)method.GetCustomAttributes(typeof(ClientAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         Localization.UpdateLanguage(language);
         Debug.Log("Set Language from server to: " + language);
     }
 
     private bool AreAllPlayersReady()
     {
+        if (SP_Manager.Instance.IsSinglePlayer() && SP_Manager.Instance.Get<SP_GameManager>().GameSetup())
+        {
+            return true;
+        }
         if (ready)
             return true;
         if (_players.Count != 3)
@@ -399,6 +466,22 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+    public void CreatePlayer(int id)
+    {
+        var index = _players.Count;
+        var playerObject = Instantiate(PlayerPrefab);
+
+        playerObject.transform.position = GetPlayerRespawn(index);
+
+        var player = playerObject.GetComponent<Player>();
+        SetPlayerRole(index, player);
+        player.PlayerNum = index;
+        player.IsSinglePlayer = true;
+        player.ConnectionId = id;
+
+        _players.Add(player);
+    }
+
     public Vector3 GetPlayerRespawn(int index)
     {
         switch (index)
@@ -420,9 +503,15 @@ public class GameManager : NetworkBehaviour
     /// Called by ProSocial event listener to start the actual game
     /// </summary>
 
-    [Server]
+    [ServerAccess]
     public void StartGameTimer()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         if (_level.RoundStarted)
         {
             return;
@@ -444,12 +533,32 @@ public class GameManager : NetworkBehaviour
         StartTimer();
 
         // Place the platform in the scene
+        
         Platform.SetActive(true);
-        NetworkServer.Spawn(Platform);
+        if (!SP_Manager.Instance.IsSinglePlayer())
+        {
+            NetworkServer.Spawn(Platform);
+        }
     }
 
-    [Server]
+    [ServerAccess]
     public void SetLesson(string year, string lesson)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+        var challenge = Curriculum.GetChallengesForYear(year).FirstOrDefault(c => c.Lesson == lesson);
+
+        if (challenge != null)
+        {
+            GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
+        }
+    }
+
+    public void SetSpLesson(string year, string lesson)
     {
         var challenge = Curriculum.GetChallengesForYear(year).FirstOrDefault(c => c.Lesson == lesson);
 
@@ -459,44 +568,87 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    [Server]
+    [ServerAccess]
     private void SetPlayerRole(int playerIndex, Player player)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         //only the 1st player should be able to ride the platform
         player.SyncNickName = Localization.Get("UI_GAME_PLAYER") + (playerIndex + 1);
         player.SetRole(playerIndex == 0 ? Player.Role.Floater : Player.Role.Paddler);
     }
     
-    [Server]
+    [ServerAccess]
     public void StartTimer()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         _gamePlaying = true;
 
         _level.ResetRound();
         _level.StartRound();
     }
 
-    [Server]
+    [ServerAccess]
     public void PauseGame()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         _level.PauseTimer();
-        RpcShowPause(true);
+        if (SP_Manager.Instance.IsSinglePlayer())
+        {
+            ClientShowPause(true);
+        }
+        else
+        {
+            RpcShowPause(true);
+        }
         _gamePlaying = false;
     }
 
-    [Server]
+    [ServerAccess]
     public void ResumeGame()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         _level.ResumeTimer();
 
-        RpcShowPause(false);
-
+        if (SP_Manager.Instance.IsSinglePlayer())
+        {
+            ClientShowPause(false);
+        }
+        else
+        {
+            RpcShowPause(false);
+        }
         _gamePlaying = true;
     }
 
-    [Server]
+    [ServerAccess]
     public void StopGame()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         // End the game
         _gamePlaying = false;
         _menu.ShowGameOver(_gameWon, _level.SecondsTaken, ControlledByOrchestrator);
@@ -504,7 +656,14 @@ public class GameManager : NetworkBehaviour
 
         if (!ControlledByOrchestrator)
         {
-            RpcStopGame();
+            if (SP_Manager.Instance.IsSinglePlayer())
+            {
+                ClientStopGame();
+            }
+            else
+            {
+                RpcStopGame();
+            }
             ClearPlayerObjects();
         }
     }
@@ -515,9 +674,28 @@ public class GameManager : NetworkBehaviour
         NetworkManager.singleton.StopClient();
     }
 
+    [ClientAccess]
+    private void ClientStopGame()
+    {
+        Application.Quit();
+    }
+
     [ClientRpc]
     private void RpcShowPause(bool showing)
     {
+        ClientShowPause(showing);
+    }
+
+    [ClientAccess]
+    private void ClientShowPause(bool showing)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ClientAccess)method.GetCustomAttributes(typeof(ClientAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         PauseScreen.SetActive(showing);
     }
 
@@ -525,24 +703,42 @@ public class GameManager : NetworkBehaviour
     /// Actions completed as a group gets credited to each player
     /// </summary>
     /// <param name="action">the action that was completed</param>
-    [Server]
+    [ServerAccess]
     public void GroupAction(PlayerAction action)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         foreach (var player in  _players)
         {
             PlayerAction(action, player.PlayerID);
         }
     }
 
-    [Server]
+    [ServerAccess]
     public void PlayerAction(PlayerAction action, string playerId)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         _playerActionManager.PerformedAction(action, playerId, action.GetAlwaysTracked(), action.GetCancelAction());
     }
 
-    [Server]
+    [ServerAccess]
     private void ClearPlayerObjects()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         foreach (var player in _players)
         {
             Destroy(player.gameObject);
@@ -550,9 +746,15 @@ public class GameManager : NetworkBehaviour
         _players.Clear();
     }
 
-    [Server]
+    [ServerAccess]
     public void NextRound()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         _level.NextRound();
         // output the values from this round
         PSL_LRSManager.Instance.NewRound((DateTime.Now - _startTime).Seconds);
@@ -561,9 +763,15 @@ public class GameManager : NetworkBehaviour
 
     }
 
-    [Server]
+    [ServerAccess]
     public void Restart(bool newRound = false)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         if (!_generatingLevel)
         {
             _generatingLevel = true;
@@ -624,9 +832,15 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    [Server]
+    [ServerAccess]
     public void ResetRound()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         if (!_generatingLevel)
         {
             _generatingLevel = true;
@@ -647,9 +861,15 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    [Server]
+    [ServerAccess]
     public void ChangeRoles()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         var players = GameObject.FindGameObjectsWithTag("Player");
 
         var _players = new List<Player>();
@@ -684,9 +904,15 @@ public class GameManager : NetworkBehaviour
         RespawnPlayers();
     }
 
-    [Server]
+    [ServerAccess]
     public void SetNewPlayerNum(int floater)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         for (var i = 0; i < _players.Count; i++)
         {
             _players[floater].PlayerNum = i;
@@ -694,18 +920,30 @@ public class GameManager : NetworkBehaviour
         }        
     }
 
-    [Server]
+    [ServerAccess]
     public void RespawnPlayers()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         foreach (var player in _players)
         {
             player.SyncRespawn(player.transform.eulerAngles);
         }
     }
 
-    [Server]
+    [ServerAccess]
     private void GameOver(bool victory)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         //PSL_LRSManager.Instance.GameCompleted(_level.SecondsTaken);
         _gameWon = victory;
         if (ControlledByOrchestrator)

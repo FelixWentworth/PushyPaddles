@@ -48,13 +48,26 @@ public class CharacterSelection : MonoBehaviour
 
     public void SelectCharacter()
     {
-        // Client needs to be ready to send command
-        if (!ClientScene.ready)
+        if (SP_Manager.Instance.IsSinglePlayer())
         {
-            ClientScene.Ready(NetworkManager.singleton.client.connection);
+            GameObject.Find("SinglePlayerManager").GetComponent<SP_GameManager>().SetModel(_currentModelIndex);
         }
-        
-        _player.CmdSetModel(_currentModelIndex);
+        else
+        {
+            // Client needs to be ready to send command
+            if (!ClientScene.ready)
+            {
+                ClientScene.Ready(NetworkManager.singleton.client.connection);
+            }
+            if (SP_Manager.Instance.IsSinglePlayer())
+            {
+                _player.SetSPModel(_currentModelIndex);
+            }
+            else
+            {
+                _player.CmdSetModel(_currentModelIndex);
+            }
+        }
         DisableAll();
         GameObject.Find("MenuManager").GetComponent<MenuManager>().HideCharacterSelect();
     }

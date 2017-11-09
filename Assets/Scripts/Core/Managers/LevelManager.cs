@@ -1,4 +1,5 @@
-﻿using PlayGen.Unity.Utilities.Localization;
+﻿using System.Reflection;
+using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
@@ -51,35 +52,70 @@ public class LevelManager : NetworkBehaviour
         _localPlayer = null;
     }
 
-    [Server]
+    [ServerAccess]
     public void ResetRound()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         ResetAll();
         UpdateUI();
         RoundStarted = false;
     }
 
-    [Server]
+    [ServerAccess]
     public void StartRound()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         RoundStarted = true;
     }
 
-    [Server]
+    [ServerAccess]
     public void NextRound()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         RoundNumber += 1;
     }
 
-    [Server]
+    [ServerAccess]
     public void PauseTimer()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         TimerPaused = true;
     }
 
-    [Server]
+    [ServerAccess]
     public void ResumeTimer()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         TimerPaused = false;
     }
 
@@ -143,28 +179,56 @@ public class LevelManager : NetworkBehaviour
         }
     }
 
-    [Server]
+    [ServerAccess]
     private void UpdateTimer(float time)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         _timeRemaining -= time;
     }
 
-    [Server]
+    [ServerAccess]
     private void ResetAll()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         ResetRounds();
         ResetTimer();
     }
 
-    [Server]
+    [ServerAccess]
     private void ResetRounds()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         RoundNumber = 1;
     }
 
-    [Server]
+    [ServerAccess]
     private void ResetTimer()
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         _timeRemaining = _timeLimit;
     }
 

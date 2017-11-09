@@ -1,4 +1,5 @@
-﻿using PlayGen.Unity.Utilities.Localization;
+﻿using System.Reflection;
+using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -153,13 +154,29 @@ public class MenuManager : NetworkBehaviour
     /// </summary>
     public void CheckIfShouldSelectLesson()
     {
-        // Lesson has not been defined previously
-        if (GameManager.LessonSelectRequired)
+        if (SP_Manager.Instance.IsSinglePlayer())
         {
-            // Is player 1, so they get to choose the lesson to do
-            if (GameManager.GetLocalPlayer().PlayerRole == Player.Role.Floater)
+            ShowLessonSelect();
+        }
+        else
+        {
+
+
+            // Lesson has not been defined previously
+            if (GameManager.LessonSelectRequired)
             {
-                ShowLessonSelect();
+                // Is player 1, so they get to choose the lesson to do
+                if (GameManager.GetLocalPlayer().PlayerRole == Player.Role.Floater)
+                {
+                    ShowLessonSelect();
+                }
+                else
+                {
+                    if (!ClientScene.ready)
+                    {
+                        ClientScene.Ready(NetworkManager.singleton.client.connection);
+                    }
+                }
             }
             else
             {
@@ -167,13 +184,6 @@ public class MenuManager : NetworkBehaviour
                 {
                     ClientScene.Ready(NetworkManager.singleton.client.connection);
                 }
-            }
-        }
-        else
-        {
-            if (!ClientScene.ready)
-            {
-                ClientScene.Ready(NetworkManager.singleton.client.connection);
             }
         }
     }
@@ -241,10 +251,23 @@ public class MenuManager : NetworkBehaviour
     /// <summary>
     /// Notify the server to show game over for all clients
     /// </summary>
-    [Server]
+    [ServerAccess]
     public void ShowGameOver(bool victory, int timeTaken, bool controlledByOrchestrator)
     {
-        RpcShowGameOver(victory, timeTaken, controlledByOrchestrator);
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+        if (!SP_Manager.Instance.IsSinglePlayer())
+        {
+            RpcShowGameOver(victory, timeTaken, controlledByOrchestrator);
+        }
+        else
+        {
+            SP_Manager.Instance.Get<SP_Menus>().ShowGameOver(victory, timeTaken);
+        }
     }
 
     /// <summary>

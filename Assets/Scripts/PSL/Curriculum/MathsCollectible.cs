@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
@@ -34,6 +35,19 @@ public class MathsCollectible : NetworkBehaviour
     [ClientRpc]
     public void RpcPlayCollectedAnimation()
     {
+        ClientPlayCollectedAnimation();
+    }   
+
+    [ClientAccess]
+    public void ClientPlayCollectedAnimation()
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ClientAccess)method.GetCustomAttributes(typeof(ClientAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         CollectedAnimation[CollectedAnimation.clip.name].speed = 1f;
         CollectedAnimation[CollectedAnimation.clip.name].time = 0f;
 
@@ -44,8 +58,22 @@ public class MathsCollectible : NetworkBehaviour
     [ClientRpc]
     public void RpcReset()
     {
+        ClientReset();
+    }
+
+    [ClientAccess]
+    public void ClientReset()
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ClientAccess)method.GetCustomAttributes(typeof(ClientAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         ResetObject();
     }
+
 
     public void ResetObject()
     {

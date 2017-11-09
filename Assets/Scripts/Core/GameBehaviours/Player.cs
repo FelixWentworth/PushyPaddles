@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using System.Reflection;
 using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -85,14 +86,14 @@ public class Player : MovingObject
     private bool _usedPaddle;
     private GameObject _raft;
     private FloatingPlatform _floatingPlatform;
-
+    
     private float _timeSinceLastMove = 0f;
     [SerializeField] private float _idleTime;
+    [HideInInspector] public bool IsSinglePlayer;
 
 
     public override void Start()
     {
-
         CanFloat = false;
         PlayerCanInteract = false;
         PlayerCanHit = false;
@@ -129,10 +130,18 @@ public class Player : MovingObject
 
             GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowHowToPlay();
 
-            var platformSelection = GameObject.Find("PlatformManager").GetComponent<PlatformSelection>();
-            _playerData = platformSelection.PlayerData;
-            CmdSetPlayerData(_playerData);
+            if (!SP_Manager.Instance.IsSinglePlayer())
+            {
+                var platformSelection = GameObject.Find("PlatformManager").GetComponent<PlatformSelection>();
+                _playerData = platformSelection.PlayerData;
+            
+                CmdSetPlayerData(_playerData);
+            }
             _playerText.text = _playerData.NickName;
+        }
+        if (IsSinglePlayer)
+        {
+            SP_Manager.Instance.Get<SP_Menus>().ShowCharacterSelect();
         }
     }
 
@@ -140,7 +149,11 @@ public class Player : MovingObject
     {
         base.ResetObject(newPosition);
 
-        if (!isServer)
+        if (SP_Manager.Instance.IsSinglePlayer())
+        {
+            SyncRespawn(transform.eulerAngles);
+        }
+        else if (!isServer)
         {
             CmdSyncRespawn(transform.eulerAngles);
         }
@@ -172,7 +185,14 @@ public class Player : MovingObject
         {
             UpdatePlayerPosition();
             // slowly tilt the platform
-            CmdTiltRaft(-1);
+            if (SP_Manager.Instance.IsSinglePlayer())
+            {
+                TiltRaft(-1);
+            }
+            else
+            {
+                CmdTiltRaft(-1);
+            }
         }
     }
     private void MoveRight()
@@ -185,7 +205,14 @@ public class Player : MovingObject
         {
             UpdatePlayerPosition();
             // slowly tilt the platform
-            CmdTiltRaft(1);
+            if (SP_Manager.Instance.IsSinglePlayer())
+            {
+                TiltRaft(1);
+            }
+            else
+            {
+                CmdTiltRaft(1);
+            }
         }
     }
     private void MoveUp()
@@ -202,7 +229,14 @@ public class Player : MovingObject
     {
         if (_animationState != AnimationState.IDLE)
         {
-            CmdChangeState((int)AnimationState.IDLE);
+            if (SP_Manager.Instance.IsSinglePlayer())
+            {
+                ChangeState((int) AnimationState.IDLE);
+            }
+            else
+            {
+                CmdChangeState((int) AnimationState.IDLE);
+            }
         }
     }
     private void Interact()
@@ -225,14 +259,21 @@ public class Player : MovingObject
         }
         if (!_gameManager.DistributingRewards)
         { 
-            if (isLocalPlayer)
+            if (isLocalPlayer || SP_Manager.Instance.IsSinglePlayer())
             {
                 if (OnPlatform)
                 {
                     // Stopped moving
                     if (_animationState != AnimationState.ONPLATFORM)
                     {
-                        CmdChangeState((int) AnimationState.ONPLATFORM);
+                        if (SP_Manager.Instance.IsSinglePlayer())
+                        {
+                            ChangeState((int)AnimationState.ONPLATFORM);
+                        }
+                        else
+                        {
+                            CmdChangeState((int)AnimationState.ONPLATFORM);
+                        }
                     }
 
                     UpdatePlayerPosition();
@@ -240,7 +281,14 @@ public class Player : MovingObject
                     var x = Input.GetAxis("Horizontal");
 
                     // slowly tilt the platform
-                    CmdTiltRaft(x);
+                    if (SP_Manager.Instance.IsSinglePlayer())
+                    {
+                        TiltRaft(x);
+                    }
+                    else
+                    {
+                        CmdTiltRaft(x);
+                    }
 
                 }
                 else
@@ -278,7 +326,14 @@ public class Player : MovingObject
                         // Stopped moving
                         if (_animationState != AnimationState.IDLE)
                         {
-                            CmdChangeState((int) AnimationState.IDLE);
+                            if (SP_Manager.Instance.IsSinglePlayer())
+                            {
+                                ChangeState((int)AnimationState.IDLE);
+                            }
+                            else
+                            {
+                                CmdChangeState((int)AnimationState.IDLE);
+                            }
                         }
 
                     }
@@ -286,7 +341,14 @@ public class Player : MovingObject
                     if (_elapsedTime > _updateInterval)
                     {
                         _elapsedTime = 0f;
-                        CmdSyncMove(transform.position, transform.eulerAngles);
+                        if (SP_Manager.Instance.IsSinglePlayer())
+                        {
+                            Move(transform.position, transform.eulerAngles);
+                        }
+                        else
+                        {
+                            CmdSyncMove(transform.position, transform.eulerAngles);
+                        }
                     }
                 }
             }
@@ -323,19 +385,23 @@ public class Player : MovingObject
         {
             _playerText.text = SyncNickName;
         }
-        if (isLocalPlayer && PlayerID == "")
+        if (isLocalPlayer && PlayerID == "" && !SP_Manager.Instance.IsSinglePlayer())
         {
             CmdSetPlayerData(_playerData);
         }
 
-        if (isLocalPlayer)
+        if (!SP_Manager.Instance.IsSinglePlayer())
         {
-            _timeSinceLastMove += Time.deltaTime;
-            if (_timeSinceLastMove >= _idleTime)
+            if (isLocalPlayer)
             {
-                _timeSinceLastMove = 0;
-                // Player has been idle, send a message
-                CmdBeenIdle();
+                _timeSinceLastMove += Time.deltaTime;
+                if (_timeSinceLastMove >= _idleTime)
+                {
+                    _timeSinceLastMove = 0;
+                    // Player has been idle, send a message
+
+                    CmdBeenIdle();
+                }
             }
         }
     }
@@ -450,7 +516,14 @@ public class Player : MovingObject
 
         if (_animationState != AnimationState.WALKING)
         {
-            CmdChangeState((int)AnimationState.WALKING);
+            if (SP_Manager.Instance.IsSinglePlayer())
+            {
+                ChangeState((int) AnimationState.WALKING);
+            }
+            else
+            {
+                CmdChangeState((int) AnimationState.WALKING);
+            }
         }
         _timeSinceLastMove = 0f;
     }
@@ -483,28 +556,54 @@ public class Player : MovingObject
             PlayerID = data.PlayerId;
             PSL_LRSManager.Instance.JoinedGame(data.MatchId, data.PlayerId);
             PlatformSelection.UpdatePlayers(_gameManager.GetAllPlayers().Select(p =>p.PlayerID).ToList());
-            _gameManager.RpcSetLanguage(Localization.SelectedLanguage.Name);
+            if (!SP_Manager.Instance.IsSinglePlayer())
+            {
+                _gameManager.RpcSetLanguage(Localization.SelectedLanguage.Name);
+            }
+            else
+            {
+                _gameManager.ClientSetLanguage(Localization.SelectedLanguage.Name);
+            }
         }
 
     }
 
-
     // Server moves the player and forces them to a position
-    [Server]
+    [ServerAccess]
     public void SyncForceMove(Vector3 position, Vector3 rotation)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         transform.position = position;
         transform.eulerAngles = rotation;
 
         RealPosition = position;
         RealRotation = rotation;
 
-        RpcUpdatePosition(position, rotation);
+        if (SP_Manager.Instance.IsSinglePlayer())
+        {
+            ClientUpdatePosition(position, rotation);
+        }
+        else
+        {
+            RpcUpdatePosition(position, rotation);
+        }
     }
 
-    [Server]
+    [ServerAccess]
     public void SetGoalReached(bool onPlatform)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         _gameManager.DistributingRewards = true;
         OnPlatform = onPlatform;
     }
@@ -512,6 +611,19 @@ public class Player : MovingObject
     [ClientRpc]
     private void RpcUpdatePosition(Vector3 position, Vector3 rotation)
     {
+        ClientUpdatePosition(position, rotation);
+    }
+
+    [ClientAccess]
+    private void ClientUpdatePosition(Vector3 position, Vector3 rotation)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ClientAccess)method.GetCustomAttributes(typeof(ClientAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         RealPosition = position;
         RealRotation = rotation;
 
@@ -521,6 +633,19 @@ public class Player : MovingObject
     [Command]
     public void CmdSyncMove(Vector3 position, Vector3 rotation)
     {
+        Move(position, rotation);
+    }
+
+    [ServerAccess]
+    public void Move(Vector3 position, Vector3 rotation)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         if (position.y < -10f)
         {
             return;
@@ -529,12 +654,26 @@ public class Player : MovingObject
         RealRotation = rotation;
     }
 
-    [Server]
+    [ServerAccess]
     public void SyncRespawn(Vector3 rotation)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         SyncForceMove(_gameManager.GetPlayerRespawn(PlayerNum), rotation);
 
-        RpcRespawn(_gameManager.GetPlayerRespawn(PlayerNum), rotation);
+        if (SP_Manager.Instance.IsSinglePlayer())
+        {
+            ClientRespawn(_gameManager.GetPlayerRespawn(1), rotation);
+        }
+        else
+        {
+            RpcRespawn(_gameManager.GetPlayerRespawn(PlayerNum), rotation);
+        }
     }
 
     [Command]
@@ -543,9 +682,23 @@ public class Player : MovingObject
         SyncRespawn(rotation);
     }
 
+
     [ClientRpc]
     private void RpcRespawn(Vector3 position, Vector3 rotation)
     {
+        ClientRespawn(position, rotation);
+    }
+
+    [ClientAccess]
+    private void ClientRespawn(Vector3 position, Vector3 rotation)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ClientAccess)method.GetCustomAttributes(typeof(ClientAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         transform.position = position;
         transform.eulerAngles = rotation;
 
@@ -554,7 +707,7 @@ public class Player : MovingObject
 
     public void HitObstacle()
     {
-        if (isLocalPlayer)
+        if (isLocalPlayer && !SP_Manager.Instance.IsSinglePlayer())
         {
             CmdHitObstacle();
         }
@@ -570,7 +723,7 @@ public class Player : MovingObject
 
     public void GotCollectible()
     {
-        if (isLocalPlayer)
+        if (isLocalPlayer && !SP_Manager.Instance.IsSinglePlayer())
         {
             CmdGotCollectible();
         }
@@ -590,33 +743,38 @@ public class Player : MovingObject
 
     public void ReachedChest()
     {
-        if (isLocalPlayer)
+        if (!SP_Manager.Instance.IsSinglePlayer())
         {
-            CmdReachedGoal();
-        }
-        else if (isServer)
-        {
-            _gameManager.GroupAction(PlayerAction.ReachedChest);
+            if (isLocalPlayer)
+            {
+                CmdReachedGoal();
+            }
+            else if (isServer)
+            {
+                _gameManager.GroupAction(PlayerAction.ReachedChest);
+            }
         }
     }
 
     public void ReachedChest(bool success)
     {
-        if (isLocalPlayer)
+        if (!SP_Manager.Instance.IsSinglePlayer())
         {
-            CmdTargetCalculated(success);
-        }
-        else if (isServer)
-        {
-            if (success)
+            if (isLocalPlayer)
             {
-                _gameManager.GroupAction(PlayerAction.ReachedChestSuccess);
+                CmdTargetCalculated(success);
             }
-            else
+            else if (isServer)
             {
-                _gameManager.GroupAction(PlayerAction.ReachedChestFail);
+                if (success)
+                {
+                    _gameManager.GroupAction(PlayerAction.ReachedChestSuccess);
+                }
+                else
+                {
+                    _gameManager.GroupAction(PlayerAction.ReachedChestFail);
+                }
             }
-            
         }
     }
 
@@ -641,17 +799,20 @@ public class Player : MovingObject
 
     public void GaveReward(string id)
     {
-        if (isLocalPlayer)
+        if (!SP_Manager.Instance.IsSinglePlayer())
         {
-            if (id == PlayerID)
+            if (isLocalPlayer)
             {
-                // gave reward to self
-                CmdGaveRewardSelf();
-            }
-            else
-            {
-                // Shared Reward
-                CmdGaveRewardOther();
+                if (id == PlayerID)
+                {
+                    // gave reward to self
+                    CmdGaveRewardSelf();
+                }
+                else
+                {
+                    // Shared Reward
+                    CmdGaveRewardOther();
+                }
             }
         }
     }
@@ -700,7 +861,7 @@ public class Player : MovingObject
         /////////////////////////
 
         
-        if (isLocalPlayer && !Respawning && Input.GetKeyDown(KeyCode.Space))
+        if ((isLocalPlayer || SP_Manager.Instance.IsSinglePlayer()) && !Respawning && Input.GetKeyDown(KeyCode.Space))
         {
             InteractPressed();
         }
@@ -715,8 +876,16 @@ public class Player : MovingObject
         if (_floatingPlatform.CanPickUp && !_floatingPlatform.OnWater && _floatingPlatform.InRange(gameObject) && !HoldingPlatform)
         {
             // Pickup Plaftorm
-            CmdPickupPlatform(_raft);
+            if (SP_Manager.Instance.IsSinglePlayer())
+            {
+                PickupPlatform(_raft);
+            }
+            else
+            {
+                CmdPickupPlatform(_raft);
+            }
             return;
+
         }
 
         // Make sure the player is looking in the correct direction
@@ -728,21 +897,42 @@ public class Player : MovingObject
         {
             if (_floatingPlatform.CanBePlacedInWater() && PlayerRole == Role.Floater)
             {
-                // Place in water
-                CmdDropPlatform(_raft);
-                CmdPlacePlatformInWater(_raft, gameObject);
+                if (SP_Manager.Instance.IsSinglePlayer())
+                {
+                    DropPlatform(_raft);
+                    PlacePlatformInWater(_raft, gameObject);
+                }
+                else
+                {
+                    // Place in water
+                    CmdDropPlatform(_raft);
+                    CmdPlacePlatformInWater(_raft, gameObject);
+                }
             }
             else if (_floatingPlatform.CanBePlacedOnLand() && PlayerRole == Role.Paddler)
             {
-                // Drop Platform
-                CmdDropPlatform(_raft);
+                if (SP_Manager.Instance.IsSinglePlayer())
+                {
+                    DropPlatform(_raft);
+                }
+                else
+                {
+                    // Drop Platform
+                    CmdDropPlatform(_raft);
+                }
             }
         }
         else
         {
-
-            // Use paddle in water
-            CmdUsePaddle(_playerData.PlayerId);
+            if (SP_Manager.Instance.IsSinglePlayer())
+            {
+                UsePaddle(_playerData.PlayerId);
+            }
+            else
+            {
+                // Use paddle in water
+                CmdUsePaddle(_playerData.PlayerId);
+            }
         }
     }
 
@@ -763,10 +953,25 @@ public class Player : MovingObject
         go.transform.position += new Vector3(x, 0, z);
         go.transform.LookAt(new Vector3(go.transform.localPosition.x + x, go.transform.localPosition.y, go.transform.localPosition.z + z));
     }
+    
 
     [Command]
     private void CmdPickupPlatform(GameObject platform)
     {
+        PickupPlatform(platform);
+
+    }
+
+    [ServerAccess]
+    private void PickupPlatform(GameObject platform)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         if (OnPlatform)
             return;
         HoldingPlatform = true;
@@ -774,36 +979,58 @@ public class Player : MovingObject
         platform.transform.SetParent(this.transform, true);
         platform.transform.localPosition = new Vector3(0f, 1.0f, 1.5f);
 
-        _gameManager.PlayerAction(PlayerAction.PickedUpPlatform, PlayerID);
+        if (!SP_Manager.Instance.IsSinglePlayer())
+        {
+            _gameManager.PlayerAction(PlayerAction.PickedUpPlatform, PlayerID);
+        }
     }
 
     [Command]
     private void CmdDropPlatform(GameObject platform)
     {
-        platform.transform.position = new Vector3(transform.position.x, -0.6f, transform.position.z);
-        platform.transform.SetParent(null, true);
-        HoldingPlatform = false;
-        platform.GetComponent<FloatingPlatform>().CanPickUp = !HoldingPlatform;
-
-        _gameManager.PlayerAction(PlayerAction.PlacedPlatform, PlayerID);
-
+        DropPlatform(platform);
     }
 
-    [Server]
+    [ServerAccess]
     public void DropPlatform(GameObject platform)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         platform.transform.position = new Vector3(transform.position.x, -0.6f, transform.position.z);
         platform.transform.SetParent(null, true);
         HoldingPlatform = false;
         platform.GetComponent<FloatingPlatform>().CanPickUp = !HoldingPlatform;
+
+        if (!SP_Manager.Instance.IsSinglePlayer())
+        {
+            _gameManager.PlayerAction(PlayerAction.PlacedPlatform, PlayerID);
+        }
     }
 
     [Command]
     private void CmdPlacePlatformInWater(GameObject platform, GameObject go)
     {
+        PlacePlatformInWater(platform, go);
+    }
+
+    [ServerAccess]
+    private void PlacePlatformInWater(GameObject platform, GameObject go)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         var player = go.GetComponent<Player>();
         player.OnPlatform = true;
-        
+
         if (player.PlayerRole != Role.Floater)
         {
             // only the server knows each player role, so do this check here
@@ -823,12 +1050,38 @@ public class Player : MovingObject
     [Command]
     private void CmdChangeState(int newState)
     {
+        ChangeState(newState);
+    }
+
+    [ServerAccess]
+    private void ChangeState(int newState)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         _animState = newState;
     }
 
     [Command]
     private void CmdUsePaddle(string playerId)
     {
+        UsePaddle(playerId);
+    }
+
+    [ServerAccess]
+    private void UsePaddle(string playerId)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         // Check here if the right player as only the server knows the current roles
         if (PlayerRole == Role.Paddler)
         {
@@ -843,6 +1096,19 @@ public class Player : MovingObject
     [Command]
     private void CmdTiltRaft(float direction)
     {
+        TiltRaft(direction);
+    }
+
+    [ServerAccess]
+    private void TiltRaft(float direction)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         GameObject.Find("Water").GetComponent<WaterBehaviour>().RaftTilt(this, direction);
     }
 
@@ -853,6 +1119,19 @@ public class Player : MovingObject
         Debug.Log("Player set model to: " + model);
         IsReady = true;
         
+        _playerModel = model;
+    }
+
+
+    /// <summary>
+    /// Set single player model
+    /// </summary>
+    /// <param name="model"></param>
+    public void SetSPModel(int model)
+    {
+        Debug.Log("Player set model to: " + model);
+        IsReady = true;
+
         _playerModel = model;
     }
 
@@ -932,7 +1211,21 @@ public class Player : MovingObject
     [ClientRpc]
     public void RpcGoalReached(string player)
     {
+        ClientGoalReached(player);
+    }
+
+    [ClientAccess]
+    public void ClientGoalReached(string player)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ClientAccess)method.GetCustomAttributes(typeof(ClientAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         StartCoroutine(FocusOnChest(player));
+
     }
 
     private IEnumerator FocusOnChest(string player)
@@ -953,7 +1246,21 @@ public class Player : MovingObject
     [ClientRpc]
     public void RpcShowSwitchingRoles()
     {
+        ClientShowSwitchingRoles();
+    }
+
+    [ClientAccess]
+    public void ClientShowSwitchingRoles()
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ClientAccess)method.GetCustomAttributes(typeof(ClientAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         StartCoroutine(ShowSwitchingRoles());
+
     }
     private IEnumerator ShowSwitchingRoles()
     {
@@ -968,16 +1275,35 @@ public class Player : MovingObject
 
     public void RestartGame()
     {
-
-        if (isLocalPlayer)
+        if (SP_Manager.Instance.IsSinglePlayer())
         {
-            CmdRestartGame();
+            ServerRestartGame();
+        }
+        else
+        {
+            if (isLocalPlayer)
+            {
+                CmdRestartGame();
+            }
         }
     }
 
     [Command]
     public void CmdRestartGame()
     {
+        ServerRestartGame();
+    }
+
+    [ServerAccess]
+    public void ServerRestartGame()
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         if (_gameManager == null)
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -988,34 +1314,90 @@ public class Player : MovingObject
 
     public void NextRound()
     {
-        if (isLocalPlayer)
+        if (SP_Manager.Instance.IsSinglePlayer())
         {
-            CmdNextRound();
+            ServerNextRound();
+        }
+        else
+        {
+            if (isLocalPlayer)
+            {
+                CmdNextRound();
+
+            }
         }
     }
 
     [Command]
     public void CmdNextRound()
     {
+        ServerNextRound();
+    }
+
+    [ServerAccess]
+    public void ServerNextRound()
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         if (_gameManager == null)
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
         _gameManager.NextRound();
-        RpcResetCamera();
-        RpcRemoveRewards();
+        if (SP_Manager.Instance.IsSinglePlayer())
+        {
+            ClientResetCamera();
+            ClientRemoveRewards();
+        }
+        else
+        {
+            RpcResetCamera();
+            RpcRemoveRewards();
+        }
+        
         _gameManager.DistributingRewards = false;
     }
 
     [ClientRpc]
     private void RpcResetCamera()
     {
+        ClientResetCamera();
+    }
+
+    [ClientAccess]
+    private void ClientResetCamera()
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ClientAccess)method.GetCustomAttributes(typeof(ClientAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         StartCoroutine(GameObject.Find("CameraManager").GetComponent<CameraManager>().TransitionToStart());
     }
 
     [ClientRpc]
     private void RpcRemoveRewards()
     {
+        ClientRemoveRewards();        
+    }
+
+    [ClientAccess]
+    private void ClientRemoveRewards()
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ClientAccess)method.GetCustomAttributes(typeof(ClientAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         // make sure rewards are removed
         var rewards = GameObject.FindGameObjectsWithTag("Reward");
         foreach (var reward in rewards)
@@ -1027,34 +1409,74 @@ public class Player : MovingObject
 
     public void StartTimer()
     {
-        if (isLocalPlayer)
+        if (SP_Manager.Instance.IsSinglePlayer())
         {
-            CmdStartRoundTimer();
+            ServerStartRoundTimer();
+        }
+        else
+        {
+            if (isLocalPlayer)
+            {
+                CmdStartRoundTimer();
+            }
         }
     }
 
     [Command]
     public void CmdStartRoundTimer()
     {
+        ServerStartRoundTimer();
+    }
+
+    [ServerAccess]
+    public void ServerStartRoundTimer()
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         _gameManager.StartTimer();
     }
 
     public void AssignSpeedBoost(string playerID, float speedIncrement)
     {
-        if (isLocalPlayer)
+        if (SP_Manager.Instance.IsSinglePlayer())
         {
-            CmdAssignSpeedBoost(playerID, speedIncrement);
+            ServerAssignSpeedBoost(playerID, speedIncrement);
+        }
+        else
+        {
+            if (isLocalPlayer)
+            {
+                CmdAssignSpeedBoost(playerID, speedIncrement);
+            }
         }
     }
 
     [Command]
     public void CmdAssignSpeedBoost(string playerID, float increment)
     {
+        ServerAssignSpeedBoost(playerID, increment);
+    }
+
+    [ServerAccess]
+    public void ServerAssignSpeedBoost(string playerId, float increment)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         if (_gameManager == null)
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
-        var player = _gameManager.GetPlayer(playerID);
+        var player = _gameManager.GetPlayer(playerId);
 
         // Assign the reward
         player.SpeedModifier += increment;
@@ -1062,20 +1484,40 @@ public class Player : MovingObject
 
     public void AssignReverseControls(string playerIndex, float modifier)
     {
-        if (isLocalPlayer)
+        if (SP_Manager.Instance.IsSinglePlayer())
         {
-            CmdAssignReverseControls(playerIndex, modifier);
+            ServerAssignReverseControls(playerIndex, modifier);
+        }
+        else
+        {
+            if (isLocalPlayer)
+            {
+                CmdAssignReverseControls(playerIndex, modifier);
+            }
         }
     }
 
     [Command]
     public void CmdAssignReverseControls(string playerID, float modifier)
     {
+        ServerAssignReverseControls(playerID, modifier);
+    }
+
+    [ServerAccess]
+    public void ServerAssignReverseControls(string playerid, float modifier)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         if (_gameManager == null)
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
-        var player = _gameManager.GetPlayer(playerID);
+        var player = _gameManager.GetPlayer(playerid);
 
         // Assign the reward
         player.DirectionModifier *= modifier;
@@ -1083,20 +1525,40 @@ public class Player : MovingObject
 
     public void AssignMoreControl(string playerIndex, float increment)
     {
-        if (isLocalPlayer)
+        if (SP_Manager.Instance.IsSinglePlayer())
         {
-            CmdAssignMoreControl(playerIndex, increment);
+            ServerAssignMoreControl(playerIndex, increment);
+        }
+        else
+        {
+            if (isLocalPlayer)
+            {
+                CmdAssignMoreControl(playerIndex, increment);
+            }
         }
     }
 
     [Command]
     public void CmdAssignMoreControl(string playerID, float increment)
     {
+        ServerAssignMoreControl(playerID, increment);
+    }
+
+    [ServerAccess]
+    public void ServerAssignMoreControl(string playerId, float increment)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         if (_gameManager == null)
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
-        var player = _gameManager.GetPlayer(playerID);
+        var player = _gameManager.GetPlayer(playerId);
 
         // Assign the reward
         player.RaftControlModifier += increment;
@@ -1104,20 +1566,40 @@ public class Player : MovingObject
 
     public void AssignMoreStrength(string playerIndex, float increment)
     {
-        if (isLocalPlayer)
+        if (SP_Manager.Instance.IsSinglePlayer())
         {
-            CmdAssignMoreStrength(playerIndex, increment);
+            ServerAssignMoreStrength(playerIndex, increment);
+        }
+        else
+        {
+            if (isLocalPlayer)
+            {
+                CmdAssignMoreStrength(playerIndex, increment);
+            }
         }
     }
 
     [Command]
     public void CmdAssignMoreStrength(string playerID, float increment)
     {
+       ServerAssignMoreStrength(playerID, increment);
+    }
+
+    [ServerAccess]
+    public void ServerAssignMoreStrength(string playerId, float increment)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         if (_gameManager == null)
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
-        var player = _gameManager.GetPlayer(playerID);
+        var player = _gameManager.GetPlayer(playerId);
 
         // Assign the reward
         player.StrengthModifier += increment;
@@ -1125,20 +1607,40 @@ public class Player : MovingObject
 
     public void SetLesson(string year, string lesson)
     {
-        if (isLocalPlayer)
+        if (SP_Manager.Instance.IsSinglePlayer())
         {
-            CmdSetLesson("year " + year, lesson);
+            ServerSetLesson("year " + year, lesson);
+        }
+        else
+        {
+            if (isLocalPlayer)
+            {
+                CmdSetLesson("year " + year, lesson);
+            }
         }
     }
 
     [Command]
     public void CmdSetLesson(string year, string lesson)
     {
+        ServerSetLesson(year, lesson);
+    }
+
+    [ServerAccess]
+    public void ServerSetLesson(string year, string lesson)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         if (_gameManager == null)
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
-            
+
         PSL_GameConfig.SetGameConfig(year, lesson, "Maths", "Any");
         _gameManager.SetLesson(year, lesson);
     }

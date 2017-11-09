@@ -98,11 +98,19 @@ public class CurriculumLevelList : MonoBehaviour
 
     public void LessonSelected(string lesson)
     {
-        if (!ClientScene.ready)
+        if (SP_Manager.Instance.IsSinglePlayer())
         {
-            ClientScene.Ready(NetworkManager.singleton.client.connection);
+            SP_Manager.Instance.Get<SP_GameManager>().SetLesson(_year, lesson);
+            SP_Manager.Instance.Get<SP_Menus>().HideLessonSelect();
         }
-        GameObject.Find("GameManager").GetComponent<GameManager>().GetLocalPlayer().SetLesson(_year, lesson);
-        GameObject.Find("MenuManager").GetComponent<MenuManager>().HideLessonSelect();
+        else
+        {
+            if (!ClientScene.ready)
+            {
+                ClientScene.Ready(NetworkManager.singleton.client.connection);
+            }
+            GameObject.Find("GameManager").GetComponent<GameManager>().GetLocalPlayer().SetLesson(_year, lesson);
+            GameObject.Find("MenuManager").GetComponent<MenuManager>().HideLessonSelect();
+        }
     }
 }

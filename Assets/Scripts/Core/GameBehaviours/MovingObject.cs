@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -40,9 +41,15 @@ public class MovingObject : NetworkBehaviour
         SetPosition(newPosition);
     }
 
-    [Server]
+    [ServerAccess]
     private void SetPosition(Vector3 position)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
         transform.position = position;
     }
 
@@ -57,10 +64,15 @@ public class MovingObject : NetworkBehaviour
 
     public virtual void FellInWater()
     {
+        if (SP_Manager.Instance.IsSinglePlayer())
+        {
+            GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Splash");
+        }
         if (!isServer)
         {
             CmdFellInWater();
         }
+        
     }
 
     [Command]
@@ -69,6 +81,8 @@ public class MovingObject : NetworkBehaviour
         GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Splash");
     }
 
+
+
     private IEnumerator WaitToRespawn()
     {
         Respawning = true;
@@ -76,7 +90,11 @@ public class MovingObject : NetworkBehaviour
         GetComponent<BoxCollider>().enabled = true;
 
         var randomRespawn = Random.Range(0, RespawnLocation.Count);
-        if (!isServer)
+        if (SP_Manager.Instance.IsSinglePlayer())
+        {
+            gameObject.transform.position = RespawnLocation[randomRespawn];
+        }
+        else if (!isServer)
         {
             CmdRespawn(gameObject, RespawnLocation[randomRespawn]);
         }

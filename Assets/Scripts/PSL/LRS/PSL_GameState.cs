@@ -1,4 +1,5 @@
-﻿using PlayGen.Orchestrator.Common;
+﻿using System.Reflection;
+using PlayGen.Orchestrator.Common;
 using UnityEngine.Networking;
 
 public class PSL_GameState : NetworkBehaviour {
@@ -21,9 +22,16 @@ public class PSL_GameState : NetworkBehaviour {
         PlatformSelection.ServerStateChanged -= StateChange;
     }
 
-    [Server]
+    [ServerAccess]
     private void StateChange(GameState state)
     {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         if (state == GameState.Started)
         {
             GameManager.StartGameTimer();
