@@ -530,6 +530,11 @@ public class Player : MovingObject
 
     private void UpdatePlayerPosition()
     {
+        if (SP_Manager.Instance.IsSinglePlayer())
+        {
+            // no need to synchronise movements
+            return;
+        }
         if (_rigidbody.useGravity)
         {
             // Don't override actual location using gravity, causes player jumping
@@ -584,11 +589,7 @@ public class Player : MovingObject
         RealPosition = position;
         RealRotation = rotation;
 
-        if (SP_Manager.Instance.IsSinglePlayer())
-        {
-            ClientUpdatePosition(position, rotation);
-        }
-        else
+        if (!SP_Manager.Instance.IsSinglePlayer())
         {
             RpcUpdatePosition(position, rotation);
         }
@@ -668,7 +669,7 @@ public class Player : MovingObject
 
         if (SP_Manager.Instance.IsSinglePlayer())
         {
-            ClientRespawn(_gameManager.GetPlayerRespawn(1), rotation);
+            ClientRespawn(RespawnLocation[0], rotation);
         }
         else
         {
@@ -855,6 +856,15 @@ public class Player : MovingObject
             SetModel();
             _currentModel = _playerModel;
         }
+        if (SP_Manager.Instance.IsSinglePlayer())
+        {
+            if (SP_Manager.Instance.Get<SP_GameManager>().GetModelNumber() != _playerModel)
+            {
+                _playerModel = SP_Manager.Instance.Get<SP_GameManager>().GetModelNumber();
+                _currentModel = _playerModel;
+                SetModel();
+            }
+        }
 
         /////////////////////////
         // Local Player Controls
@@ -864,6 +874,21 @@ public class Player : MovingObject
         if ((isLocalPlayer || SP_Manager.Instance.IsSinglePlayer()) && !Respawning && Input.GetKeyDown(KeyCode.Space))
         {
             InteractPressed();
+        }
+
+        if (Input.GetMouseButtonDown(0) && !Respawning)
+        {
+            if (PlayerRole == Role.Paddler && transform.position.x < 0)
+            {
+                InteractPressed();
+            }
+        }
+        if (Input.GetMouseButtonDown(1) && !Respawning)
+        {
+            if (PlayerRole == Role.Paddler && transform.position.x > 0)
+            {
+                InteractPressed();
+            }
         }
 
         /////////////////////////////
@@ -1232,14 +1257,21 @@ public class Player : MovingObject
     {
         yield return GameObject.Find("CameraManager").GetComponent<CameraManager>().TransitionToEnd();
 
-        if (isLocalPlayer)
+        if (SP_Manager.Instance.IsSinglePlayer())
         {
-            GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowRewards();
+            SP_Manager.Instance.Get<SP_Menus>().ShowRewards();
         }
         else
         {
-            // Show player selecting reward UI
-            GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowPlayerChoosingRewards(player);
+            if (isLocalPlayer)
+            {
+                GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowRewards();
+            }
+            else
+            {
+                // Show player selecting reward UI
+                GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowPlayerChoosingRewards(player);
+            }
         }
     }
 
@@ -1441,17 +1473,17 @@ public class Player : MovingObject
         _gameManager.StartTimer();
     }
 
-    public void AssignSpeedBoost(string playerID, float speedIncrement)
+    public void AssignSpeedBoost(Player player, float speedIncrement)
     {
         if (SP_Manager.Instance.IsSinglePlayer())
         {
-            ServerAssignSpeedBoost(playerID, speedIncrement);
+            ServerAssignSpeedBoost(player, speedIncrement);
         }
         else
         {
             if (isLocalPlayer)
             {
-                CmdAssignSpeedBoost(playerID, speedIncrement);
+                CmdAssignSpeedBoost(player.PlayerID, speedIncrement);
             }
         }
     }
@@ -1459,11 +1491,12 @@ public class Player : MovingObject
     [Command]
     public void CmdAssignSpeedBoost(string playerID, float increment)
     {
-        ServerAssignSpeedBoost(playerID, increment);
+        var player = _gameManager.GetPlayer(playerID);
+        ServerAssignSpeedBoost(player, increment);
     }
 
     [ServerAccess]
-    public void ServerAssignSpeedBoost(string playerId, float increment)
+    public void ServerAssignSpeedBoost(Player player, float increment)
     {
         var method = MethodBase.GetCurrentMethod();
         var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
@@ -1476,23 +1509,22 @@ public class Player : MovingObject
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
-        var player = _gameManager.GetPlayer(playerId);
 
         // Assign the reward
         player.SpeedModifier += increment;
     }
 
-    public void AssignReverseControls(string playerIndex, float modifier)
+    public void AssignReverseControls(Player player, float modifier)
     {
         if (SP_Manager.Instance.IsSinglePlayer())
         {
-            ServerAssignReverseControls(playerIndex, modifier);
+            ServerAssignReverseControls(player, modifier);
         }
         else
         {
             if (isLocalPlayer)
             {
-                CmdAssignReverseControls(playerIndex, modifier);
+                CmdAssignReverseControls(player.PlayerID, modifier);
             }
         }
     }
@@ -1500,11 +1532,12 @@ public class Player : MovingObject
     [Command]
     public void CmdAssignReverseControls(string playerID, float modifier)
     {
-        ServerAssignReverseControls(playerID, modifier);
+        var player = _gameManager.GetPlayer(playerID);
+        ServerAssignReverseControls(player, modifier);
     }
 
     [ServerAccess]
-    public void ServerAssignReverseControls(string playerid, float modifier)
+    public void ServerAssignReverseControls(Player player, float modifier)
     {
         var method = MethodBase.GetCurrentMethod();
         var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
@@ -1517,23 +1550,22 @@ public class Player : MovingObject
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
-        var player = _gameManager.GetPlayer(playerid);
 
         // Assign the reward
         player.DirectionModifier *= modifier;
     }
 
-    public void AssignMoreControl(string playerIndex, float increment)
+    public void AssignMoreControl(Player player, float increment)
     {
         if (SP_Manager.Instance.IsSinglePlayer())
         {
-            ServerAssignMoreControl(playerIndex, increment);
+            ServerAssignMoreControl(player, increment);
         }
         else
         {
             if (isLocalPlayer)
             {
-                CmdAssignMoreControl(playerIndex, increment);
+                CmdAssignMoreControl(player.PlayerID, increment);
             }
         }
     }
@@ -1541,11 +1573,12 @@ public class Player : MovingObject
     [Command]
     public void CmdAssignMoreControl(string playerID, float increment)
     {
-        ServerAssignMoreControl(playerID, increment);
+        var player = _gameManager.GetPlayer(playerID);
+        ServerAssignMoreControl(player, increment);
     }
 
     [ServerAccess]
-    public void ServerAssignMoreControl(string playerId, float increment)
+    public void ServerAssignMoreControl(Player player, float increment)
     {
         var method = MethodBase.GetCurrentMethod();
         var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
@@ -1558,23 +1591,22 @@ public class Player : MovingObject
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
-        var player = _gameManager.GetPlayer(playerId);
 
         // Assign the reward
         player.RaftControlModifier += increment;
     }
 
-    public void AssignMoreStrength(string playerIndex, float increment)
+    public void AssignMoreStrength(Player player, float increment)
     {
         if (SP_Manager.Instance.IsSinglePlayer())
         {
-            ServerAssignMoreStrength(playerIndex, increment);
+            ServerAssignMoreStrength(player, increment);
         }
         else
         {
             if (isLocalPlayer)
             {
-                CmdAssignMoreStrength(playerIndex, increment);
+                CmdAssignMoreStrength(player.PlayerID, increment);
             }
         }
     }
@@ -1582,11 +1614,12 @@ public class Player : MovingObject
     [Command]
     public void CmdAssignMoreStrength(string playerID, float increment)
     {
-       ServerAssignMoreStrength(playerID, increment);
+        var player = _gameManager.GetPlayer(playerID);
+        ServerAssignMoreStrength(player, increment);
     }
 
     [ServerAccess]
-    public void ServerAssignMoreStrength(string playerId, float increment)
+    public void ServerAssignMoreStrength(Player player, float increment)
     {
         var method = MethodBase.GetCurrentMethod();
         var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
@@ -1599,7 +1632,6 @@ public class Player : MovingObject
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
-        var player = _gameManager.GetPlayer(playerId);
 
         // Assign the reward
         player.StrengthModifier += increment;

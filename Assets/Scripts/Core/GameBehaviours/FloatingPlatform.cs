@@ -82,7 +82,7 @@ public class FloatingPlatform : MovingObject
         {
             _levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
         }
-        if (_playerOnPlatform != null && isServer && CanMove)
+        if (_playerOnPlatform != null && (isServer || SP_Manager.Instance.IsSinglePlayer()) && CanMove)
         {
             // On Water
             _playerOnPlatform.GetComponent<Rigidbody>().useGravity = false;

@@ -16,6 +16,8 @@ public class RewardScreenManager : UIScreen
     private GameManager _gameManager;
     private Player _player;
 
+    private bool _spWaiting;
+
     public enum RewardType
     {
         None = 0,
@@ -69,54 +71,86 @@ public class RewardScreenManager : UIScreen
             {
                 _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
             }
-            _player = _gameManager.GetLocalPlayer();
-            if (_player == null)
+            if (SP_Manager.Instance.IsSinglePlayer() && !_spWaiting)
             {
-                // Should not be able to control
-                return;
+                StartCoroutine(WaitToSelect());
             }
-            // Determine if the local player has control
-            if (_player.PlayerRole == Player.Role.Floater)
+            else
             {
-                if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+                _player = _gameManager.GetLocalPlayer();
+                if (_player == null)
                 {
-                    RewardsManager.Left();
+                    // Should not be able to control
+                    return;
                 }
-                if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+                // Determine if the local player has control
+                if (_player.PlayerRole == Player.Role.Floater)
                 {
-                    RewardsManager.Right();
-                }
-                if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter))
-                {
-                    RewardsManager.Select();
+                    if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+                    {
+                        RewardsManager.Left();
+                    }
+                    if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+                    {
+                        RewardsManager.Right();
+                    }
+                    if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter))
+                    {
+                        RewardsManager.Select();
+                    }
                 }
             }
         }
     }
 
+    private IEnumerator WaitToSelect()
+    {
+        _spWaiting = true;
+        yield return new WaitForSeconds(3.0f);
+        _spWaiting = false;
+        RewardsManager.Select();
+    }
+
     public void SetReward(RewardType type, string playerId)
     {
-        var manager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
-        var player = manager.GetLocalPlayer();
+        if (SP_Manager.Instance.IsSinglePlayer())
+        {
+            // all players receive reward
+            var players = SP_Manager.Instance.Get<SP_GameManager>().GetPlayers();
+            foreach (var p in players)
+            {
+                AssignReward(type, p);
+            }
+        }
+        else
+        {
+            var manager = GameObject.Find("GameManager").GetComponent<GameManager>();
+            var player = manager.GetLocalPlayer();
 
-        player.GaveReward(playerId);
+            player.GaveReward(playerId);
 
+            AssignReward(type, player);
+        }
+    }
+
+    private void AssignReward(RewardType type, Player player)
+    {
         switch (type)
         {
             case RewardType.None:
                 break;
-            case RewardType.SpeedBoost:  
-                player.AssignSpeedBoost(playerId, _speedBoost);
+            case RewardType.SpeedBoost:
+                player.AssignSpeedBoost(player, _speedBoost);
                 break;
             case RewardType.ReverseControls:
-                player.AssignReverseControls(playerId, _controlsModifier);
+                player.AssignReverseControls(player, _controlsModifier);
                 break;
             case RewardType.MoreBoatControl:
-                player.AssignMoreControl(playerId, _boatControlBoost);
+                player.AssignMoreControl(player, _boatControlBoost);
                 break;
             case RewardType.MorePaddleStrength:
-                player.AssignMoreStrength(playerId, _strengthBoost);
+                player.AssignMoreStrength(player, _strengthBoost);
                 break;
             default:
                 throw new ArgumentOutOfRangeException("type", type, null);

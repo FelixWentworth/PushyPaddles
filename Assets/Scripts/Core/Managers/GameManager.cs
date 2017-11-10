@@ -793,7 +793,14 @@ public class GameManager : NetworkBehaviour
                 CurriculumChallenge challenge = null;
                 if (newRound)
                 {
-                    challenge = _curriculum.GetNextChallenge(PSL_GameConfig.Level, PSL_GameConfig.LessonNumber);
+                    if (SP_Manager.Instance.IsSinglePlayer())
+                    {
+                        challenge = _curriculum.GetNextChallenge(SP_Manager.Instance.Get<SP_GameManager>().GetYear(), SP_Manager.Instance.Get<SP_GameManager>().GetLesson());
+                    }
+                    else
+                    {
+                        challenge = _curriculum.GetNextChallenge(PSL_GameConfig.Level, PSL_GameConfig.LessonNumber);
+                    }
                 }
                 if (challenge == null)
                 {
@@ -812,8 +819,11 @@ public class GameManager : NetworkBehaviour
                 }
             }
 
-            ChangeRoles();
-
+            if (!SP_Manager.Instance.IsSinglePlayer())
+            {
+                // No need to switch roles here, makes no difference to the player
+                ChangeRoles();
+            }
             // Reset Player Posititions
             var players = GameObject.FindGameObjectsWithTag("Player");
 
@@ -823,6 +833,7 @@ public class GameManager : NetworkBehaviour
             foreach (var player in players)
             {
                 player.GetComponent<Player>().Respawn();
+                player.GetComponent<Player>().OnPlatform = false;
             }
             foreach (var platform in platforms)
             {

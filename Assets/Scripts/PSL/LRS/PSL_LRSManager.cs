@@ -153,7 +153,11 @@ public class PSL_LRSManager : NetworkBehaviour
         _timeTakenPerRound.Add(timeTaken);
         _totalRoundComplete += 1;
 
-        SendSkillData(false, timeTaken);
+        // Not interested in skill data for standalone
+        if (!SP_Manager.Instance.IsSinglePlayer())
+        {
+            SendSkillData(false, timeTaken);
+        }
     }
 
     /// <summary>
@@ -170,7 +174,11 @@ public class PSL_LRSManager : NetworkBehaviour
             return;
         }
 
-        SendSkillData(true, timeTaken);
+        // Not interested in skill data for standalone
+        if (!SP_Manager.Instance.IsSinglePlayer())
+        {
+            SendSkillData(false, timeTaken);
+        }
     }
 
     [ServerAccess]
@@ -310,9 +318,6 @@ public class PSL_LRSManager : NetworkBehaviour
         var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
         if (attr.HasAccess)
         {
-
-
-
             var path = Application.streamingAssetsPath + "/" + _logFileName;
 
             if (Application.platform == RuntimePlatform.WindowsEditor ||

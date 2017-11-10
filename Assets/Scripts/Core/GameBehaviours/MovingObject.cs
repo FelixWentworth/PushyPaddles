@@ -12,11 +12,15 @@ public class MovingObject : NetworkBehaviour
 
     public bool CanFloat;
     public bool CanMove;
+
     public bool CanRespawn;
+
     // If the player can use the action button on this object
     public bool PlayerCanInteract;
+
     // If the player collides with this object
     public bool PlayerCanHit;
+
     // If the object falls
     public bool CanFall;
 
@@ -45,7 +49,7 @@ public class MovingObject : NetworkBehaviour
     private void SetPosition(Vector3 position)
     {
         var method = MethodBase.GetCurrentMethod();
-        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        var attr = (ServerAccess) method.GetCustomAttributes(typeof(ServerAccess), true)[0];
         if (!attr.HasAccess)
         {
             return;
@@ -66,22 +70,32 @@ public class MovingObject : NetworkBehaviour
     {
         if (SP_Manager.Instance.IsSinglePlayer())
         {
-            GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Splash");
+            ServerFellInWater();
         }
-        if (!isServer)
+        else if (!isServer)
         {
             CmdFellInWater();
         }
-        
+
     }
 
     [Command]
     private void CmdFellInWater()
     {
-        GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Splash");
+        ServerFellInWater();
     }
 
-
+    [ServerAccess]
+    private void ServerFellInWater()
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess) method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+        GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Splash");
+    }
 
     private IEnumerator WaitToRespawn()
     {
@@ -92,7 +106,7 @@ public class MovingObject : NetworkBehaviour
         var randomRespawn = Random.Range(0, RespawnLocation.Count);
         if (SP_Manager.Instance.IsSinglePlayer())
         {
-            gameObject.transform.position = RespawnLocation[randomRespawn];
+            ServerRespawn(gameObject, RespawnLocation[randomRespawn]);
         }
         else if (!isServer)
         {
@@ -107,6 +121,20 @@ public class MovingObject : NetworkBehaviour
     [Command]
     private void CmdRespawn(GameObject go, Vector3 pos)
     {
+        ServerRespawn(go, pos);
+    }
+
+    [ServerAccess]
+    private void ServerRespawn(GameObject go, Vector3 pos)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         go.transform.position = pos;
     }
+
 }

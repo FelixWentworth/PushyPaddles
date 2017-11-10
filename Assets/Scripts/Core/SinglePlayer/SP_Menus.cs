@@ -23,5 +23,10 @@ public class SP_Menus : MonoBehaviour
         _menuManager.ShowGameOver(victory, time, false);
     }
 
+    public void ShowRewards()
+    {
+        _menuManager.ShowRewards();
+    }
+
     // navigate menus
 }

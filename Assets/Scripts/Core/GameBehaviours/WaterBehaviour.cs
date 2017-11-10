@@ -133,12 +133,12 @@ public class WaterBehaviour : NetworkBehaviour
         {
             return;
         }
-
+        var strength = 0f;
         switch (player.PlayerRole)
         {
             case Player.Role.Paddler:
-                _paddleStrength = player.transform.position.x > 0f ? -1f : 1f;
-                _paddleStrength *= playerModifier;
+                strength = player.transform.position.x > 0f ? -1f : 1f;
+                strength*= playerModifier;
                 break;
             case Player.Role.Unassigned:
             case Player.Role.Floater:
@@ -172,16 +172,17 @@ public class WaterBehaviour : NetworkBehaviour
             }
 
         }
-
-        StartCoroutine(PaddleUsed(modifier));
+        _paddleStrength = strength * modifier;
+        //StartCoroutine(PaddleUsed(strength, modifier));
 
     }
 
-    private IEnumerator PaddleUsed(float modifier)
+    private IEnumerator PaddleUsed(float strength, float modifier)
     {
+        Debug.Log(_paddleStrength + ", " + modifier);
         var t = 0f;
 
-        var startStrength = _paddleStrength * modifier;
+        var startStrength = strength * modifier;
         while (t < _paddleCooldownTime)
         {
             _paddleStrength = Mathf.Lerp(startStrength, 0f, t/ _paddleCooldownTime);
@@ -189,6 +190,18 @@ public class WaterBehaviour : NetworkBehaviour
             yield return null;
         }
         _paddleStrength = 0f;
+    }
+
+    void Update()
+    {
+        if (_paddleStrength <= 0f)
+        {
+            _paddleStrength += Time.deltaTime;
+        }
+        else if (_paddleStrength >= 0)
+        {
+            _paddleStrength -= Time.deltaTime;
+        }
     }
 
     [ServerAccess]

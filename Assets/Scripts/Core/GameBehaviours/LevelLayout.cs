@@ -287,7 +287,10 @@ public class LevelLayout : NetworkBehaviour {
         go.transform.eulerAngles = new Vector3(0f, yRotation, 0f);
 
 
-        NetworkServer.Spawn(go);
+        if (!SP_Manager.Instance.IsSinglePlayer())
+        {
+            NetworkServer.Spawn(go);
+        }
     }
 
     [ServerAccess]
@@ -329,8 +332,10 @@ public class LevelLayout : NetworkBehaviour {
         go.transform.SetParent(parent, false);
         go.transform.eulerAngles = new Vector3(0f, 0f, 0f);
         go.GetComponent<MathsCollectible>().Set(info);
-
-        NetworkServer.Spawn(go);
+        if (!SP_Manager.Instance.IsSinglePlayer())
+        {
+            NetworkServer.Spawn(go);
+        }
     }
 
 

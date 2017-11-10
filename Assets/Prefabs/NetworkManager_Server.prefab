@@ -142,5 +142,5 @@ MonoBehaviour:
   m_MatchPort: 443
   matchName: default
   matchSize: 8
-  isNetworkActive: 1
+  isNetworkActive: 0
   matchMaker: {fileID: 0}

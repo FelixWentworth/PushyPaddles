@@ -14,10 +14,18 @@ public class SP_GameManager : MonoBehaviour {
     private bool _lessonSet;
     private bool _gamePaused;
 
+    private string _year;
+    private string _lesson;
+
     public void SetModel(int model)
     {
         _playerModel = model;
         _modelSet = true;
+    }
+
+    public int GetModelNumber()
+    {
+        return _playerModel;
     }
 
     public void ForceActive()
@@ -40,8 +48,20 @@ public class SP_GameManager : MonoBehaviour {
 
     public void SetLesson(string year, string lesson)
     {
+        _year = "Year " + year;
+        _lesson = lesson;
         _gameManager.SetSpLesson("Year " + year, lesson);
         _lessonSet = true;
+    }
+
+    public string GetYear()
+    {
+        return _year;
+    }
+
+    public string GetLesson()
+    {
+        return _lesson;
     }
 
     public void TogglePause()
@@ -54,6 +74,18 @@ public class SP_GameManager : MonoBehaviour {
         return _modelSet && _lessonSet && !_gamePaused;
     }
 
+    public List<Player> GetPlayers()
+    {
+        return _gameManager.GetAllPlayers();
+    }
+
+    public void NextRound()
+    {
+        // Get a player
+        var player = _gameManager.GetAllPlayers()[0];
+        // Call next round
+        player.NextRound();
+    }
     // Spawn players
     // Track time elapsed
     // Track goals reached

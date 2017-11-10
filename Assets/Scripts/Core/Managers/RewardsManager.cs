@@ -126,9 +126,16 @@ public class RewardsManager : MonoBehaviour
         if (_rewardsRemaining <= 0)
         {
             // Notify the server that all rewards are given out
-            var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+            if (SP_Manager.Instance.IsSinglePlayer())
+            {
+                SP_Manager.Instance.Get<SP_GameManager>().NextRound();
+            }
+            else
+            {
+                var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
-            gameManager.GetLocalPlayer().NextRound();
+                gameManager.GetLocalPlayer().NextRound();
+            }
         }
         else
         {
