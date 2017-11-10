@@ -159,7 +159,7 @@ public class GameManager : NetworkBehaviour
 
                 }
             }
-            if (ControlledByOrchestrator && (PlatformSelection.GetGameState() == GameState.Started || PlatformSelection.GetGameState() == GameState.WaitingForPlayers))
+            if (ControlledByOrchestrator && (PlatformSelection.GetGameState() == GameState.Started || PlatformSelection.GetGameState() == GameState.WaitingForPlayers) && !SP_Manager.Instance.IsSinglePlayer())
             {
                 if (!AllPlayersReady)
                 {
@@ -528,6 +528,12 @@ public class GameManager : NetworkBehaviour
             var challenge = Curriculum.GetNewChallenge(PSL_GameConfig.Level, PSL_GameConfig.LessonNumber);
             GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
         }
+        else if (SP_Manager.Instance.IsSinglePlayer())
+        {
+            var manager = SP_Manager.Instance.Get<SP_GameManager>();
+            var challenge = Curriculum.GetNewChallenge(manager.GetYear(), manager.GetLesson());
+            GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
+        }
 
         // Start the game timer
         StartTimer();
@@ -577,8 +583,16 @@ public class GameManager : NetworkBehaviour
         {
             return;
         }
+        // Single player does not need nick names
+        if (!SP_Manager.Instance.IsSinglePlayer())
+        {
+            player.SyncNickName = Localization.Get("UI_GAME_PLAYER") + (playerIndex + 1);
+        }
+        else
+        {
+            player.SyncNickName = "";
+        }
         //only the 1st player should be able to ride the platform
-        player.SyncNickName = Localization.Get("UI_GAME_PLAYER") + (playerIndex + 1);
         player.SetRole(playerIndex == 0 ? Player.Role.Floater : Player.Role.Paddler);
     }
     

@@ -122,7 +122,7 @@ public class LevelManager : NetworkBehaviour
 
     void FixedUpdate()
     {
-        if (isServer && !TimerPaused)
+        if ((isServer || SP_Manager.Instance.IsSinglePlayer()) && !TimerPaused)
         {
             if (RoundStarted)
             {
