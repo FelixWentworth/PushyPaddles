@@ -8,7 +8,7 @@ public class SP_Manager : MonoBehaviour
     public static SP_Manager Instance;
     private bool _singlePlayer;
 
-    void Start()
+    void Awake()
     {
         Instance = this;
         _singlePlayer = GameObject.Find("VersionManager").GetComponent<VersionManager>().GetVersion() ==

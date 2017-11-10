@@ -266,7 +266,7 @@ public class MenuManager : NetworkBehaviour
         }
         else
         {
-            SP_Manager.Instance.Get<SP_Menus>().ShowGameOver(victory, timeTaken);
+            ClientShowGameOver(victory, timeTaken, false);
         }
     }
 
@@ -276,6 +276,19 @@ public class MenuManager : NetworkBehaviour
     [ClientRpc]
     private void RpcShowGameOver(bool victory, int timeTaken, bool controlledByOrchestrator)
     {
+        ClientShowGameOver(victory, timeTaken, controlledByOrchestrator);
+    }
+
+    [ClientAccess]
+    private void ClientShowGameOver(bool victory, int timeTaken, bool controlledByOrchestrator)
+    {
+        var method = MethodBase.GetCurrentMethod();
+        var attr = (ClientAccess)method.GetCustomAttributes(typeof(ClientAccess), true)[0];
+        if (!attr.HasAccess)
+        {
+            return;
+        }
+
         GameOverScreen.Show();
         GameOverScreen.GetComponent<GameOverScreen>().SetText(victory, timeTaken);
         GameOverScreen.GetComponent<GameOverScreen>().SetButtonsEnabled(!controlledByOrchestrator);

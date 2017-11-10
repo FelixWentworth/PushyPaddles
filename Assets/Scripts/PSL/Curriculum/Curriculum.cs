@@ -71,6 +71,11 @@ public class Curriculum : MonoBehaviour {
 
     }
 
+    public void ResetLevel()
+    {
+        _levelIndex = "0";
+    }
+
     /// <summary>
     /// Return the currnt challenge for the key stage and lesson
     /// </summary>

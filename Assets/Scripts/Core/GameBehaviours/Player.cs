@@ -1470,7 +1470,7 @@ public class Player : MovingObject
             return;
         }
 
-        _gameManager.StartTimer();
+        _gameManager.StartGameTimer();
     }
 
     public void AssignSpeedBoost(Player player, float speedIncrement)

@@ -33,7 +33,11 @@ public class SP_GameManager : MonoBehaviour {
         // activate objects which normally rely on a network
         foreach (var obj in NetworkObjectsToActivate)
         {
-            obj.SetActive(true);
+            if (obj != null)
+            {
+                // chance for objects that dont destroy on load to be null
+                obj.SetActive(true);
+            }
         }
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }

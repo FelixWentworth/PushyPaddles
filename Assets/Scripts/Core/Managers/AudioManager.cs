@@ -21,7 +21,7 @@ public class AudioManager : MonoBehaviour
 
     public static AudioManager Instance;
 
-    void Awake()
+    void Start()
     {
         if (Instance == null)
         {
@@ -31,12 +31,11 @@ public class AudioManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+        if (!SP_Manager.Instance.IsSinglePlayer())
+        {
+            DontDestroyOnLoad(this.gameObject);
+        }
 
-        DontDestroyOnLoad(this.gameObject);
-    }
-
-    void Start()
-    {
         foreach (var audioClip in _audioClips)
         {
             var source = gameObject.AddComponent<AudioSource>();

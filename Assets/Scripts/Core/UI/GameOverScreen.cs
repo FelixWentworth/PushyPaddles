@@ -38,7 +38,7 @@ public class GameOverScreen : UIScreen
 
     public void SetButtonsEnabled(bool enabled)
     {
-        PlayAgainButton.SetActive(enabled);
+        PlayAgainButton.SetActive(false);
         QuitButton.SetActive(enabled);
     }
 
@@ -79,7 +79,14 @@ public class GameOverScreen : UIScreen
     {
         GameObject.Find("MenuManager").GetComponent<MenuManager>().HideGameOver();
         var manager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        manager.GetLocalPlayer().StartTimer();
+        if (SP_Manager.Instance.IsSinglePlayer())
+        {
+            manager.GetAllPlayers()[0].StartTimer();
+        }
+        else
+        {
+            manager.GetLocalPlayer().StartTimer();
+        }
     }
 
     /// <summary>

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security.Policy;
 using Newtonsoft.Json;
 using PlayGen.Orchestrator.Common;
@@ -106,10 +107,10 @@ public class GameManager : NetworkBehaviour
             {
                 _playerActionManager = GameObject.Find("InteractionManager").GetComponent<PlayerActionManager>();
             }
-            if (_level.IsGameOver)
+            if (_level.RoundStarted && _level.IsGameOver)
             {
-                // TODO uncomment
-                //GameOver(_gameComplete);
+                PauseGame();
+                GameOver(_gameComplete);
             }
 
             //// Check if the game should be started
@@ -971,7 +972,13 @@ public class GameManager : NetworkBehaviour
         }
         //PSL_LRSManager.Instance.GameCompleted(_level.SecondsTaken);
         _gameWon = victory;
-        if (ControlledByOrchestrator)
+        if (SP_Manager.Instance.IsSinglePlayer())
+        {
+            SP_Manager.Instance.Get<SP_Menus>().ShowGameOver(victory, _level.SecondsTaken);
+            _curriculum.ResetLevel();
+            RestartGame();
+        }
+        else if (ControlledByOrchestrator)
         {
             PlatformSelection.UpdateSeverState(GameState.Stopped);
         }
