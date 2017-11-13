@@ -47,6 +47,10 @@ public class MainMenu : MonoBehaviour
             Port.text = NetworkManager.singleton.networkPort.ToString();
         }
 
+        IpAddress.gameObject.SetActive(!SP_Manager.Instance.IsSinglePlayer());
+        Port.gameObject.SetActive(!SP_Manager.Instance.IsSinglePlayer());
+
+
         if (!_showMenu)
         {
             if (PlatformSelection.ConnectionType == ConnectionType.Testing)

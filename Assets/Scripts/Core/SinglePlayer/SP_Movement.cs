@@ -12,40 +12,45 @@ public class SP_Movement : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-	    if (Input.GetMouseButtonDown(0))
+	    if (SP_Manager.Instance.Get<SP_GameManager>().GameSetup())
 	    {
-	        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-	        RaycastHit hit;
-
-	        if (Physics.Raycast(ray, out hit, Mask))
+	        if (Input.GetMouseButtonDown(0))
 	        {
-                Debug.Log(hit.collider.name);
-	            // Check if hit a player track
-	            if (hit.collider.CompareTag("MovementTrack"))
+	            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+	            RaycastHit hit;
+
+	            if (Physics.Raycast(ray, out hit, Mask))
 	            {
-	                var player = hit.collider.GetComponent<SP_MovementTrack>().GetPlayer();
-	                if (player == null || !player.CanMove)
+	                Debug.Log(hit.collider.name);
+	                // Check if hit a player track
+	                if (hit.collider.CompareTag("MovementTrack"))
 	                {
-	                    return;
+	                    var player = hit.collider.GetComponent<SP_MovementTrack>().GetPlayer();
+	                    if (player == null || !player.CanMove)
+	                    {
+	                        return;
+	                    }
+
+	                    var pressPos = hit.point + (Vector3.up * 0.25f);
+	                    pressPos = player.PlayerRole == Player.Role.Floater
+	                        ? new Vector3(pressPos.x, pressPos.y, player.transform.position.z)
+	                        : new
+	                            Vector3(player.transform.position.x, pressPos.y, pressPos.z);
+	                    var press = ShowPress(true, pressPos);
+	                    player.MoveToAndUse(pressPos, press);
+
 	                }
+	                else if (hit.collider.CompareTag("Player"))
+	                {
+	                    var player = hit.collider.gameObject;
+	                    var p = player.GetComponent<Player>();
 
-                    var pressPos = hit.point + (Vector3.up * 0.25f);
-                    pressPos = player.PlayerRole == Player.Role.Floater ? new Vector3(pressPos.x, pressPos.y, player.transform.position.z) : new
-	                    Vector3(player.transform.position.x, pressPos.y, pressPos.z);
-                    var press = ShowPress(true, pressPos);
-	                player.MoveToAndUse(pressPos, press);
-
-                }
-                else if (hit.collider.CompareTag("Player"))
-	            {
-	                var player = hit.collider.gameObject;
-                    var p = player.GetComponent<Player>();
-
-                    p.Interact();
-                }
-                else
-	            {
-	                ShowPress(false, hit.point + (Vector3.up * 0.25f));
+	                    p.Interact();
+	                }
+	                else
+	                {
+	                    ShowPress(false, hit.point + (Vector3.up * 0.25f));
+	                }
 	            }
 	        }
 	    }

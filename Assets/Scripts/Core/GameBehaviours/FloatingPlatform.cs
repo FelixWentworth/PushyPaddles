@@ -33,6 +33,7 @@ public class FloatingPlatform : MovingObject
         PlayerCanHit = true;
         CanRespawn = true;
         CanMove = true;
+        
 
         _mesh = transform.GetChild(0).GetComponent<MeshRenderer>();
 
@@ -85,18 +86,24 @@ public class FloatingPlatform : MovingObject
         if (_playerOnPlatform != null && (isServer || SP_Manager.Instance.IsSinglePlayer()) && CanMove)
         {
             // On Water
+            GetComponent<BoxCollider>().enabled = true;
             _playerOnPlatform.GetComponent<Rigidbody>().useGravity = false;
-            _playerOnPlatform.transform.position = new Vector3(transform.position.x, _playerOnPlatform.transform.position.y, transform.position.z);
+            _playerOnPlatform.transform.position = new Vector3(transform.position.x,
+                _playerOnPlatform.transform.position.y, transform.position.z);
 
             var player = _playerOnPlatform.GetComponent<Player>();
 
             player.SyncForceMove(
                 new Vector3(transform.position.x, _playerOnPlatform.transform.position.y, transform.position.z),
                 _playerOnPlatform.transform.eulerAngles);
-            
+
             Water.TouchedWater(this);
         }
-        // Not on water
+        else
+        {
+            // Not on water
+            GetComponent<BoxCollider>().enabled = false;
+        }
         _mesh.enabled = CanPickUp;
         if (_levelManager != null)
         {
