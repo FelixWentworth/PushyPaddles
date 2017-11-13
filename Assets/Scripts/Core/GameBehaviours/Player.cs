@@ -91,10 +91,13 @@ public class Player : MovingObject
     [SerializeField] private float _idleTime;
     [HideInInspector] public bool IsSinglePlayer;
 
+    private Vector3 _targetPosition;
+    private GameObject _targetGameObject;
 
     public override void Start()
     {
         CanFloat = false;
+        CanMove = true;
         PlayerCanInteract = false;
         PlayerCanHit = false;
         CanRespawn = true;
@@ -141,6 +144,7 @@ public class Player : MovingObject
         }
         if (IsSinglePlayer)
         {
+            _targetPosition = transform.position;
             SP_Manager.Instance.Get<SP_Menus>().ShowCharacterSelect();
         }
     }
@@ -239,9 +243,59 @@ public class Player : MovingObject
             }
         }
     }
-    private void Interact()
+    public void Interact()
     {
         InteractPressed();
+    }
+
+    public void MoveToAndUse(Vector3 position, GameObject moveToObject)
+    {
+        // Clear the previous destination if it was still active
+        if (_targetGameObject != null)
+        {
+            DestroyImmediate(_targetGameObject);
+        }
+        _targetPosition = position;
+        _targetGameObject = moveToObject;
+    }
+
+    private void UpdatePosition()
+    {
+        if (Vector3.Distance(transform.position, _targetPosition) < 0.3f)
+        {
+            if (_targetGameObject != null)
+            {
+                Destroy(_targetGameObject);
+            }
+            _targetPosition = transform.position;
+            InteractPressed();
+            return;
+        }
+
+        if (PlayerRole == Role.Floater)
+        {
+            // left/right
+            if (transform.position.x > _targetPosition.x)
+            {
+                Move(gameObject, -1, 0);
+            }
+            else
+            {
+                Move(gameObject, 1, 0);
+            }
+        }
+        else
+        {
+            // up/down
+            if (transform.position.z > _targetPosition.z)
+            {
+                Move(gameObject, 0, -1);
+            }
+            else
+            {
+                Move(gameObject, 0, 1);
+            }
+        }
     }
 
 //#endif
@@ -308,6 +362,14 @@ public class Player : MovingObject
                     {
                         // when the player has full control, they should be affected by gravity
                         _rigidbody.useGravity = true;
+                    }
+
+                    if (SP_Manager.Instance.IsSinglePlayer())
+                    {
+                        if (_targetPosition != transform.position && _targetGameObject != null)
+                        {
+                            UpdatePosition();
+                        }
                     }
 
                     var x = Input.GetAxis("Horizontal");
@@ -876,21 +938,6 @@ public class Player : MovingObject
             InteractPressed();
         }
 
-        if (Input.GetMouseButtonDown(0) && !Respawning)
-        {
-            if (PlayerRole == Role.Paddler && transform.position.x < 0)
-            {
-                InteractPressed();
-            }
-        }
-        if (Input.GetMouseButtonDown(1) && !Respawning)
-        {
-            if (PlayerRole == Role.Paddler && transform.position.x > 0)
-            {
-                InteractPressed();
-            }
-        }
-
         /////////////////////////////
         // End Local Player Controls
         /////////////////////////////
@@ -901,8 +948,9 @@ public class Player : MovingObject
         if (_floatingPlatform.CanPickUp && !_floatingPlatform.OnWater && _floatingPlatform.InRange(gameObject) && !HoldingPlatform)
         {
             // Pickup Plaftorm
-            if (SP_Manager.Instance.IsSinglePlayer())
+            if (SP_Manager.Instance.IsSinglePlayer() && PlayerRole == Role.Floater)
             {
+                // We do not need to pass platform from paddler to floater in Single player
                 PickupPlatform(_raft);
             }
             else

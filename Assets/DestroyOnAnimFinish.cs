@@ -7,7 +7,7 @@ public class DestroyOnAnimFinish : MonoBehaviour
 
     void Start()
     {
-        _animator = transform.GetChild(0).GetComponent<Animator>();
+        _animator = transform.GetComponentInChildren<Animator>();
     }
 
 	// Update is called once per frame

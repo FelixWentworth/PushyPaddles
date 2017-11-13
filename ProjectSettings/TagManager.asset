@@ -14,6 +14,7 @@ TagManager:
   - PlatformPlaceRight
   - Reward
   - TouchControls
+  - MovementTrack
   layers:
   - Default
   - TransparentFX
@@ -28,7 +29,7 @@ TagManager:
   - Platform
   - Terrain
   - Collectible
-  - 
+  - MovementTrack
   - 
   - 
   - 
