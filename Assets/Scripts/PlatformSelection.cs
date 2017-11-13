@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+#if USE_PROSOCIAL
 using PlayGen.Orchestrator.Common;
 using PlayGen.Orchestrator.Contracts;
 using PlayGen.Orchestrator.PSL.Common.LRS;
@@ -10,11 +11,13 @@ using PlayGen.Orchestrator.PSL.Unity.Server;
 using PlayGen.Orchestrator.Unity.Common.Model;
 using PlayGen.Orchestratror.Unity.Client;
 using PlayGen.Orchestratror.Unity.Server;
+#endif
 using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 
 public class PlatformSelection : MonoBehaviour
 {
+#if USE_PROSOCIAL
     [SerializeField] private ConnectionType _connectionType;
     [SerializeField] private PlatformManager[] _platformManagers;
 
@@ -237,4 +240,5 @@ public class PlatformSelection : MonoBehaviour
         }
         return string.Empty;
     }
+#endif
 }

@@ -38,7 +38,9 @@ public class Curriculum : MonoBehaviour {
 
         var challenges = _challenges.MathsProblems.Where(c => c.Year == year && c.Lesson == lesson).ToList();
         _levelIndex = challenges[0].Level;
+#if USE_PROSOCIAL
         PSL_LRSManager.Instance.SetNumRounds(challenges.Count);
+#endif
         _currentChallenge = challenges[0];
         return challenges[0];
     }

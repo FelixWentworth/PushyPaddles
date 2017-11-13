@@ -1,9 +1,11 @@
 ﻿using System.Reflection;
+#if USE_PROSOCIAL
 using PlayGen.Orchestrator.Common;
+#endif
 using UnityEngine.Networking;
 
 public class PSL_GameState : NetworkBehaviour {
-
+#if USE_PROSOCIAL
     /// <summary>
     /// This class hooks up to the event listener and handle any events that are fired
     /// </summary>
@@ -47,4 +49,5 @@ public class PSL_GameState : NetworkBehaviour {
             GameManager.StopGame();
         }
     }
+#endif
 }

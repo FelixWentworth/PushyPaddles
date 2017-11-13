@@ -4,14 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Configuration;
 using Microsoft.SqlServer.Server;
+#if USE_PROSOCIAL
 using PlayGen.Orchestrator.PSL.Common.LRS;
 using PlayGen.Unity.AsyncUtilities;
+#endif
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class PlayerActionManager : MonoBehaviour
 {
-    
+#if USE_PROSOCIAL
 
     [Serializable]
     private class PlayerActions
@@ -109,4 +111,6 @@ public class PlayerActionManager : MonoBehaviour
     {
         //LogProxy.Info(message);
     }
+
+#endif
 }

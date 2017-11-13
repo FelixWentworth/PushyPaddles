@@ -31,7 +31,7 @@ public class RewardsManager : MonoBehaviour
     {
         _rewardsRemaining = rewardsToGive;//
         // Check if we only care about positive rewards
-        if (PSL_GameConfig.RewardType == "Positive")
+        if (PSL_GameConfig.RewardType == "Positive" || SP_Manager.Instance.IsSinglePlayer())
         {
             rewards = rewards.Where(r => r.Positive).ToList();
         }
@@ -115,7 +115,7 @@ public class RewardsManager : MonoBehaviour
 
     public void RewardSelected(RewardScreenManager.RewardType type, string playerId)
     {
-        transform.parent.GetComponent<RewardScreenManager>().SetReward(type, playerId);
+        transform.GetComponentInParent<RewardScreenManager>().SetReward(type, playerId);
     }
 
     private void Complete()

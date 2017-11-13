@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class RewardScreenManager : UIScreen
 {
+    [SerializeField]private GameObject _selectRecipientGameObject;
     public RewardsManager RewardsManager;
     private float _speedBoost = 0.05f;
     private float _controlsModifier = -1f;
@@ -47,6 +48,8 @@ public class RewardScreenManager : UIScreen
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
+
+        _selectRecipientGameObject.SetActive(!SP_Manager.Instance.IsSinglePlayer());
 
         var players = _gameManager.GetPlayerIds();
         

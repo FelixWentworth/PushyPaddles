@@ -6,7 +6,9 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Policy;
 using Newtonsoft.Json;
+#if USE_PROSOCIAL
 using PlayGen.Orchestrator.Common;
+#endif
 using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -131,12 +133,14 @@ public class GameManager : NetworkBehaviour
                     PauseGame();
                 }
             }
+#if USE_PROSOCIAL
             if (!ControlledByOrchestrator || PlatformSelection.ConnectionType == ConnectionType.Testing)
             {
                 if (AllPlayersReady)
                 {
                     PlatformSelection.UpdateSeverState(GameState.Started);
-                    StartGameTimer();
+
+            StartGameTimer();
                     ResumeGame();
                 }
                 else
@@ -156,7 +160,7 @@ public class GameManager : NetworkBehaviour
                 else
                 {
                     ResumeGame();
-                    PlatformSelection.UpdateSeverState(GameState.Started);
+                    PlatformSelectin.UpdateSeverState(GameState.Started);
 
                 }
             }
@@ -172,7 +176,7 @@ public class GameManager : NetworkBehaviour
                     ResumeGame();
                 }
             }
-            
+#endif
 
             // end game when no players after a certain time
             if (_players.Count == 0)
@@ -320,7 +324,9 @@ public class GameManager : NetworkBehaviour
         ChangeRoles();
 
         // TODO check if needs a delay for player disconnection, may break otherwise
+#if USE_PROSOCIAL
         PlatformSelection.UpdatePlayers(_players.Select(p => p.PlayerID).ToList());
+#endif
     }
 
     [ClientRpc]
@@ -667,8 +673,9 @@ public class GameManager : NetworkBehaviour
         // End the game
         _gamePlaying = false;
         _menu.ShowGameOver(_gameWon, _level.SecondsTaken, ControlledByOrchestrator);
+#if USE_PROSOCIAL
         PSL_LRSManager.Instance.GameCompleted(_level.SecondsTaken);
-
+#endif
         if (!ControlledByOrchestrator)
         {
             if (SP_Manager.Instance.IsSinglePlayer())
@@ -742,7 +749,9 @@ public class GameManager : NetworkBehaviour
         {
             return;
         }
+#if USE_PROSOCIAL
         _playerActionManager.PerformedAction(action, playerId, action.GetAlwaysTracked(), action.GetCancelAction());
+#endif
     }
 
     [ServerAccess]
@@ -772,7 +781,9 @@ public class GameManager : NetworkBehaviour
         }
         _level.NextRound();
         // output the values from this round
+#if USE_PROSOCIAL
         PSL_LRSManager.Instance.NewRound((DateTime.Now - _startTime).Seconds);
+#endif
         Restart(newRound: true);
         _startTime = DateTime.Now;
 
@@ -980,7 +991,9 @@ public class GameManager : NetworkBehaviour
         }
         else if (ControlledByOrchestrator)
         {
+#if USE_PROSOCIAL
             PlatformSelection.UpdateSeverState(GameState.Stopped);
+#endif
         }
         else
         {

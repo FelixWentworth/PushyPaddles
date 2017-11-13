@@ -16,6 +16,8 @@ public class MainMenu : MonoBehaviour
 
     public InputField IpAddress;
     public InputField Port;
+    public GameObject MultiPlayerMenu;
+    public GameObject SinglePlayerMenu;
 
     private bool _connecting;
 
@@ -29,28 +31,37 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
+#if USE_PROSOCIAL
         if (PlatformSelection.ConnectionType != ConnectionType.Testing)
         {
             _useDefault = false;
             _showMenu = false;
         }
-//#if UNITY_WEBGL
-//        _networkManager.useWebSockets = true;
-//#elif UNITY_STANDALONE_WIN
-//        _networkManager.useWebSockets = false;
-//#endif
+#endif
+        //#if UNITY_WEBGL
+        //        _networkManager.useWebSockets = true;
+        //#elif UNITY_STANDALONE_WIN
+        //        _networkManager.useWebSockets = false;
+        //#endif
         LoadingScreen.gameObject.SetActive(true);
 
-        if (_useDefault)
+        if (!SP_Manager.Instance.IsSinglePlayer())
         {
-            IpAddress.text = NetworkManager.singleton.networkAddress;
-            Port.text = NetworkManager.singleton.networkPort.ToString();
+            MultiPlayerMenu.SetActive(true);
+            SinglePlayerMenu.SetActive(false);
+
+            if (_useDefault)
+            {
+                IpAddress.text = NetworkManager.singleton.networkAddress;
+                Port.text = NetworkManager.singleton.networkPort.ToString();
+            }
         }
-
-        IpAddress.gameObject.SetActive(!SP_Manager.Instance.IsSinglePlayer());
-        Port.gameObject.SetActive(!SP_Manager.Instance.IsSinglePlayer());
-
-
+        else
+        {
+            MultiPlayerMenu.SetActive(false);
+            SinglePlayerMenu.SetActive(true);
+        }
+#if USE_PROSOCIAL
         if (!_showMenu)
         {
             if (PlatformSelection.ConnectionType == ConnectionType.Testing)
@@ -70,6 +81,7 @@ public class MainMenu : MonoBehaviour
                 _connecting = true;
             }
         }
+#endif
     }
 
     private IEnumerator GetConnectionConfig()
@@ -124,7 +136,7 @@ public class MainMenu : MonoBehaviour
 
     void Update()
     {
-        if (_showMenu)
+        if (_showMenu && !SP_Manager.Instance.IsSinglePlayer())
         {
             bool noConnection = (NetworkManager.singleton.client == null || NetworkManager.singleton.client.connection == null ||
                                  NetworkManager.singleton.client.connection.connectionId == -1);

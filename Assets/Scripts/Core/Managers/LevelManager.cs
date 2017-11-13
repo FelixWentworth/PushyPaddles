@@ -34,7 +34,17 @@ public class LevelManager : NetworkBehaviour
         get { return Mathf.RoundToInt(_timeLimit - _timeRemaining); }
     }
 
-    private float _timeLimit { get { return PSL_LRSManager.Instance.TimeLimit; } }
+    private float _timeLimit
+    {
+        get
+        {
+#if USE_PROSOCIAL
+            return PSL_LRSManager.Instance.TimeLimit;
+#else
+            return 10f * 60;
+#endif
+        }
+    }
 
     public bool TimerPaused { get; private set; }
 

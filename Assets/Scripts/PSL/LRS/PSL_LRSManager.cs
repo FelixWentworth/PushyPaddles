@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+#if USE_PROSOCIAL
 using PlayGen.Orchestrator.PSL.Common.LRS;
+#endif
 using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class PSL_LRSManager : NetworkBehaviour
 {
+
+#if USE_PROSOCIAL
+
 #region Variables
 
     public static PSL_LRSManager Instance;
@@ -39,7 +44,7 @@ public class PSL_LRSManager : NetworkBehaviour
     private int _totalRounds;
     public int TimeLimit { get; private set; }
 
-    #endregion
+#endregion
 
     void Awake()
     {
@@ -47,7 +52,7 @@ public class PSL_LRSManager : NetworkBehaviour
         Instance = this;
     }
 
-    #region public methods - game tracking
+#region public methods - game tracking
     /// <summary>
     /// Save the match Id and player Id locally to use with LRS
     /// </summary>
@@ -213,9 +218,9 @@ public class PSL_LRSManager : NetworkBehaviour
         OutputTrackedData(individualData, finalResult, timeTaken);
     }
 
-    #endregion
+#endregion
 
-    #region private methods - data sending
+#region private methods - data sending
 
     /// <summary>
     /// Send all the data to the LRS
@@ -344,5 +349,7 @@ public class PSL_LRSManager : NetworkBehaviour
     }
 
 #endregion
+
+#endif
 
 }

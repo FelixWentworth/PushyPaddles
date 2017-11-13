@@ -67,7 +67,9 @@ public class FloatingPlatform : MovingObject
         OnWater = false;
         if (isServer)
         {
+#if USE_PROSOCIAL
             PSL_LRSManager.Instance.NewAttempt();
+#endif
         }
     }
 
@@ -139,7 +141,9 @@ public class FloatingPlatform : MovingObject
         }
         else if (other.gameObject.tag == "Treasure")
         {
+#if USE_PROSOCIAL
             PSL_LRSManager.Instance.ChestReached();
+#endif
             _playerOnPlatform.GetComponent<Player>().ReachedChest();
             CanMove = false;
             StartCoroutine(GoalReached(other.gameObject));

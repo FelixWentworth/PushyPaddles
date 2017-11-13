@@ -1,5 +1,7 @@
 using System;
+#if USE_PROSOCIAL
 using PlayGen.Orchestrator.Common;
+#endif
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -7,7 +9,7 @@ using UnityEditor;
 
 public class ProSocialEventListener : MonoBehaviour {
 
-#if UNITY_EDITOR
+#if USE_PROSOCIAL
 	public void EditorStart()
 	{
 		PlatformSelection.UpdateSeverState(GameState.Started);
@@ -25,7 +27,7 @@ public class ProSocialEventListener : MonoBehaviour {
 #endif
 }
 
-#if UNITY_EDITOR
+#if USE_PROSOCIAL
 [CustomEditor(typeof(ProSocialEventListener))]
 public class ServerEventEditor : Editor
 {

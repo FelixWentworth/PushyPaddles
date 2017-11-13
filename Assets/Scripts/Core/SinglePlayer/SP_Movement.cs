@@ -26,7 +26,7 @@ public class SP_Movement : MonoBehaviour
 	                if (hit.collider.CompareTag("MovementTrack"))
 	                {
 	                    var player = hit.collider.GetComponent<SP_MovementTrack>().GetPlayer();
-	                    if (player == null || !player.CanMove)
+	                    if (player == null || !player.CanMove || player.OnPlatform)
 	                    {
 	                        return;
 	                    }

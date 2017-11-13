@@ -506,6 +506,7 @@ PlayerSettings:
   incrementalIl2cppBuild: {}
   additionalIl2CppArgs: 
   apiCompatibilityLevelPerPlatform:
+    Android: 1
     Standalone: 1
     WebGL: 1
   m_RenderingPath: 1

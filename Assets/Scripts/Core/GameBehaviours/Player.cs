@@ -66,8 +66,9 @@ public class Player : MovingObject
     [SyncVar] private int _playerModel;
     [SyncVar] public string SyncNickName;
     [SyncVar] public string PlayerID;
+#if USE_PROSOCIAL
     private PlatformSelection.PSLPlayerData _playerData;
-
+#endif
     [SyncVar] public Vector3 RealPosition;
     [SyncVar] public Vector3 RealRotation;
     private float _elapsedTime;
@@ -132,15 +133,19 @@ public class Player : MovingObject
             }
 
             GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowHowToPlay();
-
+#if USE_PROSOCIAL
             if (!SP_Manager.Instance.IsSinglePlayer())
             {
+
                 var platformSelection = GameObject.Find("PlatformManager").GetComponent<PlatformSelection>();
                 _playerData = platformSelection.PlayerData;
             
                 CmdSetPlayerData(_playerData);
+
             }
+
             _playerText.text = _playerData.NickName;
+#endif
         }
         if (IsSinglePlayer)
         {
@@ -163,21 +168,21 @@ public class Player : MovingObject
         }
     }
     //
-#if UNITY_ANDROID || UNITY_IPHONE
-    private void SetupOnScreenControls()
-    {
-        var go = Instantiate(OnScreenControls);
-        _controls = go.GetComponent<Controls_UI>();
+//#if UNITY_ANDROID || UNITY_IPHONE
+//    private void SetupOnScreenControls()
+//    {
+//        var go = Instantiate(OnScreenControls);
+//        _controls = go.GetComponent<Controls_UI>();
 
-        _controls.ListenTo(MoveLeft, MoveRight, MoveUp, MoveDown, StopMoving, Interact);
-        _controls.SetPlayer(this);
-        if (_instructionManager == null)
-        {
-            _instructionManager = GameObject.Find("PlayerInstructionManager").GetComponent<InstructionManager>();
-        }
-        _instructionManager.SetUIControls(_controls);
-    }
-#endif
+//        _controls.ListenTo(MoveLeft, MoveRight, MoveUp, MoveDown, StopMoving, Interact);
+//        _controls.SetPlayer(this);
+//        if (_instructionManager == null)
+//        {
+//            _instructionManager = GameObject.Find("PlayerInstructionManager").GetComponent<InstructionManager>();
+//        }
+//        _instructionManager.SetUIControls(_controls);
+//    }
+//#endif
 
     private void MoveLeft()
     {
@@ -352,12 +357,12 @@ public class Player : MovingObject
                         // Game Paused, Cannot move
                         return;
                     }
-                    #if UNITY_ANDROID || UNITY_IPHONE
-                    if (_controls == null)
-                    {
-                        SetupOnScreenControls();
-                    }
-                    #endif
+//#if UNITY_ANDROID || UNITY_IPHONE
+//                    if (_controls == null)
+//                    {
+//                        SetupOnScreenControls();
+//                    }
+//#endif
                     if (!_rigidbody.useGravity)
                     {
                         // when the player has full control, they should be affected by gravity
@@ -449,7 +454,9 @@ public class Player : MovingObject
         }
         if (isLocalPlayer && PlayerID == "" && !SP_Manager.Instance.IsSinglePlayer())
         {
+#if USE_PROSOCIAL
             CmdSetPlayerData(_playerData);
+#endif
         }
 
         if (!SP_Manager.Instance.IsSinglePlayer())
@@ -607,6 +614,7 @@ public class Player : MovingObject
         transform.eulerAngles = RealRotation;
     }
 
+#if USE_PROSOCIAL
     [Command]
     private void CmdSetPlayerData(PlatformSelection.PSLPlayerData data)
     {
@@ -634,6 +642,8 @@ public class Player : MovingObject
         }
 
     }
+
+#endif
 
     // Server moves the player and forces them to a position
     [ServerAccess]
@@ -776,7 +786,7 @@ public class Player : MovingObject
         }
     }
 
-    #region game actions
+#region game actions
 
     [Command]
     private void CmdHitObstacle()
@@ -891,7 +901,7 @@ public class Player : MovingObject
     {
         _gameManager.PlayerAction(PlayerAction.GaveRewardOther, PlayerID);
     }
-    #endregion
+#endregion
 
     // Update is called once per frame
     void FixedUpdate()
@@ -999,12 +1009,14 @@ public class Player : MovingObject
         {
             if (SP_Manager.Instance.IsSinglePlayer())
             {
-                UsePaddle(_playerData.PlayerId);
+                UsePaddle(PlayerID);
             }
             else
             {
                 // Use paddle in water
+#if USE_PROSOCIAL
                 CmdUsePaddle(_playerData.PlayerId);
+#endif
             }
         }
     }
