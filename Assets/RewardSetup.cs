@@ -13,5 +13,17 @@ public class RewardSetup : MonoBehaviour
     {
         IconBack.sprite = IconFront.sprite = icon;
         RewardText.text = name;
+        SetTextWidth();
+    }
+
+    private void SetTextWidth()
+    {
+        var textWidth = RewardText.gameObject.GetComponent<MeshRenderer>().bounds.size.x;
+        while (textWidth > IconBack.bounds.size.x)
+        {
+            RewardText.fontSize -= 1;
+            textWidth = RewardText.gameObject.GetComponent<MeshRenderer>().bounds.size.x;
+        }
+
     }
 }

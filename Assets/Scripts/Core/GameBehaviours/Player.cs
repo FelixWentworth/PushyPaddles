@@ -150,7 +150,7 @@ public class Player : MovingObject
         if (IsSinglePlayer)
         {
             _targetPosition = transform.position;
-            SP_Manager.Instance.Get<SP_Menus>().ShowCharacterSelect();
+            SP_Manager.Instance.Get<SP_Menus>().ShowHowToPlay();
         }
     }
 
