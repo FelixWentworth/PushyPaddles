@@ -8,7 +8,7 @@ public class ScreenFOVSetting : MonoBehaviour
     public float LandscapeFOV;
     public float PortraitFOV;
 
-    void Start()
+    void Update()
     {
         if (Screen.width > Screen.height)
         {
