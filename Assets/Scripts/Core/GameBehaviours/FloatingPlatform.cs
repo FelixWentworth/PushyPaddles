@@ -134,7 +134,7 @@ public class FloatingPlatform : MovingObject
             Water.TouchedWater(this);
 
             
-            if (isServer)
+            if (isServer || SP_Manager.Instance.IsSinglePlayer())
             {
                 GameObject.Find("SpawnedObjects").GetComponent<CollectibleGeneration>().ResetColliders();
             }
@@ -168,7 +168,7 @@ public class FloatingPlatform : MovingObject
 
             _operations.Add(operation);
 
-            if (isServer)
+            if (isServer || SP_Manager.Instance.IsSinglePlayer())
             {
                 GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Pickup");
                 if (isServer)
