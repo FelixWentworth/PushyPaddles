@@ -125,13 +125,13 @@ public class WaterBehaviour : NetworkBehaviour
 
     // Only allow the server to run this as to avoid players exploiting
     [ServerAccess]
-    public void PaddleUsed(Player player, float playerModifier)
+    public float PaddleUsed(Player player, float playerModifier)
     {
         var method = MethodBase.GetCurrentMethod();
         var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
         if (!attr.HasAccess)
         {
-            return;
+            return 0f;
         }
         var strength = 0f;
         switch (player.PlayerRole)
@@ -144,7 +144,7 @@ public class WaterBehaviour : NetworkBehaviour
             case Player.Role.Floater:
             default:
                 // Player Cannot interact with water
-                return;
+                return 0f;
         }
 
         // get the angle between the player and the object in the water
@@ -174,7 +174,7 @@ public class WaterBehaviour : NetworkBehaviour
         }
         _paddleStrength = strength * modifier;
         //StartCoroutine(PaddleUsed(strength, modifier));
-
+        return _paddleStrength;
     }
 
     private IEnumerator PaddleUsed(float strength, float modifier)

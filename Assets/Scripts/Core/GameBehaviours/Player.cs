@@ -957,7 +957,6 @@ public class Player : MovingObject
             if (PaddlePrompt.activeSelf || (SP_Manager.Instance.IsSinglePlayer() && _floatingPlatform.OnWater))
             {
                 _usedPaddle = true;
-                SP_Manager.Instance.Get<SP_GameManager>()._usedPaddle = true;
                 PaddlePrompt.SetActive(false);
             }
             _usePaddle = false;
@@ -1210,8 +1209,11 @@ public class Player : MovingObject
         // Check here if the right player as only the server knows the current roles
         if (PlayerRole == Role.Paddler)
         {
-            GameObject.Find("Water").GetComponent<WaterBehaviour>().PaddleUsed(this, StrengthModifier);
-
+            var strength =  GameObject.Find("Water").GetComponent<WaterBehaviour>().PaddleUsed(this, StrengthModifier);
+            if (strength > 0)
+            {
+                SP_Manager.Instance.Get<SP_GameManager>()._usedPaddle = true;
+            }
             _usePaddle = true;
         }
         GameObject.Find("AudioManager").GetComponent<NetworkAudioManager>().Play("Paddle");
