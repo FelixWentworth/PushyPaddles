@@ -17,6 +17,8 @@ public class InstructionManager : MonoBehaviour
 
     [SerializeField] private GameObject _interactPress;
 
+    [SerializeField] private GameObject _PushSinglePlayer;
+
     private Controls_UI _controls;
 
     void Awake()
@@ -38,6 +40,7 @@ public class InstructionManager : MonoBehaviour
         DisablePlaceInstruction();
         DisableMoveInstruction();
         DisableInteractInstruction();
+        DisableSinglePlayerPushInstruction();
     }
 
     public void DisablePlatformInstruction()
@@ -70,6 +73,11 @@ public class InstructionManager : MonoBehaviour
             _controls.AnimateInteract(false);
         }
         _interactPress.SetActive(false);
+    }
+
+    public void DisableSinglePlayerPushInstruction()
+    {
+        _PushSinglePlayer.SetActive(false);
     }
 
     /// <summary>
@@ -184,5 +192,17 @@ public class InstructionManager : MonoBehaviour
                 _interactPress.SetActive(true);
             }
         }
+    }
+
+    public void ShowSinglePlayerPush()
+    {
+        DisablePlatformInstruction();
+        DisableMoveInstruction();
+        _PushSinglePlayer.SetActive(true);
+    }
+
+    public void UpdatePushSinglePlayer(Vector3 pos)
+    {
+        _PushSinglePlayer.transform.position = pos;
     }
 }

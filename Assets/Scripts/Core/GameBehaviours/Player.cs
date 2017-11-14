@@ -444,10 +444,45 @@ public class Player : MovingObject
         {
             _instructionManager = GameObject.Find("PlayerInstructionManager").GetComponent<InstructionManager>();
         }
+        // Game Instructions
         if (isLocalPlayer)
         {
             ShowInstructions();
         }
+        else if (SP_Manager.Instance.IsSinglePlayer())
+        {
+            if (PlayerRole == Role.Floater)
+            {
+                if (_floatingPlatform.CanPickUp)
+                {
+                    SP_Manager.Instance.Get<SP_GameManager>().ShowPlatformPickupIndicator();
+                }
+                else
+                {
+                    SP_Manager.Instance.Get<SP_GameManager>().ShowPlaceIndicator();
+                }
+
+                if (OnPlatform)
+                {
+                    SP_Manager.Instance.Get<SP_GameManager>().UpdatePushIndicator(this);
+                }
+            }
+            else 
+            {
+                if (_floatingPlatform.OnWater)
+                {
+                    if (!SP_Manager.Instance.Get<SP_GameManager>()._usedPaddle)
+                    {
+                        SP_Manager.Instance.Get<SP_GameManager>().ShowPushIndicator();
+                    }
+                    else
+                    {
+                        SP_Manager.Instance.Get<SP_GameManager>().HideIndicators();
+                    }
+                }
+            }
+        }
+
         if (_playerText.text != SyncNickName && SyncNickName != "")
         {
             _playerText.text = SyncNickName;
@@ -915,9 +950,10 @@ public class Player : MovingObject
             {
                 _controls.AnimateInteract(false);
             }
-            if (PaddlePrompt.activeSelf)
+            if (PaddlePrompt.activeSelf || (SP_Manager.Instance.IsSinglePlayer() && _floatingPlatform.OnWater))
             {
                 _usedPaddle = true;
+                SP_Manager.Instance.Get<SP_GameManager>()._usedPaddle = true;
                 PaddlePrompt.SetActive(false);
             }
             _usePaddle = false;

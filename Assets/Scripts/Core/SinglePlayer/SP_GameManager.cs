@@ -9,10 +9,12 @@ public class SP_GameManager : MonoBehaviour {
     public List<GameObject> NetworkObjectsToActivate;
 
     private GameManager _gameManager;
+    private InstructionManager _instructionManager;
 
     private bool _modelSet;
     private bool _lessonSet;
     private bool _gamePaused;
+    public bool _usedPaddle { get; set; }
 
     private string _year;
     private string _lesson;
@@ -90,8 +92,55 @@ public class SP_GameManager : MonoBehaviour {
         // Call next round
         player.NextRound();
     }
-    // Spawn players
-    // Track time elapsed
-    // Track goals reached
-    // Track Player Model
+
+    public void ShowPlatformPickupIndicator()
+    {
+        if (_instructionManager == null)
+        {
+            _instructionManager = GameObject.Find("PlayerInstructionManager").GetComponent<InstructionManager>();
+        }
+
+        _instructionManager.ShowMoveToPlatformIndicator();
+    }
+
+    public void ShowPlaceIndicator()
+    {
+        if (_instructionManager == null)
+        {
+            _instructionManager = GameObject.Find("PlayerInstructionManager").GetComponent<InstructionManager>();
+        }
+
+        _instructionManager.ShowMoveToPlaceIndicator(Player.Role.Floater, 0);
+    }
+
+    public void ShowPushIndicator()
+    {
+        if (_instructionManager == null)
+        {
+            _instructionManager = GameObject.Find("PlayerInstructionManager").GetComponent<InstructionManager>();
+        }
+
+        _instructionManager.ShowSinglePlayerPush();
+    }
+
+    public void UpdatePushIndicator(Player player)
+    {
+        if (_instructionManager == null)
+        {
+            _instructionManager = GameObject.Find("PlayerInstructionManager").GetComponent<InstructionManager>();
+        }
+
+        var pos = new Vector3(0, 0, player.transform.position.z);
+        _instructionManager.UpdatePushSinglePlayer(pos);
+    }
+
+    public void HideIndicators()
+    {
+        if (_instructionManager == null)
+        {
+            _instructionManager = GameObject.Find("PlayerInstructionManager").GetComponent<InstructionManager>();
+        }
+
+        _instructionManager.DisableInsctructions();
+    }
 }
