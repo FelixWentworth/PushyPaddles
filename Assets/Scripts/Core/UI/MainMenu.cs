@@ -14,6 +14,9 @@ public class MainMenu : MonoBehaviour
 
     [SerializeField] private MenuManager _menuManager;
 
+    public GameObject LandscapeBG;
+    public GameObject PortraitBG;
+
     public InputField IpAddress;
     public InputField Port;
     public GameObject MultiPlayerMenu;
@@ -179,7 +182,8 @@ public class MainMenu : MonoBehaviour
                 }
             }
         }
-        
+        LandscapeBG.SetActive(Screen.width > Screen.height);
+        PortraitBG.SetActive(Screen.width < Screen.height);
     }
 
     public void SinglePlayer()

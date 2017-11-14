@@ -1210,7 +1210,7 @@ public class Player : MovingObject
         if (PlayerRole == Role.Paddler)
         {
             var strength =  GameObject.Find("Water").GetComponent<WaterBehaviour>().PaddleUsed(this, StrengthModifier);
-            if (strength > 0)
+            if (strength != 0f)
             {
                 SP_Manager.Instance.Get<SP_GameManager>()._usedPaddle = true;
             }
