@@ -68,7 +68,6 @@ public class GameManager : NetworkBehaviour
 #endif
         PauseScreen.SetActive(false);
 
-
         if (isServer)
         {
             // Set the quality settings to lowest
@@ -77,7 +76,11 @@ public class GameManager : NetworkBehaviour
         else
         {
             // Set the default quality setting
+#if UNITY_ANDROID || UNITY_IPHONE
+            UnityEngine.QualitySettings.SetQualityLevel(2);
+#else
             UnityEngine.QualitySettings.SetQualityLevel(3);
+#endif
             PauseScreen.SetActive(true);
         }
     }
@@ -483,7 +486,6 @@ public class GameManager : NetworkBehaviour
         var player = playerObject.GetComponent<Player>();
         SetPlayerRole(index, player);
         player.PlayerNum = index;
-        player.IsSinglePlayer = true;
         player.ConnectionId = id;
 
         _players.Add(player);

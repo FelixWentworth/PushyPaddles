@@ -69,4 +69,10 @@ public class QualitySettings : MonoBehaviour {
             obj.GameObject.SetActive(quality >= obj.MinimumQualityLevel && quality < obj.MaximumQualityLevel);
         }
     }
+
+    public void SetQuality(int quality)
+    {
+        UnityEngine.QualitySettings.SetQualityLevel(quality);
+        _qualityChanged = true;
+    }
 }

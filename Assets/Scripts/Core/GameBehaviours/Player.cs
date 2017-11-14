@@ -90,7 +90,6 @@ public class Player : MovingObject
     
     private float _timeSinceLastMove = 0f;
     [SerializeField] private float _idleTime;
-    [HideInInspector] public bool IsSinglePlayer;
 
     private Vector3 _targetPosition;
     private GameObject _targetGameObject;
@@ -147,10 +146,11 @@ public class Player : MovingObject
             _playerText.text = _playerData.NickName;
 #endif
         }
-        if (IsSinglePlayer)
+        if (SP_Manager.Instance.IsSinglePlayer())
         {
             _targetPosition = transform.position;
             SP_Manager.Instance.Get<SP_Menus>().ShowHowToPlay();
+            GameObject.Find("CharacterSelection").GetComponent<CharacterSelection>().Set(this);
         }
     }
 
