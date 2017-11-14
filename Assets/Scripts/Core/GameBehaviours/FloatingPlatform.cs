@@ -242,7 +242,7 @@ public class FloatingPlatform : MovingObject
 
             CanFloat = false;
             Water.TouchedWater(this);
-            if (isServer)
+            if (isServer || SP_Manager.Instance.IsSinglePlayer())
             {
                 GameObject.Find("SpawnedObjects").GetComponent<CollectibleGeneration>().ResetColliders();
             }
