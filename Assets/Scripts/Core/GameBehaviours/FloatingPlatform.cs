@@ -207,13 +207,14 @@ public class FloatingPlatform : MovingObject
         {
             var player = _playerOnPlatform.GetComponent<Player>();
 
-            if (isServer)
+            if (isServer || SP_Manager.Instance.IsSinglePlayer())
             {
                 player.SetGoalReached(false);
                 player.ControlledByServer = true;
-                player.SyncForceMove(other.transform.Find("VicrtoryLocation").position,
+                player.SyncForceMove(other.transform.Find("VictoryLocation").position,
                     Vector3.zero);
             }
+            
             // Get the name of the player who reached the chest
             var playerName = _playerOnPlatform.SyncNickName;
 

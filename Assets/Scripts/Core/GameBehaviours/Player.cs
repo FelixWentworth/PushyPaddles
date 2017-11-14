@@ -700,6 +700,10 @@ public class Player : MovingObject
         {
             RpcUpdatePosition(position, rotation);
         }
+        else
+        {
+            ClientUpdatePosition(position, rotation);
+        }
     }
 
     [ServerAccess]
