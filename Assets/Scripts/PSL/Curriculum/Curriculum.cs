@@ -37,6 +37,7 @@ public class Curriculum : MonoBehaviour {
         }
 
         var challenges = _challenges.MathsProblems.Where(c => c.Year == year && c.Lesson == lesson).ToList();
+        GameObject.Find("LevelManager").GetComponent<LevelManager>().TotalRounds = challenges.Count;
         _levelIndex = challenges[0].Level;
 #if USE_PROSOCIAL
         PSL_LRSManager.Instance.SetNumRounds(challenges.Count);
@@ -71,6 +72,23 @@ public class Curriculum : MonoBehaviour {
         _currentChallenge = challenge;
         return challenge;
 
+    }
+
+    public int GetChallengeCount(string year, string lesson)
+    {
+        year = year.Substring(5, year.Length - 5);
+
+        if (_challenges == null || _challenges.MathsProblems.Length == 0)
+        {
+            GetChallengeData();
+        }
+
+        if (_challenges.MathsProblems.Length == 0)
+        {
+            return 0;
+        }
+
+        return _challenges.MathsProblems.Count(c => c.Year == year && c.Lesson == lesson);
     }
 
     public void ResetLevel()

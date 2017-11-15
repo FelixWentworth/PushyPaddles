@@ -290,8 +290,8 @@ public class MenuManager : NetworkBehaviour
         }
 
         GameOverScreen.Show();
-        GameOverScreen.GetComponent<GameOverScreen>().SetText(victory, timeTaken);
-        GameOverScreen.GetComponent<GameOverScreen>().SetButtonsEnabled(!controlledByOrchestrator);
+        GameOverScreen.SetText(victory, timeTaken);
+        GameOverScreen.SetButtonsEnabled(!controlledByOrchestrator);
     }
 
     /// <summary>

@@ -16,7 +16,7 @@ public class QualitySettings : MonoBehaviour {
     // Populated through inspector
     [SerializeField] private List<QualityDependentObjects> _qualityDependentObjects = new List<QualityDependentObjects>();
 
-    private bool _qualityChanged = false;
+    private bool _qualityChanged = true;
 
 	// Update is called once per frame
     void Start()

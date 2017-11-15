@@ -16,6 +16,7 @@ public class LevelManager : NetworkBehaviour
 
     [SyncVar] private float _timeRemaining;
     [SyncVar] public int RoundNumber;
+    [SyncVar] public int TotalRounds;
 
     [SyncVar] public bool RoundStarted;
 

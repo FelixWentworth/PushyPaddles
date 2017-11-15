@@ -41,18 +41,18 @@ public class CurriculumLevelList : MonoBehaviour
         foreach (var curriculumChallenge in lessons)
         {
             var description = curriculum.GetDescriptionForLesson(curriculumChallenge.Lesson);
-            AddElement(curriculumChallenge.Lesson, description.Description);
+            AddElement(curriculumChallenge.Lesson, description.Description, year);
         }
     }
 
-    private void AddElement(string lesson, string description)
+    private void AddElement(string lesson, string description, string year)
     {
         var go = Instantiate(LevelElement);
 
         var lessonText = string.Format(Localization.Get("FORMATTED_UI_LESSON"), lesson);
         lessonText = lessonText.Replace(" ", "\u00a0");
 
-        go.GetComponent<LevelElement>().Setup(lessonText, description);
+        go.GetComponent<LevelElement>().Setup(lessonText, description, year, lesson);
         go.GetComponent<LevelElement>().Button.onClick.AddListener(delegate { LessonSelected(lesson); });
 
         go.transform.SetParent(_scrollRect.content);
@@ -92,7 +92,7 @@ public class CurriculumLevelList : MonoBehaviour
         foreach (var curriculumChallenge in lessons)
         {
             var description = curriculum.GetDescriptionForLesson(curriculumChallenge.Lesson);
-            AddElement(curriculumChallenge.Lesson, description.Description);
+            AddElement(curriculumChallenge.Lesson, description.Description, _year);
         }
     }
 
