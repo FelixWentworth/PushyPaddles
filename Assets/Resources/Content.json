@@ -580,7 +580,7 @@
     ,"Level":"5"
     ,"Target":"4"
     ,"RequiredOperations" : [
-        "3",
+        "5",
         "-1",
         "",
         "",
@@ -917,7 +917,7 @@
     ,"Target":"8"
     ,"RequiredOperations" : [
         "19",
-        "-9",
+        "-11",
         "",
         "",
         ""
@@ -1154,7 +1154,7 @@
      "Year":"1"
     ,"Lesson":"5"
     ,"Level":"9"
-    ,"Target":"14"
+    ,"Target":"13"
     ,"RequiredOperations" : [
         "9",
         "7",
@@ -1230,7 +1230,7 @@
     ,"RequiredOperations" : [
         "15",
         "-9",
-        "-6",
+        "-5",
         "",
         ""
     ]
@@ -1374,7 +1374,7 @@
     ,"RequiredOperations" : [
         "13",
         "4",
-        "-8",
+        "-6",
         "",
         ""
     ]
@@ -2644,7 +2644,7 @@
     ,"Level":"1"
     ,"Target":"22"
     ,"RequiredOperations" : [
-        "12",
+        "32",
         "-10",
         "",
         "",
@@ -2668,7 +2668,7 @@
     ,"Level":"2"
     ,"Target":"44"
     ,"RequiredOperations" : [
-        "24",
+        "64",
         "-20",
         "",
         "",
@@ -2692,7 +2692,7 @@
     ,"Level":"3"
     ,"Target":"58"
     ,"RequiredOperations" : [
-        "28",
+        "88",
         "-30",
         "",
         "",
@@ -2714,17 +2714,17 @@
      "Year":"2"
     ,"Lesson":"12"
     ,"Level":"4"
-    ,"Target":"74"
+    ,"Target":"54"
     ,"RequiredOperations" : [
-        "34",
+        "94",
         "-40",
         "",
         "",
         ""
     ]
     ,"ExtraOperations" : [
+        "-50",
         "-60",
-        "70",
         "",
         "",
         "",
@@ -2738,9 +2738,9 @@
      "Year":"2"
     ,"Lesson":"12"
     ,"Level":"5"
-    ,"Target":"96"
+    ,"Target":"46"
     ,"RequiredOperations" : [
-        "46",
+        "96",
         "-50",
         "",
         "",
@@ -2762,9 +2762,9 @@
      "Year":"2"
     ,"Lesson":"12"
     ,"Level":"6"
-    ,"Target":"115"
+    ,"Target":"55"
     ,"RequiredOperations" : [
-        "55",
+        "115",
         "-60",
         "",
         "",
@@ -2786,9 +2786,9 @@
      "Year":"2"
     ,"Lesson":"12"
     ,"Level":"7"
-    ,"Target":"137"
+    ,"Target":"67"
     ,"RequiredOperations" : [
-        "67",
+        "137",
         "-70",
         "",
         "",
@@ -2810,9 +2810,9 @@
      "Year":"2"
     ,"Lesson":"12"
     ,"Level":"8"
-    ,"Target":"148"
+    ,"Target":"68"
     ,"RequiredOperations" : [
-        "68",
+        "148",
         "-80",
         "",
         "",
@@ -2834,9 +2834,9 @@
      "Year":"2"
     ,"Lesson":"12"
     ,"Level":"9"
-    ,"Target":"107"
+    ,"Target":"87"
     ,"RequiredOperations" : [
-        "87",
+        "107",
         "-20",
         "",
         "",
@@ -2858,9 +2858,9 @@
      "Year":"2"
     ,"Lesson":"12"
     ,"Level":"10"
-    ,"Target":"98"
+    ,"Target":"88"
     ,"RequiredOperations" : [
-        "88",
+        "98",
         "-10",
         "",
         "",
@@ -4133,13 +4133,13 @@
     ,"Target":"15"
     ,"RequiredOperations" : [
         "5",
-        "x2",
+        "x3",
         "",
         "",
         ""
     ]
     ,"ExtraOperations" : [
-        "x3",
+        "x2",
         "x4",
         "",
         "",
@@ -5282,7 +5282,7 @@
      "Year":"3"
     ,"Lesson":"23"
     ,"Level":"1"
-    ,"Target":"9"
+    ,"Target":"109"
     ,"RequiredOperations" : [
         "110",
         "-1",
@@ -5524,7 +5524,7 @@
     ,"Level":"1"
     ,"Target":"122"
     ,"RequiredOperations" : [
-        "112",
+        "132",
         "-10",
         "",
         "",
@@ -5546,9 +5546,9 @@
      "Year":"3"
     ,"Lesson":"24"
     ,"Level":"2"
-    ,"Target":"244"
+    ,"Target":"224"
     ,"RequiredOperations" : [
-        "224",
+        "244",
         "-20",
         "",
         "",
@@ -5570,9 +5570,9 @@
      "Year":"3"
     ,"Lesson":"24"
     ,"Level":"3"
-    ,"Target":"358"
+    ,"Target":"328"
     ,"RequiredOperations" : [
-        "328",
+        "358",
         "-30",
         "",
         "",
@@ -5738,9 +5738,9 @@
      "Year":"3"
     ,"Lesson":"24"
     ,"Level":"10"
-    ,"Target":"898"
+    ,"Target":"888"
     ,"RequiredOperations" : [
-        "888",
+        "898",
         "-10",
         "",
         "",
@@ -6698,7 +6698,7 @@
      "Year":"3"
     ,"Lesson":"28"
     ,"Level":"10"
-    ,"Target":"887"
+    ,"Target":"884"
     ,"RequiredOperations" : [
         "984",
         "-800",
@@ -6794,7 +6794,7 @@
      "Year":"3"
     ,"Lesson":"29"
     ,"Level":"4"
-    ,"Target":"15"
+    ,"Target":"18"
     ,"RequiredOperations" : [
         "6",
         "x3",
@@ -7106,7 +7106,7 @@
      "Year":"3"
     ,"Lesson":"30"
     ,"Level":"7"
-    ,"Target":"28"
+    ,"Target":"32"
     ,"RequiredOperations" : [
         "4",
         "x8",
@@ -7682,7 +7682,7 @@
      "Year":"3"
     ,"Lesson":"33"
     ,"Level":"1"
-    ,"Target":"389"
+    ,"Target":"419"
     ,"RequiredOperations" : [
         "200",
         "-114",
@@ -7802,7 +7802,7 @@
      "Year":"3"
     ,"Lesson":"33"
     ,"Level":"6"
-    ,"Target":"120"
+    ,"Target":"80"
     ,"RequiredOperations" : [
         "790",
         "-540",
@@ -7874,7 +7874,7 @@
      "Year":"3"
     ,"Lesson":"33"
     ,"Level":"9"
-    ,"Target":"144"
+    ,"Target":"174"
     ,"RequiredOperations" : [
         "450",
         "-157",
@@ -8138,7 +8138,7 @@
      "Year":"4"
     ,"Lesson":"34"
     ,"Level":"10"
-    ,"Target":"5638"
+    ,"Target":"7539"
     ,"RequiredOperations" : [
         "2879",
         "2112",
@@ -8210,7 +8210,7 @@
      "Year":"4"
     ,"Lesson":"35"
     ,"Level":"3"
-    ,"Target":"1579"
+    ,"Target":"2399"
     ,"RequiredOperations" : [
         "3978",
         "-1579",
@@ -8234,12 +8234,12 @@
      "Year":"4"
     ,"Lesson":"35"
     ,"Level":"4"
-    ,"Target":"2399"
+    ,"Target":"3270"
     ,"RequiredOperations" : [
         "4501",
         "-1231",
         "",
-        "",
+        "", 
         ""
     ]
     ,"ExtraOperations" : [
