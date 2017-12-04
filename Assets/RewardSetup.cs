@@ -19,7 +19,7 @@ public class RewardSetup : MonoBehaviour
     private void SetTextWidth()
     {
         var textWidth = RewardText.gameObject.GetComponent<MeshRenderer>().bounds.size.x;
-        while (textWidth > IconBack.bounds.size.x)
+        while (textWidth > IconBack.bounds.size.x * 2.25)
         {
             RewardText.fontSize -= 1;
             textWidth = RewardText.gameObject.GetComponent<MeshRenderer>().bounds.size.x;

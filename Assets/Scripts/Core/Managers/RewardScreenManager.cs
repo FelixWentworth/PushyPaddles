@@ -57,7 +57,7 @@ public class RewardScreenManager : UIScreen
         var players = _gameManager.GetPlayerIds();
         
         // Get a random number of rewards to give
-	    var rand = UnityEngine.Random.Range(1, _rewardIcons.Count);
+	    var rand = UnityEngine.Random.Range(1, 4);
 
         RewardsManager.ShowReward(3, players, _rewardIcons, rand);
 

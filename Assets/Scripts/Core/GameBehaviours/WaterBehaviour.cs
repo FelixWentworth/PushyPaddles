@@ -8,7 +8,7 @@ public class WaterBehaviour : NetworkBehaviour
 	[SerializeField] private float _tideStrength = 0.01f;
     [SerializeField] private float _maxPaddleStrength = 1f;
 
-	private float _tideStrengthModifier { get { return _tideStrength / 5f; } }
+	private float _tideStrengthModifier { get { return _tideStrength / 10f; } }
 
 	[SyncVar] public int TideStrengthMultiplier;
 	
@@ -110,7 +110,7 @@ public class WaterBehaviour : NetworkBehaviour
 		}
 
 		TideStrengthMultiplier += increment;
-		TideStrengthMultiplier = Mathf.Clamp(TideStrengthMultiplier, -2, 10);  // clamp between half speed and 2x speed
+		TideStrengthMultiplier = Mathf.Clamp(TideStrengthMultiplier, -4, 10);  // clamp between 0.6x speed and 2x speed
 	}
 
     private void ClampX(GameObject go)
