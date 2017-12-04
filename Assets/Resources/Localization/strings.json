@@ -28,6 +28,8 @@
 {"Key":"UI_REWARDS_REVERSE_CONTROLS","en":"Reverse Controls","it":"Controlli invertiti","es":"Invertir controles","el":"Αντιστροφή Πλήκτρων"},
 {"Key":"UI_REWARDS_STRONGER_PUSH","en":"Stronger Push","it":"propulsione","es":"Propulsión","el":"Ισχυρότερη Ώθηση"},
 {"Key":"UI_REWARDS_MORE_PLATFORM_CONTROL","en":"More Raft Control","it":"Più controllo della zattera","es":"Más control sobre la lancha","el":"Καλύτερος Έλεγχος Σχεδίας"},
+{"Key":"UI_REWARDS_DECREASE_TIDE","en":"Water Speed Decreased","it":"XXXX","es":"XXXX","el":"XXXX"},
+{"Key":"UI_REWARDS_INCREASE_TIDE","en":"Water Speed Increased","it":"XXXX","es":"XXXX","el":"XXXX"},
 {"Key":"UI_CHARACTER_TITLE","en":"Select a Character","it":"Seleziona un personaggio","es":"Selecciona un personaje","el":"Επιλογή Χαρακτήρα"},
 {"Key":"UI_GAME_TOTAL","en":"Total","it":"Totale","es":"Conseguido","el":"Σύνολο"},
 {"Key":"UI_GAME_VICTORY","en":"You Win","it":"Hai Vinto","es":"Bien hecho","el":"Νικήσατε"},

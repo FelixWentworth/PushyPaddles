@@ -31,12 +31,17 @@ public class RewardsManager : MonoBehaviour
     {
         _rewardsRemaining = rewardsToGive;//
         // Check if we only care about positive rewards
-        if (PSL_GameConfig.RewardType == "Positive" || SP_Manager.Instance.IsSinglePlayer())
+        if (PSL_GameConfig.RewardType == "Positive")
         {
             rewards = rewards.Where(r => r.Positive).ToList();
         }
+		// check if in single player
+	    if (SP_Manager.Instance.IsSinglePlayer())
+	    {
+		    rewards = rewards.Where(r => r.SupportsSinglePlayer).ToList();
+	    }
 
-        var rand = UnityEngine.Random.Range(0, rewards.Count);
+	    var rand = UnityEngine.Random.Range(0, rewards.Count);
         var rewardData = rewards[rand];
 
         if (_rewardObjectInScene != null)

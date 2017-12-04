@@ -3323,18 +3323,32 @@ MonoBehaviour:
     Icon: {fileID: 21300000, guid: 8a3a823d69977744aa9bdc77edade9cc, type: 3}
     LocalizationKey: UI_REWARDS_STRONGER_PUSH
     Positive: 1
+    SupportsSinglePlayer: 1
   - Type: 1
     Icon: {fileID: 21300000, guid: 1c6c04f3e44ea5a4197ac4f48ec1d0c9, type: 3}
     LocalizationKey: UI_REWARDS_SPEED_BOOST
     Positive: 1
+    SupportsSinglePlayer: 1
   - Type: 2
     Icon: {fileID: 21300000, guid: f05a328a90a6a194c9e886c3eb29f10d, type: 3}
     LocalizationKey: UI_REWARDS_REVERSE_CONTROLS
     Positive: 0
+    SupportsSinglePlayer: 0
   - Type: 3
     Icon: {fileID: 21300000, guid: ad6a1ff0c61e4d94d9d132e727169676, type: 3}
     LocalizationKey: UI_REWARDS_MORE_PLATFORM_CONTROL
     Positive: 1
+    SupportsSinglePlayer: 0
+  - Type: 5
+    Icon: {fileID: 21300000, guid: dcb0f6543cc2cfb429d62fe8f8ae5141, type: 3}
+    LocalizationKey: UI_REWARDS_INCREASE_TIDE
+    Positive: 1
+    SupportsSinglePlayer: 1
+  - Type: 6
+    Icon: {fileID: 21300000, guid: ab9b646c4e1340c4b9462bd3da0aadf0, type: 3}
+    LocalizationKey: UI_REWARDS_DECREASE_TIDE
+    Positive: 1
+    SupportsSinglePlayer: 1
 --- !u!114 &779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3682,6 +3696,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tideStrength: 0.015
   _maxPaddleStrength: 0.025
+  TideStrengthMultiplier: 0
   Material: {fileID: 2100000, guid: 3054de6257a5b8a4daecaf2a1814ead8, type: 2}
 --- !u!114 &800
 MonoBehaviour:

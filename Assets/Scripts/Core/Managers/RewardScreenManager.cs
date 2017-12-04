@@ -27,6 +27,8 @@ public class RewardScreenManager : UIScreen
         ReverseControls,
         MoreBoatControl,
         MorePaddleStrength,
+		IncreaseTide,
+		DecreaseTide
     }
 
     [Serializable]
@@ -36,6 +38,7 @@ public class RewardScreenManager : UIScreen
         public Sprite Icon;
         public string LocalizationKey;
         public bool Positive;
+	    public bool SupportsSinglePlayer;
     }
 
     [SerializeField] private List<RewardIcons> _rewardIcons;
@@ -54,7 +57,7 @@ public class RewardScreenManager : UIScreen
         var players = _gameManager.GetPlayerIds();
         
         // Get a random number of rewards to give
-        var rand = UnityEngine.Random.Range(1, 4);
+	    var rand = UnityEngine.Random.Range(1, _rewardIcons.Count);
 
         RewardsManager.ShowReward(3, players, _rewardIcons, rand);
 
@@ -155,7 +158,13 @@ public class RewardScreenManager : UIScreen
             case RewardType.MorePaddleStrength:
                 player.AssignMoreStrength(player, _strengthBoost);
                 break;
-            default:
+			case RewardType.IncreaseTide:
+				player.ChangeTide(increase: true);
+				break;
+			case RewardType.DecreaseTide:
+				player.ChangeTide(increase: false);
+				break;
+			default:
                 throw new ArgumentOutOfRangeException("type", type, null);
         }
     }

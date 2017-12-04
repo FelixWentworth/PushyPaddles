@@ -5,9 +5,13 @@ using UnityEngine.Networking;
 
 public class WaterBehaviour : NetworkBehaviour
 {
-
-    [SerializeField] private float _tideStrength = 0.01f;
+	[SerializeField] private float _tideStrength = 0.01f;
     [SerializeField] private float _maxPaddleStrength = 1f;
+
+	private float _tideStrengthModifier { get { return _tideStrength / 5f; } }
+
+	[SyncVar] public int TideStrengthMultiplier;
+	
 
     private float _raftTilt = 0f;
     // The strength of paddle power from another player
@@ -22,6 +26,7 @@ public class WaterBehaviour : NetworkBehaviour
     // Our clamp positions for the x axis, the object should not leave the water
     private float _minXClamp;
     private float _maxXClamp;
+
 
     private GameObject _currentPlatform;
 
@@ -73,7 +78,7 @@ public class WaterBehaviour : NetworkBehaviour
         var newPosition = new Vector3(
             go.transform.position.x + (_paddleStrength * _maxPaddleStrength) + _raftTilt,
             go.transform.position.y,
-            go.transform.position.z + _tideStrength
+            go.transform.position.z + _tideStrength + (_tideStrengthModifier * TideStrengthMultiplier)
         );
 
         MoveFloatingObject(go.gameObject, newPosition);
@@ -93,6 +98,20 @@ public class WaterBehaviour : NetworkBehaviour
         // Clamp the x axis
         ClampX(go.gameObject);
     }
+
+	[ServerAccess]
+	public void IncrementTideModifier(int increment)
+	{
+		var method = MethodBase.GetCurrentMethod();
+		var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+		if (!attr.HasAccess)
+		{
+			return;
+		}
+
+		TideStrengthMultiplier += increment;
+		TideStrengthMultiplier = Mathf.Clamp(TideStrengthMultiplier, -2, 10);  // clamp between half speed and 2x speed
+	}
 
     private void ClampX(GameObject go)
     {

@@ -1796,11 +1796,46 @@ public class Player : MovingObject
         _gameManager.SetLesson(year, lesson);
     }
 
-    //void OnCollisionEnter(Collision other)
-    //{
-    //    if (other.gameObject.tag == "Water" && !OnPlatform && !)
-    //    {
-    //        other.gameObject.GetComponent<WaterBehaviour>().TouchedWater(this);       
-    //    }
-    //}
+
+	public void ChangeTide(bool increase)
+	{
+		if (SP_Manager.Instance.IsSinglePlayer())
+		{
+			ServerIncreaseTide(increase);
+		}
+		else
+		{
+			if (isLocalPlayer)
+			{
+				CmdIncreaseTide(increase);
+			}
+		}
+	}
+
+	[Command]
+	public void CmdIncreaseTide(bool increase)
+	{
+		ServerIncreaseTide(increase);
+	}
+
+	[ServerAccess]
+	private void ServerIncreaseTide(bool increase)
+	{
+		var method = MethodBase.GetCurrentMethod();
+		var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+		if (!attr.HasAccess)
+		{
+			return;
+		}
+		GameObject.Find("Water").GetComponent<WaterBehaviour>().IncrementTideModifier(increase ? 1 : -1);
+	}
+
+
+	//void OnCollisionEnter(Collision other)
+	//{
+	//    if (other.gameObject.tag == "Water" && !OnPlatform && !)
+	//    {
+	//        other.gameObject.GetComponent<WaterBehaviour>().TouchedWater(this);       
+	//    }
+	//}
 }
