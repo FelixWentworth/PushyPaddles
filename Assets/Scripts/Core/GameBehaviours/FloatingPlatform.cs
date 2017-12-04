@@ -219,8 +219,9 @@ public class FloatingPlatform : MovingObject
 
             CanFloat = false;
             Water.TouchedWater(this);
-        }
-        else
+	        MovePaddlersToStart();
+		}
+		else
         {
             ResetPositions();
         }
