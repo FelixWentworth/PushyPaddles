@@ -34,13 +34,13 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
-#if USE_PROSOCIAL
+//#if USE_PROSOCIAL
         if (PlatformSelection.ConnectionType != ConnectionType.Testing)
         {
             _useDefault = false;
             _showMenu = false;
         }
-#endif
+//#endif
         //#if UNITY_WEBGL
         //        _networkManager.useWebSockets = true;
         //#elif UNITY_STANDALONE_WIN

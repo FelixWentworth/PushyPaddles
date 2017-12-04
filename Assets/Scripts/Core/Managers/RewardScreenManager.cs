@@ -39,7 +39,8 @@ public class RewardScreenManager : UIScreen
         public string LocalizationKey;
         public bool Positive;
 	    public bool SupportsSinglePlayer;
-    }
+	    public bool SupportsMultiplayer;
+	}
 
     [SerializeField] private List<RewardIcons> _rewardIcons;
 

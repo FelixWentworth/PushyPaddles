@@ -158,7 +158,7 @@ public class Player : MovingObject
     {
         base.ResetObject(newPosition);
 
-        if (SP_Manager.Instance.IsSinglePlayer())
+        if (SP_Manager.Instance.IsSinglePlayer() || isServer)
         {
             SyncRespawn(transform.eulerAngles);
         }
@@ -1227,7 +1227,7 @@ public class Player : MovingObject
         if (PlayerRole == Role.Paddler)
         {
             var strength =  GameObject.Find("Water").GetComponent<WaterBehaviour>().PaddleUsed(this, StrengthModifier);
-            if (strength != 0f)
+            if (strength != 0f && SP_Manager.Instance.IsSinglePlayer())
             {
                 SP_Manager.Instance.Get<SP_GameManager>()._usedPaddle = true;
             }

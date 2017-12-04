@@ -163,7 +163,7 @@ public class GameManager : NetworkBehaviour
                 else
                 {
                     ResumeGame();
-                    PlatformSelectin.UpdateSeverState(GameState.Started);
+                    PlatformSelection.UpdateSeverState(GameState.Started);
 
                 }
             }
@@ -991,16 +991,16 @@ public class GameManager : NetworkBehaviour
             _curriculum.ResetLevel();
             RestartGame();
         }
-        else if (ControlledByOrchestrator)
+        else
+        {
+			_menu.ShowGameOver(victory, _level.SecondsTaken, false);
+			RestartGame();
+		}
+        if (ControlledByOrchestrator)
         {
 #if USE_PROSOCIAL
             PlatformSelection.UpdateSeverState(GameState.Stopped);
 #endif
-        }
-        else
-        {
-            _menu.ShowGameOver(victory, _level.SecondsTaken, false);
-            RestartGame();
         }
     }
     

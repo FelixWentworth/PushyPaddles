@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-#if USE_PROSOCIAL
+//#if USE_PROSOCIAL
 using PlayGen.Orchestrator.PSL.Common.LRS;
-#endif
+//#endif
 using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -13,7 +13,7 @@ using UnityEngine.Networking;
 public class PSL_LRSManager : NetworkBehaviour
 {
 
-#if USE_PROSOCIAL
+//#if USE_PROSOCIAL
 
 #region Variables
 
@@ -350,6 +350,6 @@ public class PSL_LRSManager : NetworkBehaviour
 
 #endregion
 
-#endif
+//#endif
 
 }

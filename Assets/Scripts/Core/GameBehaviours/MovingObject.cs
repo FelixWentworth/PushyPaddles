@@ -68,7 +68,7 @@ public class MovingObject : NetworkBehaviour
 
     public virtual void FellInWater()
     {
-        if (SP_Manager.Instance.IsSinglePlayer())
+        if (SP_Manager.Instance.IsSinglePlayer() || isServer)
         {
             ServerFellInWater();
         }
@@ -105,12 +105,12 @@ public class MovingObject : NetworkBehaviour
         GetComponent<BoxCollider>().enabled = true;
 
         var randomRespawn = Random.Range(0, RespawnLocation.Count);
-        if (SP_Manager.Instance.IsSinglePlayer())
+        if (isServer || SP_Manager.Instance.IsSinglePlayer())
         {
             ServerRespawn(gameObject, RespawnLocation[randomRespawn]);
         }
-        else if (!isServer)
-        {
+        else
+		{
             CmdRespawn(gameObject, RespawnLocation[randomRespawn]);
         }
         ResetObject(RespawnLocation[randomRespawn]);
@@ -134,8 +134,13 @@ public class MovingObject : NetworkBehaviour
         {
             return;
         }
-
-        go.transform.position = pos;
+	    ResetObject(pos);
+		go.transform.position = pos;
+	    var player = go.GetComponent<Player>();
+	    if (player != null)
+	    {
+		    player.RealPosition = pos;
+	    }
     }
 
 }

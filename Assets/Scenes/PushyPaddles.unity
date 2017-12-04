@@ -3324,31 +3324,37 @@ MonoBehaviour:
     LocalizationKey: UI_REWARDS_STRONGER_PUSH
     Positive: 1
     SupportsSinglePlayer: 1
+    SupportsMultiplayer: 1
   - Type: 1
     Icon: {fileID: 21300000, guid: 1c6c04f3e44ea5a4197ac4f48ec1d0c9, type: 3}
     LocalizationKey: UI_REWARDS_SPEED_BOOST
     Positive: 1
     SupportsSinglePlayer: 1
+    SupportsMultiplayer: 1
   - Type: 2
     Icon: {fileID: 21300000, guid: f05a328a90a6a194c9e886c3eb29f10d, type: 3}
     LocalizationKey: UI_REWARDS_REVERSE_CONTROLS
     Positive: 0
     SupportsSinglePlayer: 0
+    SupportsMultiplayer: 1
   - Type: 3
     Icon: {fileID: 21300000, guid: ad6a1ff0c61e4d94d9d132e727169676, type: 3}
     LocalizationKey: UI_REWARDS_MORE_PLATFORM_CONTROL
     Positive: 1
     SupportsSinglePlayer: 0
+    SupportsMultiplayer: 1
   - Type: 5
     Icon: {fileID: 21300000, guid: dcb0f6543cc2cfb429d62fe8f8ae5141, type: 3}
     LocalizationKey: UI_REWARDS_INCREASE_TIDE
     Positive: 1
     SupportsSinglePlayer: 1
+    SupportsMultiplayer: 0
   - Type: 6
     Icon: {fileID: 21300000, guid: ab9b646c4e1340c4b9462bd3da0aadf0, type: 3}
     LocalizationKey: UI_REWARDS_DECREASE_TIDE
     Positive: 1
     SupportsSinglePlayer: 1
+    SupportsMultiplayer: 0
 --- !u!114 &779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9078,6 +9084,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac324082d46c8034a99d6ec9fb9fc7e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _connectionType: 2
+  _platformManagers:
+  - ConnectionType: 0
+    NetworkManagerObj: {fileID: 114848141446279744, guid: f26e5d44aae3a0542bbb551362fe29dc,
+      type: 2}
+  - ConnectionType: 1
+    NetworkManagerObj: {fileID: 114987455416771950, guid: b9946054ca8f55446a118c39b1957410,
+      type: 2}
+  - ConnectionType: 2
+    NetworkManagerObj: {fileID: 114417391500823532, guid: 83346fb668f15cc469be0ada521b4569,
+      type: 2}
 --- !u!1 &461652065
 GameObject:
   m_ObjectHideFlags: 0
@@ -14626,6 +14643,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 871f7cb8c4bdf6c45a2925defc449f57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameManager: {fileID: 0}
 --- !u!114 &919061269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26834,6 +26852,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a09ef47008d916340ae8560ff2bfdc6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _url: http://lrs-psl.atosresearch.eu/
+  _logFileName: PlayerTracking
 --- !u!114 &1968042642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26845,6 +26865,70 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da285361e00629b4aa20a6e29af99fa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _skillCriteria:
+  - Name: Pushed Against another player
+    Skill: 11
+    Positive: 0
+    TriggerAction: 1
+    PreviousAction: 1
+    MultiplePlayers: 1
+    Interval: 0.4
+  - Name: Reached Chest
+    Skill: 11
+    Positive: 1
+    TriggerAction: 4
+    PreviousAction: 0
+    MultiplePlayers: 0
+    Interval: 0
+  - Name: Pushed into Obstacle
+    Skill: 11
+    Positive: 0
+    TriggerAction: 2
+    PreviousAction: 1
+    MultiplePlayers: 1
+    Interval: 1.5
+  - Name: Pushed into collectible
+    Skill: 11
+    Positive: 1
+    TriggerAction: 3
+    PreviousAction: 1
+    MultiplePlayers: 1
+    Interval: 1.5
+  - Name: Gave Reward To Self
+    Skill: 10
+    Positive: 0
+    TriggerAction: 10
+    PreviousAction: 0
+    MultiplePlayers: 0
+    Interval: 1
+  - Name: Gave Reward Other
+    Skill: 10
+    Positive: 1
+    TriggerAction: 11
+    PreviousAction: 0
+    MultiplePlayers: 0
+    Interval: 0
+  - Name: Reached Chest Correct
+    Skill: 9
+    Positive: 1
+    TriggerAction: 5
+    PreviousAction: 0
+    MultiplePlayers: 0
+    Interval: 0
+  - Name: Reached Chest Incorrect
+    Skill: 9
+    Positive: 0
+    TriggerAction: 6
+    PreviousAction: 0
+    MultiplePlayers: 0
+    Interval: 0
+  - Name: Idle holding platform
+    Skill: 12
+    Positive: 0
+    TriggerAction: 9
+    PreviousAction: 7
+    MultiplePlayers: 0
+    Interval: 5
 --- !u!1 &1968812621
 GameObject:
   m_ObjectHideFlags: 0

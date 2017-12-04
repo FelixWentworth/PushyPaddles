@@ -40,6 +40,10 @@ public class RewardsManager : MonoBehaviour
 	    {
 		    rewards = rewards.Where(r => r.SupportsSinglePlayer).ToList();
 	    }
+	    else
+	    {
+		    rewards = rewards.Where(r => r.SupportsMultiplayer).ToList();
+	    }
 
 	    var rand = UnityEngine.Random.Range(0, rewards.Count);
         var rewardData = rewards[rand];

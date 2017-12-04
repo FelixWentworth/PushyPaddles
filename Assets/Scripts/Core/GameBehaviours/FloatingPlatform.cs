@@ -253,10 +253,16 @@ public class FloatingPlatform : MovingObject
 		player.FellInWater();
 		player.Respawn();
 		player.OnPlatform = false;
-
 		CanFloat = false;
+		CanMove = false;
+
+		player.GetComponent<Rigidbody>().useGravity = true;
+
 		Water.TouchedWater(this);
-		MovePaddlersToStart();
+		if (SP_Manager.Instance.IsSinglePlayer())
+		{
+			MovePaddlersToStart();
+		}
 		if (isServer || SP_Manager.Instance.IsSinglePlayer())
 		{
 			GameObject.Find("SpawnedObjects").GetComponent<CollectibleGeneration>().ResetColliders();

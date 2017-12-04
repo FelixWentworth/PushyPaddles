@@ -19,8 +19,12 @@ public class QualityUI : MonoBehaviour
 
     public void ToggleMenu()
     {
+	    var inGame = (SP_Manager.Instance.IsSinglePlayer() && SP_Manager.Instance.Get<SP_GameManager>().GameSetup()) ||
+	                 (!SP_Manager.Instance.IsSinglePlayer() && GameObject.Find("GameManager").GetComponent<GameManager>()
+		                  .GetLocalPlayer().IsReady);
+
         _optionsPanel.SetActive(!_optionsPanel.activeSelf);
-        _inGameBackground.SetActive(SP_Manager.Instance.Get<SP_GameManager>().GameSetup());
+        _inGameBackground.SetActive(inGame);
         _quitGameObject.SetActive(SP_Manager.Instance.Get<SP_GameManager>().GameSetup());
     }
 	

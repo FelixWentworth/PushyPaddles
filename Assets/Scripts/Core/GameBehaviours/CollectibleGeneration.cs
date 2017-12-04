@@ -33,9 +33,20 @@ public class CollectibleGeneration : LevelLayout
         // Generate the collectibles based on the level array
         GenerateCollectibles(CollectibleGameObject);
         GenerateObstacles();
-	    Sign.SetActive(Convert.ToInt16(curriculumInfo.Level) > 3);
 
-        GameObject.Find("LevelManager").GetComponent<LevelManager>().Target = curriculumInfo.Target.ToString();
+	    var signActive = Convert.ToInt16(curriculumInfo.Level) > 3;
+
+	    Sign.SetActive(signActive);
+	    if (SP_Manager.Instance.IsSinglePlayer())
+	    {
+		    ClientSetSignActive(signActive);
+	    }
+	    else
+	    {
+		    RpcSetSign(signActive);
+	    }
+
+		GameObject.Find("LevelManager").GetComponent<LevelManager>().Target = curriculumInfo.Target.ToString();
 
     }
 
@@ -57,8 +68,17 @@ public class CollectibleGeneration : LevelLayout
         // Generate the collectibles based on the level array
         GenerateCollectibles(CollectibleGameObject);
         GenerateObstacles();
-	    Sign.SetActive(Convert.ToInt16(curriculumInfo.Level) > 3);
+		var signActive = Convert.ToInt16(curriculumInfo.Level) > 3;
 
+	    Sign.SetActive(signActive);
+	    if (SP_Manager.Instance.IsSinglePlayer())
+	    {
+		    ClientSetSignActive(signActive);
+	    }
+	    else
+	    {
+		    RpcSetSign(signActive);
+	    }
 		GameObject.Find("LevelManager").GetComponent<LevelManager>().Target = curriculumInfo.Target.ToString();
     }
 
@@ -79,8 +99,18 @@ public class CollectibleGeneration : LevelLayout
 
         GenerateCollectibles(CollectibleGameObject);
         GenerateObstacles();
-	    Sign.SetActive(Convert.ToInt16(curriculumInfo.Level) > 3);
 
+	    var signActive = Convert.ToInt16(curriculumInfo.Level) > 3;
+
+		Sign.SetActive(signActive);
+		if (SP_Manager.Instance.IsSinglePlayer())
+	    {
+		    ClientSetSignActive(signActive);
+	    }
+	    else
+	    {
+		    RpcSetSign(signActive);
+	    }
 		GameObject.Find("LevelManager").GetComponent<LevelManager>().Target = curriculumInfo.Target.ToString();
     }
 
@@ -109,7 +139,26 @@ public class CollectibleGeneration : LevelLayout
 
     }
 
-    [ClientRpc]
+	[ClientRpc]
+	private void RpcSetSign(bool active)
+	{
+		ClientSetSignActive(active);
+	}
+
+	[ClientAccess]
+	private void ClientSetSignActive(bool active)
+	{
+		var method = MethodBase.GetCurrentMethod();
+		var attr = (ClientAccess)method.GetCustomAttributes(typeof(ClientAccess), true)[0];
+		if (!attr.HasAccess)
+		{
+			return;
+		}
+
+		Sign.SetActive(active);
+	}
+
+	[ClientRpc]
     private void RpcResetColliders()
     {
         ClientResetColliders();

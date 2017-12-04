@@ -12,7 +12,7 @@ public class SP_Movement : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-	    if (SP_Manager.Instance.Get<SP_GameManager>().GameSetup())
+	    if (SP_Manager.Instance.IsSinglePlayer() &&SP_Manager.Instance.Get<SP_GameManager>().GameSetup())
 	    {
 	        if (Input.GetMouseButtonDown(0))
 	        {
