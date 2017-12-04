@@ -123,11 +123,12 @@ public class FloatingPlatform : MovingObject
 
         if (other.gameObject.tag == "Obstacle")
         {
-            _playerOnPlatform.GetComponent<Player>().HitObstacle();
+	        var p = _playerOnPlatform;
+	        _playerOnPlatform = null;
+			p.GetComponent<Player>().HitObstacle();
 
-            _playerOnPlatform.GetComponent<Player>().OnPlatform = false;
-            _playerOnPlatform.GetComponent<Rigidbody>().useGravity = true;
-            _playerOnPlatform = null;
+            p.GetComponent<Player>().OnPlatform = false;
+            p.GetComponent<Rigidbody>().useGravity = true;
 
             CanFloat = false;
             CanMove = false;

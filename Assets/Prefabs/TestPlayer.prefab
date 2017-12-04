@@ -2100,7 +2100,6 @@ MonoBehaviour:
   RealRotation: {x: 0, y: 0, z: 0}
   OnPlatform: 0
   _idleTime: 1.5
-  IsSinglePlayer: 0
 --- !u!114 &114560648049294534
 MonoBehaviour:
   m_ObjectHideFlags: 1

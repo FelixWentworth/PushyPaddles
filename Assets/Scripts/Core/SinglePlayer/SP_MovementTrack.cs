@@ -9,59 +9,47 @@ public class SP_MovementTrack : MonoBehaviour
     [Serializable]
     private enum Position
     {
-        Left,
-        Right,
+        Water,
         Bridge
     }
 
     [SerializeField] private Position _position;
 
-    private Player _player;
+	public float DistanceToGround;
 
-    public Player GetPlayer()
+    public Player GetPlayer(float xMousePos)
     {
-        if (_player == null)
+        var players = GameObject.FindGameObjectsWithTag("Player").ToList();
+	    var floatingPlayer = players.First(p => p.GetComponent<Player>().PlayerRole == Player.Role.Floater);
+        // Identify which player is using this track
+        switch (_position)
         {
-            var players = GameObject.FindGameObjectsWithTag("Player").ToList();
-            // Identify which player is using this track
-            switch (_position)
-            {
-                case Position.Left:
-                    foreach (var p in players)
+            case Position.Water:
+                foreach (var p in players)
+                {
+                    var player = p.GetComponent<Player>();
+						
+                    if (player.PlayerRole == Player.Role.Paddler)
                     {
-                        var player = p.GetComponent<Player>();
-                        if (player.PlayerRole == Player.Role.Paddler && player.transform.position.x < 0)
-                        {
-                            _player = player;
-                        }
-                    }       
-                    break;
-                case Position.Right:
-                    foreach (var p in players)
-                    {
-                        var player = p.GetComponent<Player>();
-                        if (player.PlayerRole == Player.Role.Paddler && player.transform.position.x > 0)
-                        {
-                            _player = player;
-                        }
-                    }
-                    break;
-                case Position.Bridge:
-                    foreach (var p in players)
-                    {
-                        var player = p.GetComponent<Player>();
-                        if (player.PlayerRole == Player.Role.Floater)
-                        {
-                            _player = player;
-                        }
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+	                    if (player.transform.position.x < 0 && xMousePos < floatingPlayer.transform.position.x)
+	                    {
+							// left player pushes
+		                    return player;
+						}
+						if
+	                    (player.transform.position.x > 0 && xMousePos > floatingPlayer.transform.position.x)
+	                    {
+		                    // right player pushes
+		                    return player;
+	                    }
+					}
+                }
+	            return null;
+            case Position.Bridge:
+	            return floatingPlayer.GetComponent<Player>();
+            default:
+                throw new ArgumentOutOfRangeException();
         }
-        
-        return _player;
     }
 
 }

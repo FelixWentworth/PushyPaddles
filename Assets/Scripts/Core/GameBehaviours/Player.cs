@@ -634,6 +634,10 @@ public class Player : MovingObject
 
     private void UpdatePlayerPosition()
     {
+	    if (Respawning)
+	    {
+		    return;
+	    }
         if (SP_Manager.Instance.IsSinglePlayer())
         {
             // no need to synchronise movements

@@ -100,6 +100,7 @@ public class MovingObject : NetworkBehaviour
     private IEnumerator WaitToRespawn()
     {
         Respawning = true;
+		Debug.Log("Resoawb Okablet");
         yield return new WaitForSeconds(RespawnTime);
         GetComponent<BoxCollider>().enabled = true;
 

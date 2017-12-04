@@ -9,7 +9,7 @@ public class ServerAccess : Attribute
 
     public ServerAccess()
     {
-        _hasAccess = SP_Manager.Instance.IsSinglePlayer() || GameObject.Find("GameManager").GetComponent<NetworkIdentity>()
+        _hasAccess = SP_Manager.Instance.IsSinglePlayer() || NetworkServer.active || GameObject.Find("GameManager").GetComponent<NetworkIdentity>()
                    .isServer;
 
     }

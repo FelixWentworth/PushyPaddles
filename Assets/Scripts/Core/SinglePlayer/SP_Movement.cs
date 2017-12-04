@@ -21,17 +21,24 @@ public class SP_Movement : MonoBehaviour
 
 	            if (Physics.Raycast(ray, out hit, Mask))
 	            {
-	                Debug.Log(hit.collider.name);
+	                //Debug.Log(hit.collider.name);
 	                // Check if hit a player track
 	                if (hit.collider.CompareTag("MovementTrack"))
 	                {
-	                    var player = hit.collider.GetComponent<SP_MovementTrack>().GetPlayer();
+		                var track = hit.collider.GetComponent<SP_MovementTrack>();
+		                if (track == null)
+		                {
+			                return;
+		                }
+
+						var pressPos = hit.point + (Vector3.up * track.DistanceToGround);
+		                
+		                var player = track.GetPlayer(pressPos.x);
 	                    if (player == null || !player.CanMove || player.OnPlatform)
 	                    {
 	                        return;
 	                    }
 
-	                    var pressPos = hit.point + (Vector3.up * 0.25f);
 	                    pressPos = player.PlayerRole == Player.Role.Floater
 	                        ? new Vector3(pressPos.x, pressPos.y, player.transform.position.z)
 	                        : new

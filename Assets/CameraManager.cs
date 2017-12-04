@@ -77,7 +77,7 @@ public class CameraManager : MonoBehaviour
 
         if (forward)
         {
-            StartCoroutine(OpenChest(rewardName));
+            yield return StartCoroutine(OpenChest(rewardName));
         }
         
     }
