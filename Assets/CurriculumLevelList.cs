@@ -33,15 +33,15 @@ public class CurriculumLevelList : MonoBehaviour
         // get the array of challenges
         _titleText.text = string.Format(Localization.Get("FORMATTED_UI_YEAR"), _year);
 
-        var curriculum = GameObject.Find("CurriculumManager").GetComponent<Curriculum>();
+        //var curriculum = GameObject.Find("CurriculumManager").GetComponent<Curriculum>();
         var challenges = Curriculum.GetChallengesForYear(year);
 
         var lessons = challenges.Where(c => c.Level == "1");
 
         foreach (var curriculumChallenge in lessons)
         {
-            var description = curriculum.GetDescriptionForLesson(curriculumChallenge.Lesson);
-            AddElement(curriculumChallenge.Lesson, description.Description, year);
+	        var description = Localization.Get("LESSON_" + curriculumChallenge.Lesson); //curriculum.GetDescriptionForLesson(curriculumChallenge.Lesson);
+            AddElement(curriculumChallenge.Lesson, description, year);
         }
     }
 
