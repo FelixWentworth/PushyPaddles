@@ -264,7 +264,12 @@ public class Player : MovingObject
         _targetGameObject = moveToObject;
     }
 
-    private void UpdatePosition()
+	public void MoveTo(Vector3 position)
+	{
+		_targetPosition = position;
+	}
+
+    private void UpdatePosition(bool interactWhenReachPosition)
     {
         if (Vector3.Distance(transform.position, _targetPosition) < 0.3f)
         {
@@ -273,7 +278,10 @@ public class Player : MovingObject
                 Destroy(_targetGameObject);
             }
             _targetPosition = transform.position;
-            InteractPressed();
+	        if (interactWhenReachPosition)
+	        {
+		        InteractPressed();
+	        }
             return;
         }
 
@@ -371,10 +379,11 @@ public class Player : MovingObject
 
                     if (SP_Manager.Instance.IsSinglePlayer())
                     {
-                        if (_targetPosition != transform.position && _targetGameObject != null)
+                        if (_targetPosition != transform.position && !Respawning)
                         {
-                            UpdatePosition();
+	                        UpdatePosition(_targetGameObject != null);
                         }
+						
                     }
 
                     var x = Input.GetAxis("Horizontal");
@@ -480,6 +489,10 @@ public class Player : MovingObject
                         SP_Manager.Instance.Get<SP_GameManager>().HideIndicators();
                     }
                 }
+                else
+                {
+					SP_Manager.Instance.Get<SP_GameManager>().HideSinglePlayerPushIndicator();
+				}
             }
         }
 
@@ -1783,11 +1796,11 @@ public class Player : MovingObject
         _gameManager.SetLesson(year, lesson);
     }
 
-    void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.tag == "Water")
-        {
-            other.gameObject.GetComponent<WaterBehaviour>().TouchedWater(this);       
-        }
-    }
+    //void OnCollisionEnter(Collision other)
+    //{
+    //    if (other.gameObject.tag == "Water" && !OnPlatform && !)
+    //    {
+    //        other.gameObject.GetComponent<WaterBehaviour>().TouchedWater(this);       
+    //    }
+    //}
 }

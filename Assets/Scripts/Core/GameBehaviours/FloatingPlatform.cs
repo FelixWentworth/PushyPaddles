@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using PlayGen.Unity.Utilities.Localization;
 using UnityEngine;
@@ -123,24 +124,9 @@ public class FloatingPlatform : MovingObject
 
         if (other.gameObject.tag == "Obstacle")
         {
-	        var p = _playerOnPlatform;
-	        _playerOnPlatform = null;
-			p.GetComponent<Player>().HitObstacle();
-
-            p.GetComponent<Player>().OnPlatform = false;
-            p.GetComponent<Rigidbody>().useGravity = true;
-
-            CanFloat = false;
-            CanMove = false;
-            Water.TouchedWater(this);
-
-            
-            if (isServer || SP_Manager.Instance.IsSinglePlayer())
-            {
-                GameObject.Find("SpawnedObjects").GetComponent<CollectibleGeneration>().ResetColliders();
-            }
-        }
-        else if (other.gameObject.tag == "Treasure")
+			ResetPositions();
+		}
+		else if (other.gameObject.tag == "Treasure")
         {
 #if USE_PROSOCIAL
             PSL_LRSManager.Instance.ChestReached();
@@ -236,17 +222,7 @@ public class FloatingPlatform : MovingObject
         }
         else
         {
-            // Behave as if hit object
-            _playerOnPlatform.GetComponent<Player>().OnPlatform = false;
-            _playerOnPlatform.GetComponent<Rigidbody>().useGravity = true;
-            _playerOnPlatform = null;
-
-            CanFloat = false;
-            Water.TouchedWater(this);
-            if (isServer || SP_Manager.Instance.IsSinglePlayer())
-            {
-                GameObject.Find("SpawnedObjects").GetComponent<CollectibleGeneration>().ResetColliders();
-            }
+            ResetPositions();
         }
 
 
@@ -259,8 +235,52 @@ public class FloatingPlatform : MovingObject
             ClientDisableTotal();
         }
     }
+	[ServerAccess]
+	private void ResetPositions()
+	{
+		var method = MethodBase.GetCurrentMethod();
+		var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+		if (!attr.HasAccess)
+		{
+			return;
+		}
+		// Behave as if hit object
+		var player = _playerOnPlatform.GetComponent<Player>();
+		_playerOnPlatform = null;
 
-    [ClientRpc]
+		player.GetComponent<BoxCollider>().enabled = false;
+		player.FellInWater();
+		player.Respawn();
+		player.OnPlatform = false;
+
+		CanFloat = false;
+		Water.TouchedWater(this);
+		MovePaddlersToStart();
+		if (isServer || SP_Manager.Instance.IsSinglePlayer())
+		{
+			GameObject.Find("SpawnedObjects").GetComponent<CollectibleGeneration>().ResetColliders();
+		}
+	}
+
+	[ServerAccess]
+	private void MovePaddlersToStart()
+	{
+		var method = MethodBase.GetCurrentMethod();
+		var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+		if (!attr.HasAccess)
+		{
+			return;
+		}
+		var players = GameObject.FindGameObjectsWithTag("Player")
+			.Where(p => p.GetComponent<Player>().PlayerRole == Player.Role.Paddler);
+		foreach (var player in players)
+		{
+			var p = player.GetComponent<Player>();
+			p.MoveTo(p.RespawnLocation[0]);
+		}
+	}
+
+	[ClientRpc]
     private void RpcShowTotal (bool victory)
     {
         ClientShowTotal(victory);

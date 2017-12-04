@@ -11,8 +11,9 @@ public class CollectibleGeneration : LevelLayout
 {
 
     public GameObject CollectibleGameObject;
+    public GameObject Sign;
 
-    public override void Setup<T>(int numCollectibles, T info)
+	public override void Setup<T>(int numCollectibles, T info)
     {
         base.Setup<T>(numCollectibles, info);
 
@@ -32,6 +33,7 @@ public class CollectibleGeneration : LevelLayout
         // Generate the collectibles based on the level array
         GenerateCollectibles(CollectibleGameObject);
         GenerateObstacles();
+	    Sign.SetActive(Convert.ToInt16(curriculumInfo.Level) > 3);
 
         GameObject.Find("LevelManager").GetComponent<LevelManager>().Target = curriculumInfo.Target.ToString();
 
@@ -55,8 +57,9 @@ public class CollectibleGeneration : LevelLayout
         // Generate the collectibles based on the level array
         GenerateCollectibles(CollectibleGameObject);
         GenerateObstacles();
+	    Sign.SetActive(Convert.ToInt16(curriculumInfo.Level) > 3);
 
-        GameObject.Find("LevelManager").GetComponent<LevelManager>().Target = curriculumInfo.Target.ToString();
+		GameObject.Find("LevelManager").GetComponent<LevelManager>().Target = curriculumInfo.Target.ToString();
     }
 
     public override void NewSetup<T>(int numCollectibles, T info)
@@ -76,8 +79,9 @@ public class CollectibleGeneration : LevelLayout
 
         GenerateCollectibles(CollectibleGameObject);
         GenerateObstacles();
+	    Sign.SetActive(Convert.ToInt16(curriculumInfo.Level) > 3);
 
-        GameObject.Find("LevelManager").GetComponent<LevelManager>().Target = curriculumInfo.Target.ToString();
+		GameObject.Find("LevelManager").GetComponent<LevelManager>().Target = curriculumInfo.Target.ToString();
     }
 
     [ServerAccess]

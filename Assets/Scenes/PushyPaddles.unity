@@ -380,6 +380,7 @@ MonoBehaviour:
   - {fileID: 1869481529692194, guid: 0318a0df2262e4544ba15fb40c9657cf, type: 2}
   CollectibleGameObject: {fileID: 1137053814282736, guid: de6305b2fff71ff4d9402388f9483861,
     type: 2}
+  Sign: {fileID: 650239672}
 --- !u!1 &60
 GameObject:
   m_ObjectHideFlags: 0
@@ -10846,6 +10847,11 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 643354853}
+--- !u!1 &650239672 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1352817938165758, guid: 4b2e2a3473ff7b64696ef301e4ad2aab,
+    type: 2}
+  m_PrefabInternal: {fileID: 347594587}
 --- !u!1 &650950709
 GameObject:
   m_ObjectHideFlags: 0
