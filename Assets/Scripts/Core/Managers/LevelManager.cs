@@ -135,7 +135,7 @@ public class LevelManager : NetworkBehaviour
     {
         if ((isServer || SP_Manager.Instance.IsSinglePlayer()) && !TimerPaused)
         {
-            if (RoundStarted)
+            if (RoundStarted && GameObject.Find("MenuManager").GetComponent<MenuManager>().GameOverScreen.IsShowing)
             {
                 UpdateTimer(Time.deltaTime);
             }

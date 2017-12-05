@@ -439,11 +439,6 @@ public class Player : MovingObject
             UpdatePlayerPosition();
         }
 
-        //if (Input.GetKeyDown(KeyCode.R))
-        //{
-        //    RestartGame();
-        //}
-
         if (_raft == null)
         {
             _raft = GameObject.FindGameObjectWithTag("Platform");
@@ -457,7 +452,7 @@ public class Player : MovingObject
         if (isLocalPlayer)
         {
             ShowInstructions();
-        }
+		}
         else if (SP_Manager.Instance.IsSinglePlayer())
         {
             if (PlayerRole == Role.Floater)
@@ -484,7 +479,7 @@ public class Player : MovingObject
                     {
                         SP_Manager.Instance.Get<SP_GameManager>().ShowPushIndicator();
                     }
-                    else
+                    else 
                     {
                         SP_Manager.Instance.Get<SP_GameManager>().HideIndicators();
                     }
@@ -498,7 +493,7 @@ public class Player : MovingObject
 
         if (_playerText.text != SyncNickName && SyncNickName != "")
         {
-            _playerText.text = SyncNickName;
+	        _playerText.text = SyncNickName;
         }
         if (isLocalPlayer && PlayerID == "" && !SP_Manager.Instance.IsSinglePlayer())
         {
@@ -530,7 +525,8 @@ public class Player : MovingObject
     {
         if (!_floatingPlatform.OnWater)
         {
-            if (!_hasMoved)
+	        PaddlePrompt.SetActive(false);
+			if (!_hasMoved)
             {
                 _instructionManager.ShowMovement(PlayerRole, transform.position.x);
             }
@@ -583,7 +579,6 @@ public class Player : MovingObject
                     PaddlePrompt.transform.localScale = new Vector3(PaddlePrompt.transform.localScale.x, PaddlePrompt.transform.localScale.y, PaddlePrompt.transform.localScale.z * multiplier);
                     PaddlePrompt.SetActive(true);
                 }
-
             }
         }
     }
@@ -645,7 +640,20 @@ public class Player : MovingObject
         _timeSinceLastMove = 0f;
     }
 
-    private void UpdatePlayerPosition()
+	void OnApplicationFocus(bool hasFocus)
+	{
+		// Verify UI for rewards should be shown
+		if (CanMove)
+		{
+			GameObject.Find("MenuManager").GetComponent<MenuManager>().HideRewards();
+		}
+		else
+		{
+			
+		}
+	}
+
+	private void UpdatePlayerPosition()
     {
 	    if (Respawning)
 	    {
@@ -832,7 +840,7 @@ public class Player : MovingObject
         transform.eulerAngles = rotation;
 
         ControlledByServer = false;
-    }
+	}
 
     public void HitObstacle()
     {
@@ -1374,6 +1382,7 @@ public class Player : MovingObject
 
     private IEnumerator FocusOnChest(string player)
     {
+		_playerText.gameObject.SetActive(false);
         yield return GameObject.Find("CameraManager").GetComponent<CameraManager>().TransitionToEnd();
 
         if (SP_Manager.Instance.IsSinglePlayer())
@@ -1531,9 +1540,10 @@ public class Player : MovingObject
         }
 
         StartCoroutine(GameObject.Find("CameraManager").GetComponent<CameraManager>().TransitionToStart());
-    }
+	    _playerText.gameObject.SetActive(true);
+	}
 
-    [ClientRpc]
+	[ClientRpc]
     private void RpcRemoveRewards()
     {
         ClientRemoveRewards();        
