@@ -15,7 +15,8 @@ public class Player : MovingObject
     [SyncVar] public float StrengthModifier = 1f;
 
     [SyncVar] public bool HoldingPlatform;
-    [SyncVar] public bool ControlledByServer;
+    [SyncVar] public bool CanInteract;
+	[SyncVar] public bool ControlledByServer;
 
     [SyncVar] public int PlayerNum;
 
@@ -122,9 +123,14 @@ public class Player : MovingObject
 
         PaddlePrompt.SetActive(false);
 
+	    if (isServer)
+	    {
+			CanInteract = true;
+		}
+
         if (!isServer && isLocalPlayer)
         {
-
+	        
             // Client needs to be ready to send command
             if (!ClientScene.ready)
             {
@@ -609,6 +615,11 @@ public class Player : MovingObject
         return false;
     }
 
+	public void AIMove(GameObject go, float x, float z)
+	{
+		Move(go, x, z);
+	}
+
     private void Move(GameObject go, float x, float z)
     {
         _hasMoved = true;
@@ -643,7 +654,7 @@ public class Player : MovingObject
 	void OnApplicationFocus(bool hasFocus)
 	{
 		// Verify UI for rewards should be shown
-		if (CanMove)
+		if (CanMove && !_gameManager.DistributingRewards)
 		{
 			GameObject.Find("MenuManager").GetComponent<MenuManager>().HideRewards();
 		}
@@ -840,7 +851,8 @@ public class Player : MovingObject
         transform.eulerAngles = rotation;
 
         ControlledByServer = false;
-	}
+	    HoldingPlatform = false;
+    }
 
     public void HitObstacle()
     {
@@ -1017,9 +1029,24 @@ public class Player : MovingObject
         /////////////////////////////
     }
 
-    private void InteractPressed()
+	public void AIPressed()
+	{
+		InteractPressed();
+	}
+
+	public override void Respawned()
+	{
+		base.Respawned();
+		CanInteract = true;
+	}
+
+	private void InteractPressed()
     {
-        if (_floatingPlatform.CanPickUp && !_floatingPlatform.OnWater && _floatingPlatform.InRange(gameObject) && !HoldingPlatform)
+	    if (!CanInteract)
+	    {
+		    return;
+	    }
+        if (_floatingPlatform != null && _floatingPlatform.CanPickUp && !_floatingPlatform.OnWater && _floatingPlatform.InRange(gameObject) && !HoldingPlatform)
         {
             // Pickup Plaftorm
             if (SP_Manager.Instance.IsSinglePlayer() && PlayerRole == Role.Floater)
@@ -1124,7 +1151,7 @@ public class Player : MovingObject
         if (OnPlatform)
             return;
         HoldingPlatform = true;
-        platform.GetComponent<FloatingPlatform>().CanPickUp = !HoldingPlatform;
+        platform.GetComponent<FloatingPlatform>().CanPickUp = false;
         platform.transform.SetParent(this.transform, true);
         platform.transform.localPosition = new Vector3(0f, 1.0f, 1.5f);
 
@@ -1149,11 +1176,10 @@ public class Player : MovingObject
         {
             return;
         }
-
-        platform.transform.position = new Vector3(transform.position.x, -0.6f, transform.position.z);
-        platform.transform.SetParent(null, true);
+	    platform.transform.SetParent(null, true);
+		platform.transform.position = new Vector3(transform.position.x, -0.6f, transform.position.z);
         HoldingPlatform = false;
-        platform.GetComponent<FloatingPlatform>().CanPickUp = !HoldingPlatform;
+	    platform.GetComponent<FloatingPlatform>().CanPickUp = true;
 
         if (!SP_Manager.Instance.IsSinglePlayer())
         {
@@ -1176,8 +1202,9 @@ public class Player : MovingObject
         {
             return;
         }
+	    CanInteract = false;
 
-        var player = go.GetComponent<Player>();
+		var player = go.GetComponent<Player>();
         player.OnPlatform = true;
 
         if (player.PlayerRole != Role.Floater)
@@ -1191,7 +1218,7 @@ public class Player : MovingObject
 
         var fp = platform.GetComponent<FloatingPlatform>();
 
-        fp.CanPickUp = true;
+        //fp.CanPickUp = true;
         fp.PlaceOnWater(this);
 
     }

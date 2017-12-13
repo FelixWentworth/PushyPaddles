@@ -110,6 +110,11 @@ public class RewardScreenManager : UIScreen
         }
     }
 
+	public void AIPressed()
+	{
+		RewardsManager.Select();
+	}
+
     private IEnumerator WaitToSelect()
     {
         _spWaiting = true;

@@ -116,7 +116,10 @@ public class MovingObject : NetworkBehaviour
         ResetObject(RespawnLocation[randomRespawn]);
 
         GetComponent<Rigidbody>().useGravity = CanFall;
+
+		yield return new WaitForSeconds(0.5f);
         Respawning = false;
+		Respawned();
     }
 
     [Command]
@@ -143,4 +146,8 @@ public class MovingObject : NetworkBehaviour
 	    }
     }
 
+	public virtual void Respawned()
+	{
+		
+	}
 }
