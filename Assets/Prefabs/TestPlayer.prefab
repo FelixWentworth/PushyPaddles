@@ -2078,6 +2078,7 @@ MonoBehaviour:
   Respawning: 0
   RespawnLocation: []
   Name: 
+  SimplePlayerAi: {fileID: 114874208738509816}
   DirectionModifier: 1
   SpeedModifier: 1
   RaftControlModifier: 0.001

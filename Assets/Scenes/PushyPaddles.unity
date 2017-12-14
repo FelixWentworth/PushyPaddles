@@ -3571,6 +3571,7 @@ MonoBehaviour:
   WaitingForPlayersPrompt: {fileID: 2046117915}
   PlayerChoosingRewardsGameObject: {fileID: 315879652}
   SwitchingRolesPrompt: {fileID: 1464712893}
+  GameOver: 0
 --- !u!114 &794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4499,7 +4500,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4860041337649218, guid: 0a241f7c4dc3da44bac60d4788d9a8d2, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 3.4
+      value: 4.412
       objectReference: {fileID: 0}
     - target: {fileID: 4860041337649218, guid: 0a241f7c4dc3da44bac60d4788d9a8d2, type: 2}
       propertyPath: m_LocalPosition.y
@@ -19302,7 +19303,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1283488380}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.2, y: -0.72, z: 0.25}
+  m_LocalPosition: {x: 0, y: -0.72, z: 0.25}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 121062385}

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -13,9 +14,13 @@ public class TEST_SimplePlayerAI : NetworkBehaviour {
 
 	private RewardScreenManager _rewardScreenManager;
 
-	private float inputTime = .2f;
+	// set to 0 for commands every frame - Input test
+	private float interactTime = 0f;
+	private float paddlerPickupTime = 0f;
 
 	private float currentTime = 0f;
+
+	private float currentPaddlerTime = 3f;
 	// Use this for initialization
 	void Start ()
 	{
@@ -25,48 +30,98 @@ public class TEST_SimplePlayerAI : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update ()
-	{
+	{ 
 		currentTime += Time.deltaTime;
-		if (currentTime >= inputTime)
+		//_player.AIPressed();
+		if (_player.CanMove && _player.PlayerRole == Player.Role.Floater && isLocalPlayer)
 		{
-			currentTime = 0f;
-			if (_player.CanMove && _player.PlayerRole == Player.Role.Floater && isLocalPlayer)
+			if (_rewardScreenManager == null)
 			{
-				if (_rewardScreenManager == null)
+				_rewardScreenManager = GameObject.Find("RewardScreen").GetComponent<RewardScreenManager>();
+			}
+			if (_rewardScreenManager != null && _rewardScreenManager.IsShowing)
+			{
+				if (currentTime >= interactTime)
 				{
-					_rewardScreenManager = GameObject.Find("RewardScreen").GetComponent<RewardScreenManager>();
-				}
-				if (_rewardScreenManager != null && _rewardScreenManager.IsShowing)
-				{
+					currentTime = 0f;
+					Log("Selecting Rewards");
 					_rewardScreenManager.AIPressed();
 				}
-				else if (!_platform.OnWater)
+			}
+			else if (!_platform.OnWater)
+			{
+				// place platform in water
+				if (_player.HoldingPlatform)
 				{
-					// place platform in water
-					if (_player.HoldingPlatform)
+					// place in water
+					if (_platform.CanBePlacedInWater())
 					{
-						// place in water
-						if (_platform.CanBePlacedInWater())
+						if (currentTime >= interactTime)
 						{
+							currentTime = 0f;
+							Log("Placing platform in water");
 							_player.AIPressed();
-						}
-						else
-						{
-							Move(new Vector3(0, transform.position.y, transform.position.z));
 						}
 					}
 					else
 					{
-						// pick up
-						if (_platform.InRange(gameObject))
+						Move(new Vector3(0, transform.position.y, transform.position.z));
+					}
+				}
+				else
+				{
+					// pick up
+					if (_platform.InRange(gameObject) && _player.IsNextToGetPlatform())
+					{
+						if (currentTime >= interactTime )
 						{
+							currentTime = 0f;
+							Log("Pickup Platform");
 							_player.AIPressed();
 						}
-						else
-						{
-							Move(_platform.transform.position);
-						}
 					}
+					else
+					{
+						Move(_platform.transform.position);
+					}
+				}
+			}
+		}
+		if (_player.PlayerRole == Player.Role.Paddler && !_platform.OnWater)
+		{
+			// place platform in water
+			if (_player.HoldingPlatform)
+			{
+				// place in water
+				if (_platform.CanBePlacedOnLand())
+				{
+					if (currentTime >= interactTime)
+					{
+						currentTime = 0f;
+						Log("Drop Platform");
+						_player.AIPressed();
+					}
+				}
+				else
+				{
+					MoveUpDown(new Vector3(transform.position.x, transform.position.y, 0.25f));
+				}
+			}
+			else
+			{
+				// pick up
+				if (_platform.InRange(gameObject) && _player.IsNextToGetPlatform())
+				{
+					if (currentPaddlerTime >= paddlerPickupTime)
+					{
+						currentPaddlerTime = 0f;
+						Log("Pickup Platform");
+						_player.AIPressed();
+					}
+				}
+				else
+				{
+					MoveUpDown(_platform.transform.position);
 				}
 			}
 		}
@@ -74,16 +129,33 @@ public class TEST_SimplePlayerAI : NetworkBehaviour {
 
 	private void Move(Vector3 destination)
 	{
-		Debug.Log("Trying to reach " + destination);
 		if (gameObject.transform.position.x > destination.x)
 		{
-			Debug.Log("Moving Left");
-			_player.AIMove(gameObject, -1 * _player.DirectionModifier, 0);
+			Log("Moving Left");
+			_player.AIMove(gameObject, -0.5f * _player.DirectionModifier, 0);
 		}
 		else
 		{
-			Debug.Log("Moving Right");
-			_player.AIMove(gameObject, 1 * _player.DirectionModifier, 0);
+			Log("Moving Right");
+			_player.AIMove(gameObject, 0.5f * _player.DirectionModifier, 0);
 		}
+	}
+	private void MoveUpDown(Vector3 destination)
+	{
+		if (gameObject.transform.position.z > destination.z)
+		{
+			Log("Moving Down");
+			_player.AIMove(gameObject, 0f, -0.5f * _player.DirectionModifier);
+		}
+		else
+		{
+			Log("Moving Up");
+			_player.AIMove(gameObject, 0f, 0.5f * _player.DirectionModifier);
+		}
+	}
+
+	private void Log(string msg)
+	{
+		//Debug.Log(DateTime.Now + "\n" + msg);
 	}
 }

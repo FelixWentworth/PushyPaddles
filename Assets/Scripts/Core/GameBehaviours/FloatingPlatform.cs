@@ -38,12 +38,22 @@ public class FloatingPlatform : MovingObject
 
         _mesh = transform.GetChild(0).GetComponent<MeshRenderer>();
 
-        RespawnLocation.Add(transform.position);
         var oppositeSide = new Vector3(transform.position.x * -1, transform.position.y, transform.position.z);
 
-        RespawnLocation.Add(oppositeSide);
+	    if (!SP_Manager.Instance.IsSinglePlayer())
+	    {
+			// Set the respawn position to be further along the path so that the paddlers must help
+		    var zIncrease = Vector3.forward * 8f;
+		    RespawnLocation.Add(transform.position + zIncrease);
+		    RespawnLocation.Add(oppositeSide + zIncrease);
+		}
+		else
+	    {
+		    RespawnLocation.Add(transform.position);
+		    RespawnLocation.Add(oppositeSide);
+		}
 
-        _pickupText = GetComponentInChildren<Text>();
+		_pickupText = GetComponentInChildren<Text>();
         PickupValue = "";
         _operations = new List<string>();
     }
@@ -63,7 +73,6 @@ public class FloatingPlatform : MovingObject
         base.Respawn();
 
         _playerOnPlatform = null;
-        CanPickUp = true;
         CanMove = true;
         OnWater = false;
         if (isServer)
@@ -74,7 +83,14 @@ public class FloatingPlatform : MovingObject
         }
     }
 
-    public void PlaceOnWater(Player player)
+	public override void Respawned()
+	{
+		base.Respawned();
+
+		CanPickUp = true;
+	}
+
+	public void PlaceOnWater(Player player)
     {
         _playerOnPlatform = player;
         OnWater = true;
@@ -350,8 +366,7 @@ public class FloatingPlatform : MovingObject
             return false;
         }
         var distance = Vector3.Distance(other.transform.position, transform.position);
-        return distance < 2f;
-
+        return distance < 1.5f;
     }
 
     public bool CanBePlacedInWater()
@@ -367,8 +382,8 @@ public class FloatingPlatform : MovingObject
         var leftPlacement = GameObject.FindWithTag("PlatformPlaceLeft");
         var rightPlacement = GameObject.FindWithTag("PlatformPlaceRight");
 
-        return Vector3.Distance(leftPlacement.transform.position, transform.position) < 1.5f ||
-                      Vector3.Distance(rightPlacement.transform.position, transform.position) < 1.5f;
+        return Vector3.Distance(leftPlacement.transform.position, transform.position) < 1f ||
+                      Vector3.Distance(rightPlacement.transform.position, transform.position) < 1f;
 
     }
 

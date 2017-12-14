@@ -9,6 +9,7 @@ using UnityEngine.Networking;
 public class Player : MovingObject
 {
     public string Name;
+	public TEST_SimplePlayerAI SimplePlayerAi;
     [SyncVar] public float DirectionModifier = 1;
     [SyncVar] public float SpeedModifier = 1f;
     [SyncVar] public float RaftControlModifier = 1f;
@@ -97,7 +98,9 @@ public class Player : MovingObject
 
     public override void Start()
     {
-        CanFloat = false;
+	    SimplePlayerAi.enabled = false;
+
+		CanFloat = false;
         CanMove = true;
         PlayerCanInteract = false;
         PlayerCanHit = false;
@@ -277,7 +280,7 @@ public class Player : MovingObject
 
     private void UpdatePosition(bool interactWhenReachPosition)
     {
-        if (Vector3.Distance(transform.position, _targetPosition) < 0.3f)
+        if (Vector3.Distance(transform.position, _targetPosition) < 0.35f)
         {
             if (_targetGameObject != null)
             {
@@ -325,6 +328,18 @@ public class Player : MovingObject
 
     void Update()
     {
+		// Switch between autopilot and normal
+	    if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+	    {
+		    if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+		    {
+			    if (Input.GetKeyDown(KeyCode.L))
+			    {
+				    SimplePlayerAi.enabled = !SimplePlayerAi.enabled;
+			    }
+		    }
+	    }
+
         // Don't allow players to move whilst rewards are being distributed
         if (_gameManager == null)
         {
@@ -554,6 +569,18 @@ public class Player : MovingObject
             }
             else if (HoldingPlatform)
             {
+	            if (_floatingPlatform.CanPickUp || _floatingPlatform.gameObject.activeSelf)
+	            {
+		            // player should be holding this
+		            if (SP_Manager.Instance.IsSinglePlayer())
+		            {
+			            HoldPlatform(_raft);
+		            }
+		            else if (isLocalPlayer)
+		            {
+			            CmdHoldPlatform(_raft);
+		            }
+	            }
                 _instructionManager.ShowMoveToPlaceIndicator(PlayerRole, transform.position.x);
                 if ((_floatingPlatform.CanBePlacedOnLand() && PlayerRole == Role.Paddler) ||
                     (_floatingPlatform.CanBePlacedInWater() && PlayerRole == Role.Floater))
@@ -593,13 +620,13 @@ public class Player : MovingObject
     /// Check if the current player is next to grab the platfomr
     /// </summary>
     /// <returns>current player is next</returns>
-    private bool IsNextToGetPlatform()
+    public bool IsNextToGetPlatform()
     {
-        if (PlayerRole == Role.Floater && _raft.transform.position.z <= 1.0f)
+        if (PlayerRole == Role.Floater && _raft.transform.position.z <= 1.5f)
         {
             return true;
         }
-        else if (PlayerRole == Role.Paddler && _raft.transform.position.z > 1.0f)
+        if (PlayerRole == Role.Paddler && _raft.transform.position.z > 1.5f)
         {
             if (transform.position.x < 0 && _raft.transform.position.x < 0)
             {
@@ -643,7 +670,7 @@ public class Player : MovingObject
             {
                 ChangeState((int) AnimationState.WALKING);
             }
-            else
+            else if (isLocalPlayer)
             {
                 CmdChangeState((int) AnimationState.WALKING);
             }
@@ -817,8 +844,9 @@ public class Player : MovingObject
         if (SP_Manager.Instance.IsSinglePlayer())
         {
             ClientRespawn(RespawnLocation[0], rotation);
-        }
-        else
+	        HoldingPlatform = false;
+		}
+		else
         {
             RpcRespawn(_gameManager.GetPlayerRespawn(PlayerNum), rotation);
         }
@@ -851,7 +879,6 @@ public class Player : MovingObject
         transform.eulerAngles = rotation;
 
         ControlledByServer = false;
-	    HoldingPlatform = false;
     }
 
     public void HitObstacle()
@@ -1042,11 +1069,11 @@ public class Player : MovingObject
 
 	private void InteractPressed()
     {
-	    if (!CanInteract)
+	    if (!CanInteract && !SP_Manager.Instance.IsSinglePlayer())
 	    {
 		    return;
 	    }
-        if (_floatingPlatform != null && _floatingPlatform.CanPickUp && !_floatingPlatform.OnWater && _floatingPlatform.InRange(gameObject) && !HoldingPlatform)
+        if (_floatingPlatform != null && _floatingPlatform.CanPickUp && !_floatingPlatform.OnWater && IsNextToGetPlatform() && _floatingPlatform.InRange(gameObject) && !HoldingPlatform)
         {
             // Pickup Plaftorm
             if (SP_Manager.Instance.IsSinglePlayer() && PlayerRole == Role.Floater)
@@ -1054,7 +1081,7 @@ public class Player : MovingObject
                 // We do not need to pass platform from paddler to floater in Single player
                 PickupPlatform(_raft);
             }
-            else
+            else if (isLocalPlayer)
             {
                 CmdPickupPlatform(_raft);
             }
@@ -1076,7 +1103,7 @@ public class Player : MovingObject
                     DropPlatform(_raft);
                     PlacePlatformInWater(_raft, gameObject);
                 }
-                else
+                else if (isLocalPlayer)
                 {
                     // Place in water
                     CmdDropPlatform(_raft);
@@ -1089,7 +1116,7 @@ public class Player : MovingObject
                 {
                     DropPlatform(_raft);
                 }
-                else
+                else if (isLocalPlayer)
                 {
                     // Drop Platform
                     CmdDropPlatform(_raft);
@@ -1102,7 +1129,7 @@ public class Player : MovingObject
             {
                 UsePaddle(PlayerID);
             }
-            else
+            else if (isLocalPlayer)
             {
                 // Use paddle in water
 #if USE_PROSOCIAL
@@ -1147,21 +1174,47 @@ public class Player : MovingObject
         {
             return;
         }
+		// Check if any other players are holding the platform
+	    var platformHeld = _gameManager.GetAllPlayers().Any(p => p.HoldingPlatform);
+
+		if (platformHeld)
+	    {
+			// Dont let the platform be picked up as someone else has picked it up
+		    return;
+	    }
+
 
         if (OnPlatform)
             return;
         HoldingPlatform = true;
-        platform.GetComponent<FloatingPlatform>().CanPickUp = false;
-        platform.transform.SetParent(this.transform, true);
-        platform.transform.localPosition = new Vector3(0f, 1.0f, 1.5f);
-
+        
         if (!SP_Manager.Instance.IsSinglePlayer())
         {
             _gameManager.PlayerAction(PlayerAction.PickedUpPlatform, PlayerID);
         }
     }
 
-    [Command]
+	[Command]
+	private void CmdHoldPlatform(GameObject platform)
+	{
+		HoldPlatform(platform);
+	}
+
+	[ServerAccess]
+	private void HoldPlatform(GameObject platform)
+	{
+		var method = MethodBase.GetCurrentMethod();
+		var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
+		if (!attr.HasAccess)
+		{
+			return;
+		}
+		platform.GetComponent<FloatingPlatform>().CanPickUp = false;
+		platform.transform.SetParent(this.transform, true);
+		platform.transform.localPosition = Vector3.zero;
+	}
+
+	[Command]
     private void CmdDropPlatform(GameObject platform)
     {
         DropPlatform(platform);
@@ -1179,9 +1232,9 @@ public class Player : MovingObject
 	    platform.transform.SetParent(null, true);
 		platform.transform.position = new Vector3(transform.position.x, -0.6f, transform.position.z);
         HoldingPlatform = false;
-	    platform.GetComponent<FloatingPlatform>().CanPickUp = true;
+		platform.GetComponent<FloatingPlatform>().CanPickUp = true;
 
-        if (!SP_Manager.Instance.IsSinglePlayer())
+		if (!SP_Manager.Instance.IsSinglePlayer())
         {
             _gameManager.PlayerAction(PlayerAction.PlacedPlatform, PlayerID);
         }
