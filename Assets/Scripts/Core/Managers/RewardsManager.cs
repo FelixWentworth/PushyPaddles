@@ -20,6 +20,7 @@ public class RewardsManager : MonoBehaviour
     private int _currentId;
 
     private int _rewardsRemaining;
+	private bool _nextRoundStarted;
 
     private GameObject _rewardObjectInScene;
 
@@ -29,7 +30,8 @@ public class RewardsManager : MonoBehaviour
     public void ShowReward(int playerCount, List<string> ids, List<RewardScreenManager.RewardIcons> rewards,
         int rewardsToGive)
     {
-        _rewardsRemaining = rewardsToGive;//
+	    _nextRoundStarted = false;
+		_rewardsRemaining = rewardsToGive;//
         // Check if we only care about positive rewards
         if (PSL_GameConfig.RewardType == "Positive")
         {
@@ -108,6 +110,9 @@ public class RewardsManager : MonoBehaviour
 
     public void Select()
     {
+		if (_nextRoundStarted)
+			return;
+	    
         RewardSelected(_type, _playerIds[_currentlyHighlighting]);
 
         Complete();
@@ -131,9 +136,10 @@ public class RewardsManager : MonoBehaviour
     {
         _rewardsRemaining -= 1;
 
-
-        if (_rewardsRemaining <= 0)
+        if (_rewardsRemaining <= 0 && !_nextRoundStarted)
         {
+			// stop players spamming next round
+	        _nextRoundStarted = true;
             // Notify the server that all rewards are given out
             if (SP_Manager.Instance.IsSinglePlayer())
             {
