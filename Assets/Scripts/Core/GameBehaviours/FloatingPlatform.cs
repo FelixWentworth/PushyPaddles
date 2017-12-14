@@ -108,7 +108,7 @@ public class FloatingPlatform : MovingObject
             GetComponent<BoxCollider>().enabled = true;
             _playerOnPlatform.GetComponent<Rigidbody>().useGravity = false;
             _playerOnPlatform.transform.position = new Vector3(transform.position.x,
-                _playerOnPlatform.transform.position.y, transform.position.z);
+            _playerOnPlatform.transform.position.y, transform.position.z);
 
             var player = _playerOnPlatform.GetComponent<Player>();
 
@@ -123,6 +123,10 @@ public class FloatingPlatform : MovingObject
             // Not on water
             GetComponent<BoxCollider>().enabled = false;
         }
+
+	    var players = GameObject.FindGameObjectsWithTag("Player");
+		CanPickUp = !players.Any(p => p.GetComponent<Player>().HoldingPlatform);
+
         _mesh.enabled = CanPickUp;
         if (_levelManager != null)
         {

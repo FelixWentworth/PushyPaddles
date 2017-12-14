@@ -1209,9 +1209,9 @@ public class Player : MovingObject
 		{
 			return;
 		}
-		platform.GetComponent<FloatingPlatform>().CanPickUp = false;
-		platform.transform.SetParent(this.transform, true);
-		platform.transform.localPosition = Vector3.zero;
+		var fp = platform.GetComponent<FloatingPlatform>();
+		//platform.transform.SetParent(this.transform, true);
+		platform.transform.localPosition = new Vector3(transform.position.x, -0.75f, transform.position.z);
 	}
 
 	[Command]
@@ -1229,10 +1229,9 @@ public class Player : MovingObject
         {
             return;
         }
-	    platform.transform.SetParent(null, true);
-		platform.transform.position = new Vector3(transform.position.x, -0.6f, transform.position.z);
+	    //platform.transform.SetParent(null, true);
+		platform.transform.position = new Vector3(transform.position.x, -0.75f, transform.position.z);
         HoldingPlatform = false;
-		platform.GetComponent<FloatingPlatform>().CanPickUp = true;
 
 		if (!SP_Manager.Instance.IsSinglePlayer())
         {
