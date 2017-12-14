@@ -27,6 +27,8 @@ public class MenuManager : NetworkBehaviour
     public GameObject PlayerChoosingRewardsGameObject;
     public GameObject SwitchingRolesPrompt;
 
+	public bool GameOver;
+
     void Start()
     {
         SetupScreens();
@@ -101,6 +103,7 @@ public class MenuManager : NetworkBehaviour
         SwitchingRolesPrompt.SetActive(false);
         GameOverScreen.gameObject.SetActive(true);
         GameOverScreen.Hide();
+	    GameOver = false;
 
         CharacterSelectionScreen.SetActive(false);
         HowToPlayScreen.SetActive(false);
@@ -263,7 +266,9 @@ public class MenuManager : NetworkBehaviour
         if (!SP_Manager.Instance.IsSinglePlayer())
         {
             RpcShowGameOver(victory, timeTaken, controlledByOrchestrator);
-        }
+	        GameOver = true;
+			GameOverScreen.Show();
+		}
         else
         {
             ClientShowGameOver(victory, timeTaken, false);
@@ -288,7 +293,6 @@ public class MenuManager : NetworkBehaviour
         {
             return;
         }
-
         GameOverScreen.Show();
         GameOverScreen.SetText(victory, timeTaken);
         GameOverScreen.SetButtonsEnabled(!controlledByOrchestrator);
@@ -299,6 +303,7 @@ public class MenuManager : NetworkBehaviour
     /// </summary>
     public void HideGameOver()
     {
+	    GameOver = false;
         GameOverScreen.Hide();
     }
 
