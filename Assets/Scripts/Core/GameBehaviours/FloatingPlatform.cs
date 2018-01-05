@@ -37,21 +37,22 @@ public class FloatingPlatform : MovingObject
         
 
         _mesh = transform.GetChild(0).GetComponent<MeshRenderer>();
-
-        var oppositeSide = new Vector3(transform.position.x * -1, transform.position.y, transform.position.z);
-
+       
 	    if (!SP_Manager.Instance.IsSinglePlayer())
 	    {
 			// Set the respawn position to be further along the path so that the paddlers must help
-		    var zIncrease = Vector3.forward * 8f;
-		    RespawnLocation.Add(transform.position + zIncrease);
-		    RespawnLocation.Add(oppositeSide + zIncrease);
+		    transform.position += Vector3.forward * 8f;
+		    RespawnLocation.Add(transform.position);
 		}
 		else
 	    {
+			// Set the respawn position to be closer to the middle to ensure it can be seen in portrait mode
+			transform.position += Vector3.left;
 		    RespawnLocation.Add(transform.position);
-		    RespawnLocation.Add(oppositeSide);
 		}
+
+		var oppositeSide = new Vector3(transform.position.x * -1, transform.position.y, transform.position.z);
+		RespawnLocation.Add(oppositeSide);
 
 		_pickupText = GetComponentInChildren<Text>();
         PickupValue = "";
