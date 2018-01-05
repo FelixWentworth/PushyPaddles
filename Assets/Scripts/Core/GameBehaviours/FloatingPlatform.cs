@@ -90,9 +90,10 @@ public class FloatingPlatform : MovingObject
 		CanPickUp = true;
 	}
 
-	public void PlaceOnWater(Player player)
+	public void PlaceOnWater(Player player, Vector3 pos)
     {
         _playerOnPlatform = player;
+		transform.position = pos;
         OnWater = true;
     }
 
@@ -162,11 +163,18 @@ public class FloatingPlatform : MovingObject
             var operation = other.gameObject.GetComponent<MathsCollectible>().Operation;
 
 
-            if (_operations.Count == 0 &&
-                (operation.Contains("+") || operation.Contains("/") || operation.Contains("x")))
+            if (_operations.Count == 0)
             {
-                operation = operation.Substring(1, operation.Length - 1);
-                PickupValue = operation;
+				if (operation.Contains("+"))
+				{
+					operation = operation.Substring(1, operation.Length - 1);
+					PickupValue = operation;
+				}
+				else if (operation.Contains("/") || operation.Contains("x"))
+				{
+					operation = "0";
+					PickupValue = operation;
+				}
             }
             else
             {
@@ -378,7 +386,7 @@ public class FloatingPlatform : MovingObject
         // Get Start Point
         var start = GameObject.Find("PlatformStartPoint");
 
-        return Vector3.Distance(start.transform.position, transform.position) < 2.0f;
+        return Vector3.Distance(start.transform.position, transform.position) < 1.0f;
     }
 
     public bool CanBePlacedOnLand()

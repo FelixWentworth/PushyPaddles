@@ -485,7 +485,8 @@ public class Player : MovingObject
                 else
                 {
                     SP_Manager.Instance.Get<SP_GameManager>().ShowPlaceIndicator();
-                }
+					HoldPlatform(_raft);
+				}
 
                 if (OnPlatform)
                 {
@@ -572,14 +573,7 @@ public class Player : MovingObject
 	            if (_floatingPlatform.CanPickUp || _floatingPlatform.gameObject.activeSelf)
 	            {
 		            // player should be holding this
-		            if (SP_Manager.Instance.IsSinglePlayer())
-		            {
-			            HoldPlatform(_raft);
-		            }
-		            else if (isLocalPlayer)
-		            {
-			            CmdHoldPlatform(_raft);
-		            }
+			        CmdHoldPlatform(_raft);
 	            }
                 _instructionManager.ShowMoveToPlaceIndicator(PlayerRole, transform.position.x);
                 if ((_floatingPlatform.CanBePlacedOnLand() && PlayerRole == Role.Paddler) ||
@@ -1264,14 +1258,11 @@ public class Player : MovingObject
             // only the server knows each player role, so do this check here
             return;
         }
-        var start = GameObject.Find("PlatformStartPoint");
-
-        platform.transform.position = start.transform.position;
-
+        var start = GameObject.Find("PlatformStartPoint/PlatformStart");
         var fp = platform.GetComponent<FloatingPlatform>();
 
         //fp.CanPickUp = true;
-        fp.PlaceOnWater(this);
+        fp.PlaceOnWater(this, start.transform.position);
 
     }
 
