@@ -77,11 +77,11 @@ public class FloatingPlatform : MovingObject
         OnWater = false;
         if (isServer)
         {
-#if USE_PROSOCIAL
+#if PSL_ENABLED
             PSL_LRSManager.Instance.NewAttempt();
 #endif
-        }
-    }
+		}
+	}
 
 	public override void Respawned()
 	{
@@ -149,10 +149,10 @@ public class FloatingPlatform : MovingObject
 		}
 		else if (other.gameObject.tag == "Treasure")
         {
-#if USE_PROSOCIAL
+#if PSL_ENABLED
             PSL_LRSManager.Instance.ChestReached();
 #endif
-            _playerOnPlatform.GetComponent<Player>().ReachedChest();
+			_playerOnPlatform.GetComponent<Player>().ReachedChest();
             CanMove = false;
             StartCoroutine(GoalReached(other.gameObject));
         }

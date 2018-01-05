@@ -39,10 +39,10 @@ public class LevelManager : NetworkBehaviour
     {
         get
         {
-#if USE_PROSOCIAL
+#if PSL_ENABLED
             return PSL_LRSManager.Instance.TimeLimit;
 #else
-            return 10f * 60;
+			return 10f * 60;
 #endif
         }
     }

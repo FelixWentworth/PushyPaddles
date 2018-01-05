@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Policy;
 using Newtonsoft.Json;
-#if USE_PROSOCIAL
+#if PSL_ENABLED
 using PlayGen.Orchestrator.Common;
 #endif
 using PlayGen.Unity.Utilities.Localization;
@@ -63,10 +63,14 @@ public class GameManager : NetworkBehaviour
     {
         _startTime = DateTime.Now;
 
-#if USE_PROSOCIAL_EVENTS
+#if PSL_ENABLED
+		Debug.Log("PSL ENABLED");
         Platform.SetActive(false);
 #endif
-        PauseScreen.SetActive(false);
+#if !PSL_ENABLED
+		Debug.Log("PSL DISABLED");
+#endif
+		PauseScreen.SetActive(false);
 
         if (isServer)
         {
@@ -136,7 +140,7 @@ public class GameManager : NetworkBehaviour
                     PauseGame();
                 }
             }
-#if USE_PROSOCIAL
+#if PSL_ENABLED
             if (!ControlledByOrchestrator || PlatformSelection.ConnectionType == ConnectionType.Testing)
             {
                 if (AllPlayersReady)
@@ -181,8 +185,8 @@ public class GameManager : NetworkBehaviour
             }
 #endif
 
-            // end game when no players after a certain time
-            if (_players.Count == 0)
+			// end game when no players after a certain time
+			if (_players.Count == 0)
             {
                 _noPlayerTimer += Time.deltaTime;
                 if (_noPlayerTimer > _maxInactiveTime)
@@ -207,7 +211,7 @@ public class GameManager : NetworkBehaviour
         //{
         //    ResetRound();
         //}
-#if USE_PROSOCIAL_EVENTS
+#if PSL_ENABLED
         PauseScreen.SetActive(!_gamePlaying);
 #else
 
@@ -326,13 +330,13 @@ public class GameManager : NetworkBehaviour
 
         ChangeRoles();
 
-        // TODO check if needs a delay for player disconnection, may break otherwise
-#if USE_PROSOCIAL
+		// TODO check if needs a delay for player disconnection, may break otherwise
+#if PSL_ENABLED
         PlatformSelection.UpdatePlayers(_players.Select(p => p.PlayerID).ToList());
 #endif
-    }
+	}
 
-    [ClientRpc]
+	[ClientRpc]
     public void RpcSetLanguage(string language)
     {
         ClientSetLanguage(language);
@@ -675,10 +679,10 @@ public class GameManager : NetworkBehaviour
         // End the game
         _gamePlaying = false;
         _menu.ShowGameOver(_gameWon, _level.SecondsTaken, ControlledByOrchestrator);
-#if USE_PROSOCIAL
+#if PSL_ENABLED
         PSL_LRSManager.Instance.GameCompleted(_level.SecondsTaken);
 #endif
-        if (!ControlledByOrchestrator)
+		if (!ControlledByOrchestrator)
         {
             if (SP_Manager.Instance.IsSinglePlayer())
             {
@@ -751,12 +755,12 @@ public class GameManager : NetworkBehaviour
         {
             return;
         }
-#if USE_PROSOCIAL
+#if PSL_ENABLED
         _playerActionManager.PerformedAction(action, playerId, action.GetAlwaysTracked(), action.GetCancelAction());
 #endif
-    }
+	}
 
-    [ServerAccess]
+	[ServerAccess]
     private void ClearPlayerObjects()
     {
         var method = MethodBase.GetCurrentMethod();
@@ -782,11 +786,11 @@ public class GameManager : NetworkBehaviour
             return;
         }
         _level.NextRound();
-        // output the values from this round
-#if USE_PROSOCIAL
+		// output the values from this round
+#if PSL_ENABLED
         PSL_LRSManager.Instance.NewRound((DateTime.Now - _startTime).Seconds);
 #endif
-        Restart(newRound: true);
+		Restart(newRound: true);
         _startTime = DateTime.Now;
 
     }
@@ -998,11 +1002,11 @@ public class GameManager : NetworkBehaviour
 		}
         if (ControlledByOrchestrator)
         {
-#if USE_PROSOCIAL
+#if PSL_ENABLED
             PlatformSelection.UpdateSeverState(GameState.Stopped);
 #endif
-        }
-    }
+		}
+	}
     
 
 

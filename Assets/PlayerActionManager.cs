@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Configuration;
 using Microsoft.SqlServer.Server;
-#if USE_PROSOCIAL
+#if PSL_ENABLED
 using PlayGen.Orchestrator.PSL.Common.LRS;
 using PlayGen.Unity.AsyncUtilities;
 #endif
@@ -13,7 +13,7 @@ using Random = UnityEngine.Random;
 
 public class PlayerActionManager : MonoBehaviour
 {
-#if USE_PROSOCIAL
+#if PSL_ENABLED
 
     [Serializable]
     private class PlayerActions

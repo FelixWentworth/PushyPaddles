@@ -1570,6 +1570,7 @@ Transform:
   m_LocalPosition: {x: 0, y: -0.4991, z: -0.6}
   m_LocalScale: {x: 0.0666667, y: 0.06666683, z: 0.114013836}
   m_Children:
+  - {fileID: 1052176561}
   - {fileID: 1554796478}
   m_Father: {fileID: 303}
   m_RootOrder: 0
@@ -6796,7 +6797,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 265459929}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0.15}
+  m_LocalPosition: {x: 0, y: 0, z: -0.013}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children:
   - {fileID: 401705012}
@@ -6807,7 +6808,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: -0.6}
-  m_SizeDelta: {x: 800, y: 180}
+  m_SizeDelta: {x: 800, y: 220}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &265459931
 Canvas:
@@ -8143,7 +8144,7 @@ RectTransform:
   m_Father: {fileID: 265459930}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0.6}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -8174,7 +8175,7 @@ MonoBehaviour:
     m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 80
-    m_Alignment: 4
+    m_Alignment: 7
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -9085,17 +9086,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac324082d46c8034a99d6ec9fb9fc7e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _connectionType: 2
-  _platformManagers:
-  - ConnectionType: 0
-    NetworkManagerObj: {fileID: 114848141446279744, guid: f26e5d44aae3a0542bbb551362fe29dc,
-      type: 2}
-  - ConnectionType: 1
-    NetworkManagerObj: {fileID: 114987455416771950, guid: b9946054ca8f55446a118c39b1957410,
-      type: 2}
-  - ConnectionType: 2
-    NetworkManagerObj: {fileID: 114417391500823532, guid: 83346fb668f15cc469be0ada521b4569,
-      type: 2}
 --- !u!1 &461652065
 GameObject:
   m_ObjectHideFlags: 0
@@ -14644,7 +14634,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 871f7cb8c4bdf6c45a2925defc449f57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameManager: {fileID: 0}
 --- !u!114 &919061269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15856,7 +15845,7 @@ RectTransform:
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.6}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -15886,7 +15875,7 @@ MonoBehaviour:
     m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 150
-    m_Alignment: 4
+    m_Alignment: 7
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -16104,6 +16093,34 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.36837792, y: 0.0000017285347, z: 0.0016335845}
     m_Extent: {x: 1.4135954, y: 1.6845057, z: 0.35555044}
   m_DirtyAABB: 0
+--- !u!1 &1052176560
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1052176561}
+  m_Layer: 0
+  m_Name: PlatformStart
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1052176561
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1052176560}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.68, y: -0, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 333}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1052639970
 GameObject:
   m_ObjectHideFlags: 0
@@ -22148,7 +22165,7 @@ RectTransform:
   m_Children:
   - {fileID: 1685183243}
   m_Father: {fileID: 333}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -135, y: -90, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -26853,8 +26870,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a09ef47008d916340ae8560ff2bfdc6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _url: http://lrs-psl.atosresearch.eu/
-  _logFileName: PlayerTracking
 --- !u!114 &1968042642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26866,70 +26881,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da285361e00629b4aa20a6e29af99fa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skillCriteria:
-  - Name: Pushed Against another player
-    Skill: 11
-    Positive: 0
-    TriggerAction: 1
-    PreviousAction: 1
-    MultiplePlayers: 1
-    Interval: 0.4
-  - Name: Reached Chest
-    Skill: 11
-    Positive: 1
-    TriggerAction: 4
-    PreviousAction: 0
-    MultiplePlayers: 0
-    Interval: 0
-  - Name: Pushed into Obstacle
-    Skill: 11
-    Positive: 0
-    TriggerAction: 2
-    PreviousAction: 1
-    MultiplePlayers: 1
-    Interval: 1.5
-  - Name: Pushed into collectible
-    Skill: 11
-    Positive: 1
-    TriggerAction: 3
-    PreviousAction: 1
-    MultiplePlayers: 1
-    Interval: 1.5
-  - Name: Gave Reward To Self
-    Skill: 10
-    Positive: 0
-    TriggerAction: 10
-    PreviousAction: 0
-    MultiplePlayers: 0
-    Interval: 1
-  - Name: Gave Reward Other
-    Skill: 10
-    Positive: 1
-    TriggerAction: 11
-    PreviousAction: 0
-    MultiplePlayers: 0
-    Interval: 0
-  - Name: Reached Chest Correct
-    Skill: 9
-    Positive: 1
-    TriggerAction: 5
-    PreviousAction: 0
-    MultiplePlayers: 0
-    Interval: 0
-  - Name: Reached Chest Incorrect
-    Skill: 9
-    Positive: 0
-    TriggerAction: 6
-    PreviousAction: 0
-    MultiplePlayers: 0
-    Interval: 0
-  - Name: Idle holding platform
-    Skill: 12
-    Positive: 0
-    TriggerAction: 9
-    PreviousAction: 7
-    MultiplePlayers: 0
-    Interval: 5
 --- !u!1 &1968812621
 GameObject:
   m_ObjectHideFlags: 0

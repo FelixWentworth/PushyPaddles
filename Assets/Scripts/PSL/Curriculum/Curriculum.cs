@@ -39,10 +39,10 @@ public class Curriculum : MonoBehaviour {
         var challenges = _challenges.MathsProblems.Where(c => c.Year == year && c.Lesson == lesson).ToList();
         GameObject.Find("LevelManager").GetComponent<LevelManager>().TotalRounds = challenges.Count;
         _levelIndex = challenges[0].Level;
-#if USE_PROSOCIAL
+#if PSL_ENABLED
         PSL_LRSManager.Instance.SetNumRounds(challenges.Count);
 #endif
-        _currentChallenge = challenges[0];
+		_currentChallenge = challenges[0];
         return challenges[0];
     }
 

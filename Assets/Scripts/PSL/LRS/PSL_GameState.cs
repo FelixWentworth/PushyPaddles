@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
-#if USE_PROSOCIAL
+#if PSL_ENABLED
 using PlayGen.Orchestrator.Common;
 #endif
 using UnityEngine.Networking;
 
 public class PSL_GameState : NetworkBehaviour {
-#if USE_PROSOCIAL
+#if PSL_ENABLED
     /// <summary>
     /// This class hooks up to the event listener and handle any events that are fired
     /// </summary>

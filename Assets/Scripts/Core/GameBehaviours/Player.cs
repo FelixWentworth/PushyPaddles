@@ -68,10 +68,10 @@ public class Player : MovingObject
     [SyncVar] private int _playerModel;
     [SyncVar] public string SyncNickName;
     [SyncVar] public string PlayerID;
-#if USE_PROSOCIAL
+#if PSL_ENABLED
     private PlatformSelection.PSLPlayerData _playerData;
 #endif
-    [SyncVar] public Vector3 RealPosition;
+	[SyncVar] public Vector3 RealPosition;
     [SyncVar] public Vector3 RealRotation;
     private float _elapsedTime;
     private float _updateInterval = 0.11f; // 9 times a second
@@ -141,7 +141,7 @@ public class Player : MovingObject
             }
 
             GameObject.Find("MenuManager").GetComponent<MenuManager>().ShowHowToPlay();
-#if USE_PROSOCIAL
+#if PSL_ENABLED
             if (!SP_Manager.Instance.IsSinglePlayer())
             {
 
@@ -154,8 +154,8 @@ public class Player : MovingObject
 
             _playerText.text = _playerData.NickName;
 #endif
-        }
-        if (SP_Manager.Instance.IsSinglePlayer())
+		}
+		if (SP_Manager.Instance.IsSinglePlayer())
         {
             _targetPosition = transform.position;
             SP_Manager.Instance.Get<SP_Menus>().ShowHowToPlay();
@@ -519,12 +519,12 @@ public class Player : MovingObject
         }
         if (isLocalPlayer && PlayerID == "" && !SP_Manager.Instance.IsSinglePlayer())
         {
-#if USE_PROSOCIAL
+#if PSL_ENABLED
             CmdSetPlayerData(_playerData);
 #endif
-        }
+		}
 
-        if (!SP_Manager.Instance.IsSinglePlayer())
+		if (!SP_Manager.Instance.IsSinglePlayer())
         {
             if (isLocalPlayer)
             {
@@ -706,7 +706,7 @@ public class Player : MovingObject
         transform.eulerAngles = RealRotation;
     }
 
-#if USE_PROSOCIAL
+#if PSL_ENABLED
     [Command]
     private void CmdSetPlayerData(PlatformSelection.PSLPlayerData data)
     {
@@ -737,8 +737,8 @@ public class Player : MovingObject
 
 #endif
 
-    // Server moves the player and forces them to a position
-    [ServerAccess]
+	// Server moves the player and forces them to a position
+	[ServerAccess]
     public void SyncForceMove(Vector3 position, Vector3 rotation)
     {
         var method = MethodBase.GetCurrentMethod();
@@ -1125,12 +1125,12 @@ public class Player : MovingObject
             }
             else if (isLocalPlayer)
             {
-                // Use paddle in water
-#if USE_PROSOCIAL
+				// Use paddle in water
+#if PSL_ENABLED
                 CmdUsePaddle(_playerData.PlayerId);
 #endif
-            }
-        }
+			}
+		}
     }
 
     private void SpawnWaveEffect(Vector3 playerPos)

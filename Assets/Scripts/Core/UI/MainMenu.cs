@@ -34,13 +34,13 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
-//#if USE_PROSOCIAL
-        if (PlatformSelection.ConnectionType != ConnectionType.Testing)
+		#if PSL_ENABLED
+		if (PlatformSelection.ConnectionType != ConnectionType.Testing)
         {
             _useDefault = false;
             _showMenu = false;
         }
-//#endif
+#endif
         //#if UNITY_WEBGL
         //        _networkManager.useWebSockets = true;
         //#elif UNITY_STANDALONE_WIN
@@ -64,7 +64,7 @@ public class MainMenu : MonoBehaviour
             MultiPlayerMenu.SetActive(false);
             SinglePlayerMenu.SetActive(true);
         }
-#if USE_PROSOCIAL
+#if PSL_ENABLED
         if (!_showMenu)
         {
             if (PlatformSelection.ConnectionType == ConnectionType.Testing)
@@ -85,9 +85,9 @@ public class MainMenu : MonoBehaviour
             }
         }
 #endif
-    }
+	}
 
-    private IEnumerator GetConnectionConfig()
+	private IEnumerator GetConnectionConfig()
     {
         var path = Application.streamingAssetsPath + "/ConnectionConfig.json";
 
