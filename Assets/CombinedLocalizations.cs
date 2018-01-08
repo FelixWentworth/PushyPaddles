@@ -11,7 +11,7 @@ public class CombinedLocalizations : MonoBehaviour
     public List<string> Keys;
     public bool SeparateKeys;
 
-    void Start()
+    void OnEnable()
     {
         var text = GetComponent<Text>();
         var str = "";
