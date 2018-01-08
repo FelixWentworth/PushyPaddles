@@ -132,6 +132,11 @@ public class FloatingPlatform : MovingObject
         {
             _levelManager.Current = PickupValue;
         }
+	    if (isServer && transform.position.z > 18f)
+	    {
+		    // out of bounds
+			ResetPositions();
+	    }
     }
 
     void OnTriggerEnter(Collider other)

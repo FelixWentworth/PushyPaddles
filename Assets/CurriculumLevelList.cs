@@ -21,7 +21,7 @@ public class CurriculumLevelList : MonoBehaviour
     private string _year = "1";
 
     // Use this for initialization
-    void Start ()
+    void OnEnable ()
     {
         _scrollRect = GetComponentInChildren<ScrollRect>();
 
@@ -91,8 +91,8 @@ public class CurriculumLevelList : MonoBehaviour
 
         foreach (var curriculumChallenge in lessons)
         {
-            var description = curriculum.GetDescriptionForLesson(curriculumChallenge.Lesson);
-            AddElement(curriculumChallenge.Lesson, description.Description, _year);
+            var description = Localization.Get("LESSON_" + curriculumChallenge.Lesson);
+			AddElement(curriculumChallenge.Lesson, description, _year);
         }
     }
 
