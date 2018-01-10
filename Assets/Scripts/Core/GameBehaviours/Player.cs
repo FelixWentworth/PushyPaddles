@@ -155,9 +155,10 @@ public class Player : MovingObject
             _playerText.text = _playerData.NickName;
 #endif
 		}
+	    _targetPosition = transform.position;
+
 		if (SP_Manager.Instance.IsSinglePlayer())
         {
-            _targetPosition = transform.position;
             SP_Manager.Instance.Get<SP_Menus>().ShowHowToPlay();
             GameObject.Find("CharacterSelection").GetComponent<CharacterSelection>().Set(this);
         }
@@ -398,15 +399,18 @@ public class Player : MovingObject
                         _rigidbody.useGravity = true;
                     }
 
-                    if (SP_Manager.Instance.IsSinglePlayer())
+                    if (SP_Manager.Instance.IsSinglePlayer() || Touch_Movement.UseTouch)
                     {
                         if (_targetPosition != transform.position && !Respawning)
                         {
 	                        UpdatePosition(_targetGameObject != null);
                         }
-						
                     }
-
+	                if (!Touch_Movement.UseTouch)
+	                {
+						// keep target position updated
+		                _targetPosition = transform.position;
+	                }
                     var x = Input.GetAxis("Horizontal");
                     var z = Input.GetAxis("Vertical");
 
@@ -418,8 +422,9 @@ public class Player : MovingObject
                     {
                         Move(gameObject, 0, z);
                     }
-                    else
+                    else if (!Touch_Movement.UseTouch || _targetGameObject == null)
                     {
+						// TODO Make sure that player is not using touch controls to move, resets anim
                         // Stopped moving
                         if (_animationState != AnimationState.IDLE)
                         {
@@ -548,6 +553,7 @@ public class Player : MovingObject
         if (!_floatingPlatform.OnWater)
         {
 	        PaddlePrompt.SetActive(false);
+			_instructionManager.DisableTouchPushInstruction();
 			if (!_hasMoved)
             {
                 _instructionManager.ShowMovement(PlayerRole, transform.position.x);
@@ -594,19 +600,34 @@ public class Player : MovingObject
         else
         {
             _instructionManager.DisableInsctructions();
-            if (PlayerRole == Role.Paddler && !PaddlePrompt.activeSelf && !_usedPaddle)
+            if (PlayerRole == Role.Paddler && !_usedPaddle)
             {
                 if (_controls != null)
                 {
                     _controls.AnimateInteract(true);
                 }
-                else
+                else if (!Touch_Movement.UseTouch && !PaddlePrompt.activeSelf)
                 {
                     var multiplier = transform.position.x < 0 ? 1f : -1f;
                     PaddlePrompt.transform.localScale = new Vector3(PaddlePrompt.transform.localScale.x, PaddlePrompt.transform.localScale.y, PaddlePrompt.transform.localScale.z * multiplier);
                     PaddlePrompt.SetActive(true);
                 }
-            }
+                else if (Touch_Movement.UseTouch)
+                {
+	                _instructionManager.ShowTouchPush(transform.position.x < 0);
+                }
+			}
+	        if (Touch_Movement.UseTouch)
+	        {
+		        if (!_usedPaddle)
+		        {
+			        _instructionManager.UpdatePushSinglePlayer(new Vector3(0f, 0f, _raft.transform.position.z));
+		        }
+		        else
+		        {
+			        _instructionManager.DisableTouchPushInstruction();
+		        }
+	        }
         }
     }
 
@@ -1012,12 +1033,14 @@ public class Player : MovingObject
             {
                 _controls.AnimateInteract(false);
             }
-            if (PaddlePrompt.activeSelf || (SP_Manager.Instance.IsSinglePlayer() && _floatingPlatform.OnWater))
+            if (PaddlePrompt.activeSelf ||(SP_Manager.Instance.IsSinglePlayer() || Touch_Movement.UseTouch) && _floatingPlatform.OnWater)
             {
                 _usedPaddle = true;
                 PaddlePrompt.SetActive(false);
-            }
-            _usePaddle = false;
+			}
+	        _instructionManager.DisableTouchPushInstruction();
+
+			_usePaddle = false;
             SpawnWaveEffect(transform.position);
         }
         if (_playerModel != _currentModel)
@@ -1063,7 +1086,7 @@ public class Player : MovingObject
 
 	private void InteractPressed()
     {
-	    if (!CanInteract && !SP_Manager.Instance.IsSinglePlayer())
+	    if (!CanInteract && !SP_Manager.Instance.IsSinglePlayer() && !Touch_Movement.UseTouch)
 	    {
 		    return;
 	    }
@@ -1339,9 +1362,12 @@ public class Player : MovingObject
     {
         
         Debug.Log("Player set model to: " + model);
-        IsReady = true;
-        
-        _playerModel = model;
+	    if (PlayerRole == Role.Paddler || !_gameManager.LessonSelectRequired)
+	    {
+		    IsReady = true;
+	    }
+
+	    _playerModel = model;
     }
 
 
@@ -1847,6 +1873,7 @@ public class Player : MovingObject
             if (isLocalPlayer)
             {
                 CmdSetLesson("year " + year, lesson);
+	            
             }
         }
     }
@@ -1855,7 +1882,8 @@ public class Player : MovingObject
     public void CmdSetLesson(string year, string lesson)
     {
         ServerSetLesson(year, lesson);
-    }
+	    IsReady = true;
+	}
 
     [ServerAccess]
     public void ServerSetLesson(string year, string lesson)
@@ -1871,8 +1899,8 @@ public class Player : MovingObject
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
-
-        PSL_GameConfig.SetGameConfig(year, lesson, "Maths", "Any");
+	    
+		PSL_GameConfig.SetGameConfig(year, lesson, "Maths", "Any");
         _gameManager.SetLesson(year, lesson);
     }
 

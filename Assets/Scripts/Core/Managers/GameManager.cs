@@ -91,7 +91,7 @@ public class GameManager : NetworkBehaviour
 
     void Update()
     {
-        if (isServer || SP_Manager.Instance.IsSinglePlayer())
+	    if (isServer || SP_Manager.Instance.IsSinglePlayer())
         {
             NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
             NetworkServer.RegisterHandler(MsgType.Disconnect, OnDisconnected);
@@ -126,9 +126,8 @@ public class GameManager : NetworkBehaviour
             //if (!_level.RoundStarted)
             //{
             // Set the sync var variable
-
             AllPlayersReady = AreAllPlayersReady();
-            if (SP_Manager.Instance.IsSinglePlayer())
+            if (SP_Manager.Instance != null && SP_Manager.Instance.IsSinglePlayer())
             {
                 if (AllPlayersReady)
                 {
@@ -157,7 +156,7 @@ public class GameManager : NetworkBehaviour
                 }
                 //}
                 //
-                AllPlayersReady = _players.Count >= 3;
+                //AllPlayersReady = _players.Count >= 3;
                 if (!AllPlayersReady)
                 {
                     PauseGame();
@@ -364,7 +363,8 @@ public class GameManager : NetworkBehaviour
         }
         if (ready)
             return true;
-        if (_players.Count != 3)
+
+		if (_players.Count != 3)
         {
             return false;
         }

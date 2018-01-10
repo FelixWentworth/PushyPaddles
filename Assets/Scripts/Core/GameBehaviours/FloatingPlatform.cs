@@ -41,15 +41,14 @@ public class FloatingPlatform : MovingObject
 	    if (!SP_Manager.Instance.IsSinglePlayer())
 	    {
 			// Set the respawn position to be further along the path so that the paddlers must help
-		    transform.position += Vector3.forward * 8f;
-		    RespawnLocation.Add(transform.position);
+		    transform.position = new Vector3(transform.position.x, transform.position.y, 8f);
 		}
 		else
 	    {
 			// Set the respawn position to be closer to the middle to ensure it can be seen in portrait mode
 			transform.position += Vector3.left;
-		    RespawnLocation.Add(transform.position);
 		}
+	    RespawnLocation.Add(transform.position);
 
 		var oppositeSide = new Vector3(transform.position.x * -1, transform.position.y, transform.position.z);
 		RespawnLocation.Add(oppositeSide);

@@ -70,7 +70,6 @@ public class MainMenu : MonoBehaviour
             if (PlatformSelection.ConnectionType == ConnectionType.Testing)
             {
 #if UNITY_STANDALONE_LINUX
-// TODO shut down if no players after x seconds (30?)
             //_networkManager.StartServer();
             _menuManager.HideMenu();
 #elif UNITY_WEBGL

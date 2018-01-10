@@ -152,6 +152,6 @@ public class SP_GameManager : MonoBehaviour
 			_instructionManager = GameObject.Find("PlayerInstructionManager").GetComponent<InstructionManager>();
 		}
 
-		_instructionManager.DisableSinglePlayerPushInstruction();
+		_instructionManager.DisableTouchPushInstruction();
 	}
 }

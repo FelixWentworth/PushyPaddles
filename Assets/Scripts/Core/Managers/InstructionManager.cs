@@ -40,7 +40,7 @@ public class InstructionManager : MonoBehaviour
         DisablePlaceInstruction();
         DisableMoveInstruction();
         DisableInteractInstruction();
-        DisableSinglePlayerPushInstruction();
+        DisableTouchPushInstruction();
     }
 
     public void DisablePlatformInstruction()
@@ -75,10 +75,11 @@ public class InstructionManager : MonoBehaviour
         _interactPress.SetActive(false);
     }
 
-    public void DisableSinglePlayerPushInstruction()
+    public void DisableTouchPushInstruction()
     {
         _PushSinglePlayer.SetActive(false);
     }
+
 
     /// <summary>
     /// Show players their controls for movement
@@ -187,7 +188,7 @@ public class InstructionManager : MonoBehaviour
         }
         else
         {
-            if (!_interactPress.activeSelf)
+            if (!_interactPress.activeSelf && !Touch_Movement.UseTouch)
             {
                 _interactPress.SetActive(true);
             }
@@ -200,6 +201,15 @@ public class InstructionManager : MonoBehaviour
         DisableMoveInstruction();
         _PushSinglePlayer.SetActive(true);
     }
+
+	public void ShowTouchPush(bool left)
+	{
+		DisableMoveInstruction();
+		DisableMoveInstruction();
+		_PushSinglePlayer.SetActive(true);
+		_PushSinglePlayer.transform.Find("TapLeft").gameObject.SetActive(left);
+		_PushSinglePlayer.transform.Find("TapRight").gameObject.SetActive(!left);
+	}
 
     public void UpdatePushSinglePlayer(Vector3 pos)
     {

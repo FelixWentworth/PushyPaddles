@@ -216,7 +216,7 @@ PlayerSettings:
   AndroidTargetDevice: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: C:/Users/Felix/Documents/PlayGen/user.keystore
+  AndroidKeystoreName: C:/Users/Felix/Documents/Projects/GameJam/PushyPaddles/user.keystore
   AndroidKeyaliasName: release
   AndroidTVCompatibility: 1
   AndroidIsGame: 1

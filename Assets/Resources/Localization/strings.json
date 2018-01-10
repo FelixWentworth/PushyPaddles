@@ -12,6 +12,7 @@
 {"Key":"BUTTON_NEXT","en":"Next","it":"Successivo","es":"Siguiente","el":"Επόμενο"},
 {"Key":"BUTTON_SELECT","en":"Select","it":"Seleziona","es":"Seleccionar","el":"Επιλογή"},
 {"Key":"BUTTON_CANCEL","en":"Cancel","it":"Cancella","es":"Cancelar","el":"Ακύρωση"},
+{"Key":"BUTTON_TOGGLE_TOUCH","en":"Use Tap Controls","it":"Tocca Controlli","es":"Controles táctiles","el":"Αγγίξτε τα στοιχεία ελέγχου"},
 {"Key":"UI_MAIN_TITLE","en":"Main Menu","it":"Menù Principale","es":"Menú principal","el":"Κεντρικό Μενού"},
 {"Key":"UI_MAIN_IP_ADDRESS","en":"ip address","it":"Indirizzo IP","es":"Dirección IP","el":"διεύθυνση IP"},
 {"Key":"UI_MAIN_PORT","en":"port","it":"Porta","es":"Puerto","el":"θύρα"},

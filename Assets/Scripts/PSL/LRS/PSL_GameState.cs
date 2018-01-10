@@ -37,7 +37,6 @@ public class PSL_GameState : NetworkBehaviour {
         if (state == GameState.Started)
         {
             GameManager.StartGameTimer();
-            // TODO check if paused
             GameManager.ResumeGame();
         }
         if (state == GameState.Paused)
