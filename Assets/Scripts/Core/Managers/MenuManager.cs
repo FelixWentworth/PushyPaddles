@@ -263,10 +263,10 @@ public class MenuManager : NetworkBehaviour
         {
             return;
         }
-        if (!SP_Manager.Instance.IsSinglePlayer())
+	    GameOver = true;
+		if (!SP_Manager.Instance.IsSinglePlayer())
         {
             RpcShowGameOver(victory, timeTaken, controlledByOrchestrator);
-	        GameOver = true;
 			GameOverScreen.Show();
 		}
         else
