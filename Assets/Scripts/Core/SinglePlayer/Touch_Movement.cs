@@ -31,6 +31,10 @@ public class Touch_Movement : MonoBehaviour
 		                           Application.platform != RuntimePlatform.IPhonePlayer;
 
 		_touchControlsOption.SetActive(touchOptionAvailable);
+		if (!touchOptionAvailable)
+		{
+			UseTouch = true;
+		}
 	}
 
 	// Update is called once per frame
