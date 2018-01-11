@@ -3749,10 +3749,10 @@ MonoBehaviour:
   m_Script: {fileID: 1077351063, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
+  m_HorizontalAxis: Empty
+  m_VerticalAxis: Empty
+  m_SubmitButton: Empty
+  m_CancelButton: Empty
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
   m_ForceModuleActive: 0
@@ -12973,7 +12973,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -74.54056}
+  m_SizeDelta: {x: -921.8, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &776390675
 MonoBehaviour:
