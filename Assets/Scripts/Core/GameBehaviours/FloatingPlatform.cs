@@ -163,6 +163,7 @@ public class FloatingPlatform : MovingObject
         }
         else if (other.gameObject.tag == "Collectible")
         {
+	        other.GetComponent<BoxCollider>().enabled = false;
             _playerOnPlatform.GetComponent<Player>().GotCollectible();
 
             var operation = other.gameObject.GetComponent<MathsCollectible>().Operation;
@@ -178,6 +179,10 @@ public class FloatingPlatform : MovingObject
 				else if (operation.Contains("/") || operation.Contains("x"))
 				{
 					operation = "0";
+					PickupValue = operation;
+				}
+				else
+				{
 					PickupValue = operation;
 				}
             }
@@ -223,9 +228,12 @@ public class FloatingPlatform : MovingObject
             yield return new WaitForSeconds(levelManager.TotalUI.AnimLength());
         }
 
-        if (PickupValue == levelManager.Target || !levelManager.MathsVersion)
+	    var player = _playerOnPlatform.GetComponent<Player>();
+		player.ReachedChest(PickupValue == levelManager.Target);
+
+		if (PickupValue == levelManager.Target || !levelManager.MathsVersion)
         {
-            var player = _playerOnPlatform.GetComponent<Player>();
+            
 
             if (isServer || SP_Manager.Instance.IsSinglePlayer())
             {

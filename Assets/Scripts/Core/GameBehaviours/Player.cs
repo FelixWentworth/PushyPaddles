@@ -1873,7 +1873,6 @@ public class Player : MovingObject
             if (isLocalPlayer)
             {
                 CmdSetLesson("year " + year, lesson);
-	            
             }
         }
     }

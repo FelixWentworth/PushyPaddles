@@ -146,7 +146,7 @@ public class GameManager : NetworkBehaviour
                 {
                     PlatformSelection.UpdateSeverState(GameState.Started);
 
-            StartGameTimer();
+					StartGameTimer();
                     ResumeGame();
                 }
                 else
