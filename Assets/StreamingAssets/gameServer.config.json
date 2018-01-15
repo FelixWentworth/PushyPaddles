@@ -3,8 +3,8 @@
 	"HeartbeatInterval": "10",
 	"Host": "0.0.0.0",
 	"Port": "9000",
-	"OrchestrationServerUrl": "http://localhost:49769/api/",
-	"MinPlayers": "1",
-	"MaxPlayers": "4",
+	"OrchestrationServerUrl": "http://localhost:49768/api/",
+	"MinPlayers": "3",
+	"MaxPlayers": "3",
 	"StartMode": "0"
 }

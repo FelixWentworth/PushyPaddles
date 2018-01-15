@@ -49,13 +49,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1260455905501108}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1438973116, guid: f16594f7bfc8d494a9cb35f63c1743d7, type: 3}
+  m_Script: {fileID: 43654079, guid: 62862f23efb782446ac5b978b6653d3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _useNetworkManager: 1
   Standalone: 0
   SimulatePlatformIntegration: 0
-  _commandLine: listen 0.0.0.0:9001 players 4:4 start Explicit instanceId c367a32c-a659-4619-99ba-e8ceae087022
+  _commandLine: 
 --- !u!114 &114987455416771950
 MonoBehaviour:
   m_ObjectHideFlags: 1

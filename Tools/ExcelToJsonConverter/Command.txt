@@ -1,1 +1,7 @@
-ExcelToJsonConverter.exe C:\Users\Felix\Documents\Projects\GameJam\PushyPaddles\Assets\Localization\Editor\LocalizationStrings.xlsx C:\Users\Felix\Documents\Projects\GameJam\PushyPaddles\Assets\Resources\Localization\strings.json
+Pushy Paddles
+
+ExcelToJsonConverter.exe C:\Users\Felix\Documents\Projects\GameJam\PushyPaddles\Assets\Localization\Editor\PP_LocalizationStrings.xlsx C:\Users\Felix\Documents\Projects\GameJam\PushyPaddles\Assets\Resources\Localization\strings.json
+
+Resource Force
+
+ExcelToJsonConverter.exe C:\Users\Felix\Documents\Projects\INSPEC2T\ResourceForce\RF_Game\Assets\Editor\Strings\StringFile.xlsx C:\Users\Felix\Documents\Projects\INSPEC2T\ResourceForce\RF_Game\Assets\Resources\StringLocalizations_BasicText.json
