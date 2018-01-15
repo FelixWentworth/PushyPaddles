@@ -5,7 +5,6 @@ using PlayGen.Orchestrator.Common;
 using UnityEngine.Networking;
 
 public class PSL_GameState : NetworkBehaviour {
-#if PSL_ENABLED
     /// <summary>
     /// This class hooks up to the event listener and handle any events that are fired
     /// </summary>
@@ -13,6 +12,7 @@ public class PSL_GameState : NetworkBehaviour {
     public bool IsPaused { get; private set; }
 
     public GameManager GameManager;
+#if PSL_ENABLED
 
 	// Use this for initialization
 	void OnEnable ()

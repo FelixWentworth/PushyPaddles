@@ -20,9 +20,9 @@ public class PSL_LRSManager : NetworkBehaviour
 	public static PSL_LRSManager Instance;
     
     // Our variables needed for sending data
-    [SerializeField] private string _url;
+    [SerializeField] private string _url = "http://lrs-psl.atosresearch.eu/";
 
-    [SerializeField] private string _logFileName;
+    [SerializeField] private string _logFileName = "PlayerSkills";
     private object _body;
 
     // Our variables that identify the players and the match, used when sending data through LRS
