@@ -25,7 +25,7 @@ public class Touch_Movement : MonoBehaviour
 
 	void Awake()
 	{
-		_touchEnabledGameObject = _touchControlsOption.transform.Find("On").gameObject;
+		_touchEnabledGameObject = _touchControlsOption.transform.Find("Toggle/On").gameObject;
 
 		var touchOptionAvailable = Application.platform != RuntimePlatform.Android &&
 		                           Application.platform != RuntimePlatform.IPhonePlayer;
