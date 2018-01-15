@@ -17,11 +17,11 @@ using UnityEngine;
 
 public class PlatformSelection : MonoBehaviour
 {
-#if PSL_ENABLED
     [SerializeField] private ConnectionType _connectionType;
     [SerializeField] private PlatformManager[] _platformManagers;
+#if PSL_ENABLED
 
-    private static PlatformSelection _instance;
+	private static PlatformSelection _instance;
     public static ConnectionType ConnectionType { get; private set; }
 
     public static Action<GameState> ServerStateChanged;
