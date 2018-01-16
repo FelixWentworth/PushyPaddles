@@ -16,7 +16,9 @@ public class Touch_Movement : MonoBehaviour
 	}
 
 	public LayerMask Mask;
-    
+
+	private bool _splashControls = true;
+
     [SerializeField] private GameObject ValidPress;
     [SerializeField] private GameObject InvalidPress;
 
@@ -61,13 +63,22 @@ public class Touch_Movement : MonoBehaviour
 		                }
 
 						var pressPos = hit.point + (Vector3.up * track.DistanceToGround);
-		                Player player;
+
+		                
+
+						Player player;
+
 		                if (sp)
 		                {
 			                player = track.GetPlayer(pressPos.x);
-			                
-			                
-		                }
+							if (_splashControls && player.PlayerRole == Player.Role.Paddler)
+							{
+								// push water relative to player on platform
+									GameObject.Find("Water").GetComponent<WaterBehaviour>().PaddleUsed(player, player.StrengthModifier, true);
+								return;
+							}
+
+						}
 		                else
 		                {
 			                // Find the player to move

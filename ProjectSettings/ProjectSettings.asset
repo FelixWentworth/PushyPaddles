@@ -11,7 +11,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: PlayGen
-  productName: Pushy Paddles
+  productName: Pushy Paddles Alt
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13333334, g: 0.17254902, b: 0.21176471, a: 0}
@@ -137,8 +137,8 @@ PlayerSettings:
   protectGraphicsMemory: 0
   useHDRDisplay: 0
   applicationIdentifier:
-    Android: com.PlayGen.PushyPaddles
-    iOS: com.PlayGen.PushyPaddles
+    Android: com.PlayGen.PushyPaddlesAlt
+    iOS: com.PlayGen.PushyPaddlesAlt
   buildNumber:
     iOS: 6
   AndroidBundleVersionCode: 8
@@ -216,7 +216,7 @@ PlayerSettings:
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
   AndroidKeystoreName: C:/Users/Felix/Documents/Projects/GameJam/PushyPaddles/user.keystore
-  AndroidKeyaliasName: release
+  AndroidKeyaliasName: 
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   androidEnableBanner: 1
@@ -230,7 +230,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 2e1d73a96bc58384d9a7b0c8becedb0f, type: 3}
+      m_Icon: {fileID: 2800000, guid: dd9c17fede484da4dad915f6c01e712b, type: 3}
       m_Width: 128
       m_Height: 128
   m_BuildTargetBatching: []

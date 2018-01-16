@@ -144,7 +144,7 @@ public class WaterBehaviour : NetworkBehaviour
 
     // Only allow the server to run this as to avoid players exploiting
     [ServerAccess]
-    public float PaddleUsed(Player player, float playerModifier)
+    public float PaddleUsed(Player player, float playerModifier, bool splash = false)
     {
         var method = MethodBase.GetCurrentMethod();
         var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
@@ -177,7 +177,11 @@ public class WaterBehaviour : NetworkBehaviour
             var zDist = platformPosition.z - playerPosition.z;
 
             zDist = zDist < 0 ? zDist * -1f : zDist;
-            if (zDist <= 0.5f)
+	        if (splash)
+	        {
+		        modifier = 1f;
+	        }
+            else if (zDist <= 0.5f)
             {
                 modifier = 1f;
             }
