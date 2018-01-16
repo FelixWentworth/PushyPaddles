@@ -119,7 +119,7 @@ PlayerSettings:
     16:10: 1
     16:9: 0
     Others: 0
-  bundleVersion: 1.1.3
+  bundleVersion: 1.1.4
   preloadedAssets: []
   metroInputSource: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -141,7 +141,7 @@ PlayerSettings:
     iOS: com.PlayGen.PushyPaddles
   buildNumber:
     iOS: 6
-  AndroidBundleVersionCode: 7
+  AndroidBundleVersionCode: 8
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
@@ -230,7 +230,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 5cfdf90d7acb56449a9bb0f1e4fb96b7, type: 3}
+      m_Icon: {fileID: 2800000, guid: 2e1d73a96bc58384d9a7b0c8becedb0f, type: 3}
       m_Width: 128
       m_Height: 128
   m_BuildTargetBatching: []

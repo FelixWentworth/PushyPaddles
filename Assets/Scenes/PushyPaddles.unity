@@ -24792,7 +24792,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1698043229
 RectTransform:
   m_ObjectHideFlags: 0
@@ -27740,8 +27740,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a09ef47008d916340ae8560ff2bfdc6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _url: http://lrs-psl.atosresearch.eu/
-  _logFileName: PlayerSkills
 --- !u!114 &1968042642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27753,77 +27751,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da285361e00629b4aa20a6e29af99fa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skillCriteria:
-  - Name: Pushed against another player
-    Skill: 11
-    Positive: 0
-    TriggerAction: 1
-    PreviousAction: 1
-    MultiplePlayers: 1
-    Interval: 0.5
-  - Name: Reached Chest
-    Skill: 11
-    Positive: 1
-    TriggerAction: 4
-    PreviousAction: 0
-    MultiplePlayers: 0
-    Interval: 0
-  - Name: Pushed into Obstacle
-    Skill: 11
-    Positive: 0
-    TriggerAction: 2
-    PreviousAction: 1
-    MultiplePlayers: 1
-    Interval: 1
-  - Name: Pushed into collectible
-    Skill: 11
-    Positive: 1
-    TriggerAction: 3
-    PreviousAction: 1
-    MultiplePlayers: 1
-    Interval: 1
-  - Name: Gave reward self
-    Skill: 10
-    Positive: 0
-    TriggerAction: 10
-    PreviousAction: 0
-    MultiplePlayers: 0
-    Interval: 0
-  - Name: Gave reward other
-    Skill: 10
-    Positive: 1
-    TriggerAction: 11
-    PreviousAction: 0
-    MultiplePlayers: 0
-    Interval: 0
-  - Name: Reached Chest Correct
-    Skill: 9
-    Positive: 1
-    TriggerAction: 5
-    PreviousAction: 0
-    MultiplePlayers: 0
-    Interval: 0
-  - Name: Reached Chest Wrong
-    Skill: 9
-    Positive: 0
-    TriggerAction: 6
-    PreviousAction: 0
-    MultiplePlayers: 0
-    Interval: 0
-  - Name: Idle
-    Skill: 12
-    Positive: 0
-    TriggerAction: 9
-    PreviousAction: 7
-    MultiplePlayers: 0
-    Interval: 5
-  - Name: Took Turns Positive
-    Skill: 12
-    Positive: 1
-    TriggerAction: 4
-    PreviousAction: 0
-    MultiplePlayers: 0
-    Interval: 0
 --- !u!1 &1968812621
 GameObject:
   m_ObjectHideFlags: 0
