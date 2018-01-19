@@ -346,11 +346,16 @@ public class Player : MovingObject
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
+	    if (_gameManager != null)
+	    {
+		    _floatingPlatform = _gameManager.FloatingPlatform;
+		    _raft = _floatingPlatform.gameObject;
+	    }
         if (!_gameManager.DistributingRewards)
         { 
             if (isLocalPlayer || SP_Manager.Instance.IsSinglePlayer())
             {
-                if (OnPlatform)
+				if (OnPlatform)
                 {
                     // Stopped moving
                     if (_animationState != AnimationState.ONPLATFORM)
@@ -465,11 +470,6 @@ public class Player : MovingObject
             UpdatePlayerPosition();
         }
 
-        if (_raft == null)
-        {
-            _raft = GameObject.FindGameObjectWithTag("Platform");
-            _floatingPlatform = _raft.GetComponent<FloatingPlatform>();
-        }
         if (_instructionManager == null)
         {
             _instructionManager = GameObject.Find("PlayerInstructionManager").GetComponent<InstructionManager>();
@@ -671,6 +671,14 @@ public class Player : MovingObject
 
         x *= MovementSpeed * SpeedModifier * DirectionModifier;
         z *= MovementSpeed * SpeedModifier * DirectionModifier;
+
+		// make sure if players are using touch their direction is not reversed.
+		//TODO make it so players cannot received reversed controls if they are currently using touch
+	    if (Touch_Movement.UseTouch)
+	    {
+		    x *= x < 0 ? -1f : 1f;
+			z *= z < 0 ? -1f : 1f;
+		}
 
         // HACK clamp position to stop running out of the world
         var newX = Mathf.Clamp(go.transform.position.x + x, -5f, 5f);
@@ -1866,13 +1874,13 @@ public class Player : MovingObject
     {
         if (SP_Manager.Instance.IsSinglePlayer())
         {
-            ServerSetLesson("year " + year, lesson);
+            ServerSetLesson(year, lesson);
         }
         else
         {
             if (isLocalPlayer)
             {
-                CmdSetLesson("year " + year, lesson);
+                CmdSetLesson(year, lesson);
             }
         }
     }
@@ -1884,7 +1892,7 @@ public class Player : MovingObject
 	    IsReady = true;
 	}
 
-    [ServerAccess]
+	[ServerAccess]
     public void ServerSetLesson(string year, string lesson)
     {
         var method = MethodBase.GetCurrentMethod();
@@ -1898,9 +1906,8 @@ public class Player : MovingObject
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
-	    
+	    _gameManager.SetLesson(year, lesson);
 		PSL_GameConfig.SetGameConfig(year, lesson, "Maths", "Any");
-        _gameManager.SetLesson(year, lesson);
     }
 
 

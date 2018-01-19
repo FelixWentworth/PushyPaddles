@@ -123,7 +123,6 @@ public class Curriculum : MonoBehaviour {
         {
             return null;
         }
-
         var challenges = _challenges.MathsProblems.Where(c => c.Year == year && c.Level == "1").ToArray();
         return challenges;
     }
@@ -158,7 +157,7 @@ public class Curriculum : MonoBehaviour {
         var data = Resources.Load<TextAsset>(_fileName);
         if (data == null)
         {
-            Debug.Log("no Data");
+            Debug.LogError("no Data");
             return;
         }
 

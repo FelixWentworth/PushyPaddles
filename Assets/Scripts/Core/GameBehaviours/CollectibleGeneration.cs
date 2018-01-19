@@ -26,7 +26,7 @@ public class CollectibleGeneration : LevelLayout
 
         // Clear the current level
         ClearChildren();
-
+		Debug.Log("Generating Level: " + curriculumInfo.RequiredOperations[0]);
         CreateLevel(curriculumInfo.RequiredOperations, "+");
         CreateLevel(curriculumInfo.ExtraOperations, "c");
 
@@ -43,11 +43,13 @@ public class CollectibleGeneration : LevelLayout
 	    }
 	    else
 	    {
-		    RpcSetSign(signActive);
+		    Debug.Log("Setting sign " + signActive);
+
+			RpcSetSign(signActive);
 	    }
 
+		Debug.Log("Setting Target");
 		GameObject.Find("LevelManager").GetComponent<LevelManager>().Target = curriculumInfo.Target.ToString();
-
     }
 
     [ServerAccess]

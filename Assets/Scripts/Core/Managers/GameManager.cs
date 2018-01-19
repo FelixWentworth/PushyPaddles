@@ -48,7 +48,6 @@ public class GameManager : NetworkBehaviour
 
     private bool _generatingLevel;
 
-    private bool ready;
     private DateTime _startTime;
 
     public bool ControlledByOrchestrator;
@@ -58,6 +57,8 @@ public class GameManager : NetworkBehaviour
 
     private float _noPlayerTimer = 0f;
     private const float _maxInactiveTime = 300f;
+
+	public FloatingPlatform FloatingPlatform;
 
     void Start()
     {
@@ -87,9 +88,10 @@ public class GameManager : NetworkBehaviour
 #endif
             PauseScreen.SetActive(true);
         }
-    }
 
-    void Update()
+	}
+
+	void Update()
     {
 	    if (isServer || SP_Manager.Instance.IsSinglePlayer())
         {
@@ -182,6 +184,7 @@ public class GameManager : NetworkBehaviour
                     ResumeGame();
                 }
             }
+
 #endif
 
 			// end game when no players after a certain time
@@ -197,8 +200,8 @@ public class GameManager : NetworkBehaviour
             {
                 _noPlayerTimer = 0f;
             }
-            LessonSelectRequired = PSL_GameConfig.LessonSelectionRequired;
-        }
+			
+		}
 
 
 
@@ -215,7 +218,7 @@ public class GameManager : NetworkBehaviour
 #else
 
 #endif
-
+	    LessonSelectRequired = PSL_GameConfig.LessonSelectionRequired;
     }
 
     [ServerAccess]
@@ -357,13 +360,14 @@ public class GameManager : NetworkBehaviour
 
     private bool AreAllPlayersReady()
     {
+	    if (PSL_GameConfig.LessonSelectionRequired)
+	    {
+		    return false;
+	    }
         if (SP_Manager.Instance.IsSinglePlayer() && SP_Manager.Instance.Get<SP_GameManager>().GameSetup())
         {
             return true;
         }
-        if (ready)
-            return true;
-
 		if (_players.Count != 3)
         {
             return false;
@@ -536,20 +540,19 @@ public class GameManager : NetworkBehaviour
         {
             GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<ObstacleGeneration>().Setup(3, "");
         }
-        else if (!PSL_GameConfig.LessonSelectionRequired)
-        {
-            var challenge = Curriculum.GetNewChallenge(PSL_GameConfig.Level, PSL_GameConfig.LessonNumber);
-            GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
-        }
-        else if (SP_Manager.Instance.IsSinglePlayer())
+		else if (SP_Manager.Instance.IsSinglePlayer())
         {
             var manager = SP_Manager.Instance.Get<SP_GameManager>();
             var challenge = Curriculum.GetNewChallenge(manager.GetYear(), manager.GetLesson());
             GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
         }
-
-        // Start the game timer
-        StartTimer();
+        else
+		{
+	        var challenge = Curriculum.GetNewChallenge(PSL_GameConfig.Level, PSL_GameConfig.LessonNumber);
+	        GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
+        }
+		// Start the game timer
+		StartTimer();
 
         // Place the platform in the scene
         
@@ -569,15 +572,16 @@ public class GameManager : NetworkBehaviour
         {
             return;
         }
-        var challenge = Curriculum.GetChallengesForYear(year).FirstOrDefault(c => c.Lesson == lesson);
+		var challenges = Curriculum.GetChallengesForYear(year);
 
+		var challenge = Curriculum.GetChallengesForYear(year).FirstOrDefault(c => c.Lesson == lesson);
         if (challenge != null)
         {
             GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
-        }
-    }
+		}
+	}
 
-    public void SetSpLesson(string year, string lesson)
+	public void SetSpLesson(string year, string lesson)
     {
         var challenge = Curriculum.GetChallengesForYear(year).FirstOrDefault(c => c.Lesson == lesson);
 
@@ -846,8 +850,7 @@ public class GameManager : NetworkBehaviour
                 }
                 else
                 {
-                    GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>()
-                        .Setup(0, challenge);
+                    GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().Setup(0, challenge);
                 }
             }
 

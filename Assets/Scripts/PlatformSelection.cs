@@ -151,11 +151,11 @@ public class PlatformSelection : MonoBehaviour
 
     private void RegisteredWithOrchestrator(GameRegistrationResponse obj)
     {
-        if (obj.scenario != "Default" && obj.scenario != "Custom")
-        { 
-            PSL_GameConfig.SetGameConfig(obj.scenario, GetLessonFromDifficulty(obj.scenario, obj.difficulty), "Maths", "All");
-        }
-        PSL_LRSManager.Instance.SetTotalTime(Convert.ToInt16(obj.maxTime * 60));
+		if (obj.scenario != "Default" && obj.scenario != "Custom")
+		{
+			PSL_GameConfig.SetGameConfig(obj.scenario, GetLessonFromDifficulty(obj.scenario, obj.difficulty), "Maths", "All");
+		}
+		PSL_LRSManager.Instance.SetTotalTime(Convert.ToInt16(obj.maxTime * 60));
 
         Localization.Get("GAME_NAME");
 

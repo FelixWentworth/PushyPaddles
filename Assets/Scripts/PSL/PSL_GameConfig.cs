@@ -53,11 +53,11 @@ public class PSL_GameConfig : MonoBehaviour
     public static void SetGameConfig(string level, string lesson, string gameType, string rewardType)
     {
         Debug.Log(string.Format("Setting game config, {0} {1} {2} {3}", level, lesson, gameType, rewardType));
-        Level = level;
+        Level = "year " + level;
         LessonNumber = lesson;
         GameType = gameType;
         RewardType = rewardType;
 
-        LessonSelectionRequired = false;
+		LessonSelectionRequired = false;
     } 
 }
