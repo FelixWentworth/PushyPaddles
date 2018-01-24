@@ -159,7 +159,7 @@ public class PSL_LRSManager : NetworkBehaviour
         _totalRoundComplete += 1;
 
         // Not interested in skill data for standalone
-        if (!SP_Manager.Instance.IsSinglePlayer())
+        if (!SP_Manager.Instance.IsSinglePlayer() && PlatformSelection.ConnectionType != ConnectionType.Testing)
         {
             SendSkillData(false, timeTaken);
         }
@@ -180,7 +180,7 @@ public class PSL_LRSManager : NetworkBehaviour
         }
 
         // Not interested in skill data for standalone
-        if (!SP_Manager.Instance.IsSinglePlayer())
+        if (!SP_Manager.Instance.IsSinglePlayer() && PlatformSelection.ConnectionType != ConnectionType.Testing)
         {
             SendSkillData(false, timeTaken);
         }

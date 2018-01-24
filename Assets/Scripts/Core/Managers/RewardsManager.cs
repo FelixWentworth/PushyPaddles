@@ -19,7 +19,6 @@ public class RewardsManager : MonoBehaviour
     private List<string> _playerIds;
     private int _currentId;
 
-    private int _rewardsRemaining;
 	private bool _nextRoundStarted;
 
     private GameObject _rewardObjectInScene;
@@ -31,7 +30,6 @@ public class RewardsManager : MonoBehaviour
         int rewardsToGive)
     {
 	    _nextRoundStarted = false;
-		_rewardsRemaining = rewardsToGive;//
         // Check if we only care about positive rewards
         if (PSL_GameConfig.RewardType == "Positive")
         {
@@ -134,9 +132,10 @@ public class RewardsManager : MonoBehaviour
 
     private void Complete()
     {
-        _rewardsRemaining -= 1;
+	    var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        gameManager.RewardsToGive -= 1;
 
-        if (_rewardsRemaining <= 0 && !_nextRoundStarted)
+        if (gameManager.RewardsToGive <= 0 && !_nextRoundStarted)
         {
 			// stop players spamming next round
 	        _nextRoundStarted = true;
@@ -147,14 +146,12 @@ public class RewardsManager : MonoBehaviour
             }
             else
             {
-                var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-
                 gameManager.GetLocalPlayer().NextRound();
             }
         }
         else
         {
-            ShowReward(3, _playerIds, _rewardData, _rewardsRemaining);
+            ShowReward(3, _playerIds, _rewardData, gameManager.RewardsToGive);
         }
 
     }

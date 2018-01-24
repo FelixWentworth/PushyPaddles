@@ -12,6 +12,7 @@ public class CollectibleGeneration : LevelLayout
 
     public GameObject CollectibleGameObject;
     public GameObject Sign;
+	[SyncVar] public bool SignActive;
 
 	public override void Setup<T>(int numCollectibles, T info)
     {
@@ -34,18 +35,18 @@ public class CollectibleGeneration : LevelLayout
         GenerateCollectibles(CollectibleGameObject);
         GenerateObstacles();
 
-	    var signActive = Convert.ToInt16(curriculumInfo.Level) > 3;
+	    SignActive = Convert.ToInt16(curriculumInfo.Level) > 3;
 
-	    Sign.SetActive(signActive);
+	    Sign.SetActive(SignActive);
 	    if (SP_Manager.Instance.IsSinglePlayer())
 	    {
-		    ClientSetSignActive(signActive);
+		    ClientSetSignActive(SignActive);
 	    }
 	    else
 	    {
-		    Debug.Log("Setting sign " + signActive);
+		    Debug.Log("Setting sign " + SignActive);
 
-			RpcSetSign(signActive);
+			RpcSetSign(SignActive);
 	    }
 
 		Debug.Log("Setting Target");
@@ -156,7 +157,7 @@ public class CollectibleGeneration : LevelLayout
 		{
 			return;
 		}
-
+		SignActive = active;
 		Sign.SetActive(active);
 	}
 

@@ -64,9 +64,10 @@ public class Player : MovingObject
     [SyncVar] private bool _usePaddle;
     [SyncVar] public bool IsReady;
     [SyncVar] public int ConnectionId;
-    private int _currentModel;
+    [SyncVar] public string ConnectionAddress;
+	private int _currentModel;
     [SyncVar] private int _playerModel;
-    [SyncVar] public string SyncNickName;
+	[SyncVar] public string SyncNickName = "";
     [SyncVar] public string PlayerID;
 #if PSL_ENABLED
     private PlatformSelection.PSLPlayerData _playerData;
@@ -79,7 +80,7 @@ public class Player : MovingObject
     [SyncVar] public bool OnPlatform;
     
     private Rigidbody _rigidbody;
-    private TextMesh _playerText;
+    [SerializeField] private TextMesh _playerText;
 
     private GameManager _gameManager;
 
@@ -112,7 +113,6 @@ public class Player : MovingObject
 
         //GetComponent<Rigidbody>().isKinematic = !isServer;
         _rigidbody = GetComponent<Rigidbody>();
-        _playerText = GetComponentInChildren<TextMesh>();
         if (SyncNickName == "")
         {
             _playerText.text = SyncNickName;
@@ -1487,7 +1487,8 @@ public class Player : MovingObject
     private IEnumerator FocusOnChest(string player)
     {
 		_playerText.gameObject.SetActive(false);
-        yield return GameObject.Find("CameraManager").GetComponent<CameraManager>().TransitionToEnd();
+
+		yield return GameObject.Find("CameraManager").GetComponent<CameraManager>().TransitionToEnd();
 
         if (SP_Manager.Instance.IsSinglePlayer())
         {
@@ -1612,7 +1613,8 @@ public class Player : MovingObject
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
-        _gameManager.NextRound();
+	    _gameManager.DistributingRewards = false;
+		_gameManager.NextRound();
         if (SP_Manager.Instance.IsSinglePlayer())
         {
             ClientResetCamera();
@@ -1624,7 +1626,7 @@ public class Player : MovingObject
             RpcRemoveRewards();
         }
         
-        _gameManager.DistributingRewards = false;
+        
     }
 
     [ClientRpc]
