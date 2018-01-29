@@ -163,6 +163,8 @@ public class MenuManager : NetworkBehaviour
         }
         else
         {
+
+
             // Lesson has not been defined previously
             if (GameManager.LessonSelectRequired)
             {
@@ -211,10 +213,7 @@ public class MenuManager : NetworkBehaviour
     /// </summary>
     public void ShowRewards()
     {
-	    if (!RewardScreenManager.IsShowing)
-	    {
-		    RewardScreenManager.Show();
-	    }
+        RewardScreenManager.Show();
     }
 
     /// <summary>

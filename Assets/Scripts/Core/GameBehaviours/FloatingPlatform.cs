@@ -25,9 +25,6 @@ public class FloatingPlatform : MovingObject
     
     private Text _pickupText;
 
-	public Vector3 StartPositionOnline;
-	public Vector3 StartPositionOffline;
-
     public override void Start()
     {
         base.Start();
@@ -44,15 +41,17 @@ public class FloatingPlatform : MovingObject
 	    if (!SP_Manager.Instance.IsSinglePlayer())
 	    {
 			// Set the respawn position to be further along the path so that the paddlers must help
-			RespawnLocation.Add(StartPositionOnline);
-			RespawnLocation.Add(new Vector3(StartPositionOnline.x * -1, StartPositionOnline.y, StartPositionOnline.x));
+		    transform.position = new Vector3(transform.position.x, transform.position.y, 8f);
 		}
 		else
 	    {
 			// Set the respawn position to be closer to the middle to ensure it can be seen in portrait mode
-			RespawnLocation.Add(StartPositionOffline);
-			RespawnLocation.Add(new Vector3(StartPositionOffline.x * -1, StartPositionOffline.y, StartPositionOffline.x));
+			transform.position += Vector3.left;
 		}
+	    RespawnLocation.Add(transform.position);
+
+		var oppositeSide = new Vector3(transform.position.x * -1, transform.position.y, transform.position.z);
+		RespawnLocation.Add(oppositeSide);
 
 		_pickupText = GetComponentInChildren<Text>();
         PickupValue = "";

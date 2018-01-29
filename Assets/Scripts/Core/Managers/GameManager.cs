@@ -27,7 +27,7 @@ public class GameManager : NetworkBehaviour
     [SyncVar]
     public bool AllPlayersReady;
 
-    [SyncVar] public bool LessonSelectRequired = true;
+    [SyncVar] public bool LessonSelectRequired;
 
     public GameObject Platform;
     public GameObject PauseScreen;
@@ -37,7 +37,6 @@ public class GameManager : NetworkBehaviour
 
     public GameObject PlayerPrefab;
     private List<Player> _players = new List<Player>();
-	private List<DisconnectedPlayer> _disconnectedPlayers = new List<DisconnectedPlayer>();
     private MenuManager _menu;
     private LevelManager _level;
     private Curriculum _curriculum;
@@ -61,27 +60,17 @@ public class GameManager : NetworkBehaviour
 
 	public FloatingPlatform FloatingPlatform;
 
-	[SyncVar] public int RewardsToGive;
-
-	void Awake()
-	{
-		var level = GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>();
-		level.Sign.SetActive(level.SignActive);
-	    Platform.SetActive(false);
-	}
-
-	void Start()
+    void Start()
     {
         _startTime = DateTime.Now;
 
 #if PSL_ENABLED
 		Debug.Log("PSL ENABLED");
+        Platform.SetActive(false);
 #endif
 #if !PSL_ENABLED
 		Debug.Log("PSL DISABLED");
-
 #endif
-
 		PauseScreen.SetActive(false);
 
         if (isServer)
@@ -99,6 +88,7 @@ public class GameManager : NetworkBehaviour
 #endif
             PauseScreen.SetActive(true);
         }
+
 	}
 
 	void Update()
@@ -215,20 +205,20 @@ public class GameManager : NetworkBehaviour
 
 
 
-		//if (Input.GetKeyDown(KeyCode.F1))
-		//{
-		//    ready = true;
-		//}
-		//if (Input.GetKeyDown(KeyCode.R))
-		//{
-		//    ResetRound();
-		//}
+        //if (Input.GetKeyDown(KeyCode.F1))
+        //{
+        //    ready = true;
+        //}
+        //if (Input.GetKeyDown(KeyCode.R))
+        //{
+        //    ResetRound();
+        //}
 #if PSL_ENABLED
-		PauseScreen.SetActive(!_gamePlaying);
+        PauseScreen.SetActive(!_gamePlaying);
 #else
 
 #endif
-	    //LessonSelectRequired = PSL_GameConfig.LessonSelectionRequired;
+	    LessonSelectRequired = PSL_GameConfig.LessonSelectionRequired;
     }
 
     [ServerAccess]
@@ -320,7 +310,6 @@ public class GameManager : NetworkBehaviour
             return;
         }
         // Remove player from the list
-		_disconnectedPlayers.Add(new DisconnectedPlayer(player));
         _players.Remove(player);
         Debug.Log("(D} Current Players: " + _players.Count);
 
@@ -333,17 +322,15 @@ public class GameManager : NetworkBehaviour
         if (player.OnPlatform)
         {
             GameObject.FindGameObjectWithTag("Platform").GetComponent<FloatingPlatform>().Respawn();
-			player.FellInWater();
-	        player.Respawn();
-			player.OnPlatform = false;
-		}
+
+        }
 
         // Destroy player game object
-        //DestroyImmediate(player.gameObject);
+        DestroyImmediate(player.gameObject);
 
         netMsg.Disconnect();
 
-        //ChangeRoles();
+        ChangeRoles();
 
 		// TODO check if needs a delay for player disconnection, may break otherwise
 #if PSL_ENABLED
@@ -473,35 +460,7 @@ public class GameManager : NetworkBehaviour
     public IEnumerator JoinGame(NetworkConnection conn)
     {
         var index = _players.Count;
-	    if (_disconnectedPlayers.Any(p => p.Player.ConnectionAddress == conn.address))
-	    {
-		    // player has reconnected
-		    var disconnectedPlayer = _disconnectedPlayers.Find(a => a.Player.ConnectionAddress == conn.address);
-
-		    var existingPlayer = disconnectedPlayer.Player;
-		    existingPlayer.ConnectionId = conn.connectionId;
-			_players.Add(existingPlayer);
-		    _disconnectedPlayers.Remove(disconnectedPlayer);
-
-			NetworkServer.AddPlayerForConnection(conn, existingPlayer.gameObject, 0);
-			//NetworkServer.Spawn(Platform);
-
-			// check if any player is holding the platform
-		    RpcSetPlatform(!_players.Any(p => p.HoldingPlatform));
-
-			while (!conn.isReady)
-		    {
-			    Debug.Log("Waiting for connection to be ready");
-			    yield return null;
-		    }
-
-		    if (DistributingRewards)
-		    {
-			    var player = _players.Find(p => p.PlayerRole == Player.Role.Floater);
-			    player.RpcGoalReached(player.SyncNickName);
-		    }
-		}
-		else if (conn != null)
+        if (conn != null)
         {
             var playerObject = Instantiate(PlayerPrefab);
 
@@ -512,7 +471,6 @@ public class GameManager : NetworkBehaviour
             player.PlayerNum = index;
 
             player.ConnectionId = conn.connectionId;
-	        player.ConnectionAddress = conn.address;
 
             _players.Add(player);
 
@@ -525,12 +483,6 @@ public class GameManager : NetworkBehaviour
             }
         }
     }
-
-	[ClientRpc]
-	private void RpcSetPlatform(bool active)
-	{
-		Platform.SetActive(active);
-	}
 
     public void CreatePlayer(int id)
     {
@@ -607,14 +559,9 @@ public class GameManager : NetworkBehaviour
         Platform.SetActive(true);
         if (!SP_Manager.Instance.IsSinglePlayer())
         {
-	        Platform.transform.position = Platform.GetComponent<FloatingPlatform>().StartPositionOnline;
             NetworkServer.Spawn(Platform);
         }
-        else
-        {
-	        Platform.transform.position = Platform.GetComponent<FloatingPlatform>().StartPositionOffline;
-        }
-	}
+    }
 
     [ServerAccess]
     public void SetLesson(string year, string lesson)
@@ -780,6 +727,7 @@ public class GameManager : NetworkBehaviour
         {
             return;
         }
+
         PauseScreen.SetActive(showing);
     }
 
@@ -848,7 +796,7 @@ public class GameManager : NetworkBehaviour
 #endif
 		Restart(newRound: true);
         _startTime = DateTime.Now;
-	    RewardsToGive = UnityEngine.Random.Range(1, 4);
+
     }
 
     [ServerAccess]
@@ -968,12 +916,14 @@ public class GameManager : NetworkBehaviour
         {
             return;
         }
+        var players = GameObject.FindGameObjectsWithTag("Player");
 
-		//temporarily add disconnected players to list to set next role properly
-	    foreach (var p in _disconnectedPlayers)
-	    {
-		    _players.Add(p.Player);
-	    }
+        var _players = new List<Player>();
+
+        foreach (var player in players)
+        {
+            _players.Add(player.GetComponent<Player>());
+        }
 
         if (_players.Count == 0)
         {
@@ -994,15 +944,6 @@ public class GameManager : NetworkBehaviour
         floaterIndex = floaterIndex >= _players.Count - 1 ? 0 : floaterIndex + 1;
 
         _players[floaterIndex].SetRole(Player.Role.Floater);
-
-		// remove disconnected players from _players list
-	    foreach (var p in _disconnectedPlayers)
-	    {
-		    if (_players.Contains(p.Player))
-		    {
-			    _players.Remove(p.Player);
-		    }
-	    }
 
         SetNewPlayerNum(floaterIndex);
 

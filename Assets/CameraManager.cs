@@ -55,34 +55,31 @@ public class CameraManager : MonoBehaviour
 
     private IEnumerator PlayAnimation (bool forward, string rewardName = "")
     {
-		// only run if anim is different to last played direction
-	    if (_end != forward)
-	    {
-		    while (_animation.isPlaying)
-		    {
-			    yield return null;
-		    }
 
-		    if (!forward)
-		    {
-			    SetChestDefault();
-		    }
+        while (_animation.isPlaying)
+        {
+            yield return null;
+        }
 
-		    _animation[_animation.clip.name].time = forward ? 0f : 1f;
-		    _animation[_animation.clip.name].speed = forward ? 1f : -1f;
+        if (!forward)
+        {
+            SetChestDefault();
+        }
 
-		    _animation.Play();
-		    while (_animation.isPlaying)
-		    {
-			    yield return null;
-		    }
+        _animation[_animation.clip.name].time = forward ? 0f : 1f;
+        _animation[_animation.clip.name].speed = forward ? 1f : -1f;
 
-		    if (forward)
-		    {
-			    yield return StartCoroutine(OpenChest(rewardName));
-		    }
-		    _end = forward;
-	    }
+        _animation.Play();
+        while (_animation.isPlaying)
+        {
+            yield return null;
+        }
+
+        if (forward)
+        {
+            yield return StartCoroutine(OpenChest(rewardName));
+        }
+        
     }
 
     private IEnumerator OpenChest(string rewardName)

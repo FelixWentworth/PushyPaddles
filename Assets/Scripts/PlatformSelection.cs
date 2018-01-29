@@ -153,8 +153,7 @@ public class PlatformSelection : MonoBehaviour
     {
 		if (obj.scenario != "Default" && obj.scenario != "Custom")
 		{
-			var year = obj.scenario.Substring(5, obj.scenario.Length-5);
-			PSL_GameConfig.SetGameConfig(year, GetLessonFromDifficulty(year, obj.difficulty), "Maths", "All");
+			PSL_GameConfig.SetGameConfig(obj.scenario, GetLessonFromDifficulty(obj.scenario, obj.difficulty), "Maths", "All");
 		}
 		PSL_LRSManager.Instance.SetTotalTime(Convert.ToInt16(obj.maxTime * 60));
 
@@ -175,6 +174,7 @@ public class PlatformSelection : MonoBehaviour
 
     private string GetLessonFromDifficulty(string year, int difficulty)
     {
+        year = year.Substring(5, year.Length-5);
         var startIndex = PSL_GameConfig.GetFirstLessonIndexForYear(year);
         var availableLessons = PSL_GameConfig.GetLessonCountForScenario(year);
 
