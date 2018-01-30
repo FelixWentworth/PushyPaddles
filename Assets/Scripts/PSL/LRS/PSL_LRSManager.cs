@@ -305,47 +305,55 @@ public class PSL_LRSManager : NetworkBehaviour
     private IEnumerator SendPlayerData(WWWForm data, string playerId)
     {
         var method = MethodBase.GetCurrentMethod();
-        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
-        if (attr.HasAccess)
-        {
+	    var arr = method.GetCustomAttributes(typeof(ServerAccess), true);
+	    if (arr.Length > 0)
+	    {
+		    var attr = (ServerAccess)arr[0];
+		    if (attr.HasAccess)
+		    {
 
-            data.AddField("PlayerId", playerId);
+			    data.AddField("PlayerId", playerId);
 
-            var www = new WWW(_url, data);
-            yield return www;
-        }
+			    var www = new WWW(_url, data);
+			    yield return www;
+		    }
+	    }
     }
 
     [ServerAccess]
     private IEnumerator WriteToFile(string message)
     {
-        var method = MethodBase.GetCurrentMethod();
-        var attr = (ServerAccess)method.GetCustomAttributes(typeof(ServerAccess), true)[0];
-        if (attr.HasAccess)
-        {
-            var path = Application.streamingAssetsPath + "/" + _logFileName;
+		var method = MethodBase.GetCurrentMethod();
+	    var arr = method.GetCustomAttributes(typeof(ServerAccess), true);
+	    if (arr.Length > 0)
+	    {
+		    var attr = (ServerAccess) arr[0];
+		    if (attr.HasAccess)
+		    {
+			    var path = Application.streamingAssetsPath + "/" + _logFileName;
 
-            if (Application.platform == RuntimePlatform.WindowsEditor ||
-                Application.platform == RuntimePlatform.WindowsPlayer ||
-                Application.platform == RuntimePlatform.WSAPlayerX86 ||
-                Application.platform == RuntimePlatform.WSAPlayerX64 ||
-                Application.platform == RuntimePlatform.LinuxPlayer)
-            {
-                path = "file:///" + path;
-            }
+			    if (Application.platform == RuntimePlatform.WindowsEditor ||
+			        Application.platform == RuntimePlatform.WindowsPlayer ||
+			        Application.platform == RuntimePlatform.WSAPlayerX86 ||
+			        Application.platform == RuntimePlatform.WSAPlayerX64 ||
+			        Application.platform == RuntimePlatform.LinuxPlayer)
+			    {
+				    path = "file:///" + path;
+			    }
 
-            var www = new WWW(path);
+			    var www = new WWW(path);
 
-            yield return www;
-            if (www.text != null)
-            {
-                var newtext = www.text + message;
-                using (var sw = new StreamWriter(Application.streamingAssetsPath + "/" + _logFileName))
-                {
-                    sw.Write(newtext);
-                }
-            }
-        }
+			    yield return www;
+			    if (www.text != null)
+			    {
+				    var newtext = www.text + message;
+				    using (var sw = new StreamWriter(Application.streamingAssetsPath + "/" + _logFileName))
+				    {
+					    sw.Write(newtext);
+				    }
+			    }
+		    }
+	    }
     }
 
 #endregion

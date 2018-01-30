@@ -676,8 +676,9 @@ public class Player : MovingObject
 		//TODO make it so players cannot received reversed controls if they are currently using touch
 	    if (Touch_Movement.UseTouch)
 	    {
-		    x *= x < 0 ? -1f : 1f;
-			z *= z < 0 ? -1f : 1f;
+			// reapply direction modifier to make direction positive again
+		    x *= DirectionModifier;
+			z *= DirectionModifier;
 		}
 
         // HACK clamp position to stop running out of the world
