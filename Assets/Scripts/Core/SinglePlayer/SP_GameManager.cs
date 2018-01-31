@@ -8,6 +8,7 @@ public class SP_GameManager : MonoBehaviour
 	public int _playerModel { get; private set; }
 
 	public List<GameObject> NetworkObjectsToActivate;
+	public List<GameObject> ObjectsToDeactivate;
 
 	private GameManager _gameManager;
 	private InstructionManager _instructionManager;
@@ -40,6 +41,14 @@ public class SP_GameManager : MonoBehaviour
 			{
 				// chance for objects that dont destroy on load to be null
 				obj.SetActive(true);
+			}
+		}
+		foreach (var obj in ObjectsToDeactivate)
+		{
+			if (obj != null)
+			{
+				// some objects should not be seen in single player
+				obj.SetActive(false);
 			}
 		}
 		_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
