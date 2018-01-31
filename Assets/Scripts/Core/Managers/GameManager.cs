@@ -360,14 +360,15 @@ public class GameManager : NetworkBehaviour
 
     private bool AreAllPlayersReady()
     {
-	    if (PSL_GameConfig.LessonSelectionRequired)
-	    {
-		    return false;
-	    }
+	    
         if (SP_Manager.Instance.IsSinglePlayer() && SP_Manager.Instance.Get<SP_GameManager>().GameSetup())
         {
             return true;
         }
+	    if (PSL_GameConfig.LessonSelectionRequired)
+	    {
+		    return false;
+	    }
 		if (_players.Count != 3)
         {
             return false;
@@ -900,7 +901,16 @@ public class GameManager : NetworkBehaviour
             else
             {
                 var currentChallenge = _curriculum.GetCurrentChallenge();
-                GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>().NewSetup(0, currentChallenge);
+	            if (currentChallenge != null)
+	            {
+		            GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>()
+			            .NewSetup(0, currentChallenge);
+	            }
+	            else
+	            {
+					GameObject.Find("LevelColliders/SpawnedObjects")
+						.GetComponent<ObstacleGeneration>().GenerateNewLevel(_postGameRounds * 3);
+				}
             }
 
             _generatingLevel = false;
