@@ -2102,6 +2102,7 @@ MonoBehaviour:
   RealPosition: {x: 0, y: 0, z: 0}
   RealRotation: {x: 0, y: 0, z: 0}
   OnPlatform: 0
+  _playerText: {fileID: 102493703008765294}
   _idleTime: 1.5
 --- !u!114 &114560648049294534
 MonoBehaviour:

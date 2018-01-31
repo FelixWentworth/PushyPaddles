@@ -59,5 +59,6 @@ public class PSL_GameConfig : MonoBehaviour
         RewardType = rewardType;
 
 		LessonSelectionRequired = false;
-    } 
+		GameObject.Find("GameManager").GetComponent<GameManager>().LessonSelectRequired = false;
+	}
 }

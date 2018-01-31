@@ -60,20 +60,29 @@ public class GameManager : NetworkBehaviour
 
 	public FloatingPlatform FloatingPlatform;
 
-    void Start()
+	[SyncVar] public int RewardsToGive;
+
+	void Awake()
+	{
+		var level = GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>();
+		level.Sign.SetActive(level.SignActive);
+		Platform.SetActive(false);
+	}
+
+
+	void Start()
     {
         _startTime = DateTime.Now;
 
 #if PSL_ENABLED
 		Debug.Log("PSL ENABLED");
-        Platform.SetActive(false);
 #endif
 #if !PSL_ENABLED
 		Debug.Log("PSL DISABLED");
 #endif
 		PauseScreen.SetActive(false);
 
-        if (isServer)
+		if (isServer)
         {
             // Set the quality settings to lowest
             UnityEngine.QualitySettings.SetQualityLevel(0);
@@ -93,6 +102,18 @@ public class GameManager : NetworkBehaviour
 
 	void Update()
     {
+	    //if (Input.GetKeyDown(KeyCode.A))
+	    //{
+		   // if (SP_Manager.Instance.IsSinglePlayer())
+		   // {
+			  //  SP_Manager.Instance.Get<SP_GameManager>().NextRound();
+		   // }
+		   // else if (isServer)
+		   // {
+			  //  _players[0].ServerNextRound();
+		   // }
+	    //}
+
 	    if (isServer || SP_Manager.Instance.IsSinglePlayer())
         {
             NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
@@ -218,7 +239,7 @@ public class GameManager : NetworkBehaviour
 #else
 
 #endif
-	    LessonSelectRequired = PSL_GameConfig.LessonSelectionRequired;
+	    //LessonSelectRequired = PSL_GameConfig.LessonSelectionRequired;
     }
 
     [ServerAccess]
@@ -322,11 +343,13 @@ public class GameManager : NetworkBehaviour
         if (player.OnPlatform)
         {
             GameObject.FindGameObjectWithTag("Platform").GetComponent<FloatingPlatform>().Respawn();
+	        player.FellInWater();
+	        player.Respawn();
+	        player.OnPlatform = false;
+		}
 
-        }
-
-        // Destroy player game object
-        DestroyImmediate(player.gameObject);
+		// Destroy player game object
+		DestroyImmediate(player.gameObject);
 
         netMsg.Disconnect();
 
@@ -477,15 +500,30 @@ public class GameManager : NetworkBehaviour
 
             NetworkServer.AddPlayerForConnection(conn, player.gameObject, 0);
 
-            while (!conn.isReady)
+			RpcSetPlatform(!_players.Any(p => p.HoldingPlatform));
+
+			while (!conn.isReady)
             {
                 Debug.Log("Waiting for connection to be ready");
                 yield return null;
             }
-        }
-    }
+	        if (DistributingRewards)
+	        {
+		        var floatingPlayer = _players.Find(p => p.PlayerRole == Player.Role.Floater);
+		        floatingPlayer.RpcGoalReached(floatingPlayer.SyncNickName);
+	        }
 
-    public void CreatePlayer(int id)
+		}
+	}
+
+	[ClientRpc]
+	private void RpcSetPlatform(bool active)
+	{
+		Platform.SetActive(active);
+	}
+
+
+	public void CreatePlayer(int id)
     {
         var index = _players.Count;
         var playerObject = Instantiate(PlayerPrefab);
@@ -560,11 +598,17 @@ public class GameManager : NetworkBehaviour
         Platform.SetActive(true);
         if (!SP_Manager.Instance.IsSinglePlayer())
         {
-            NetworkServer.Spawn(Platform);
+	        Platform.transform.position = Platform.GetComponent<FloatingPlatform>().StartPositionOnline;
+			NetworkServer.Spawn(Platform);
         }
-    }
+        else
+        {
+	        Platform.transform.position = Platform.GetComponent<FloatingPlatform>().StartPositionOffline;
+        }
 
-    [ServerAccess]
+	}
+
+	[ServerAccess]
     public void SetLesson(string year, string lesson)
     {
         var method = MethodBase.GetCurrentMethod();
@@ -798,9 +842,11 @@ public class GameManager : NetworkBehaviour
 		Restart(newRound: true);
         _startTime = DateTime.Now;
 
-    }
+	    RewardsToGive = UnityEngine.Random.Range(1, 4);
 
-    [ServerAccess]
+	}
+
+	[ServerAccess]
     public void Restart(bool newRound = false)
     {
         var method = MethodBase.GetCurrentMethod();

@@ -158,10 +158,10 @@ public class PSL_LRSManager : NetworkBehaviour
         _timeTakenPerRound.Add(timeTaken);
         _totalRoundComplete += 1;
 
-        // Not interested in skill data for standalone
-        if (!SP_Manager.Instance.IsSinglePlayer())
+		// Not interested in skill data for standalone
+		if (!SP_Manager.Instance.IsSinglePlayer() && PlatformSelection.ConnectionType != ConnectionType.Testing)
         {
-            SendSkillData(false, timeTaken);
+			SendSkillData(false, timeTaken);
         }
     }
 
@@ -179,10 +179,10 @@ public class PSL_LRSManager : NetworkBehaviour
             return;
         }
 
-        // Not interested in skill data for standalone
-        if (!SP_Manager.Instance.IsSinglePlayer())
+		// Not interested in skill data for standalone
+		if (!SP_Manager.Instance.IsSinglePlayer() && PlatformSelection.ConnectionType != ConnectionType.Testing)
         {
-            SendSkillData(false, timeTaken);
+			SendSkillData(false, timeTaken);
         }
     }
 

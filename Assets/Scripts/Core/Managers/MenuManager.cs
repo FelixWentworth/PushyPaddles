@@ -213,13 +213,16 @@ public class MenuManager : NetworkBehaviour
     /// </summary>
     public void ShowRewards()
     {
-        RewardScreenManager.Show();
-    }
+		if (!RewardScreenManager.IsShowing)
+		{
+			RewardScreenManager.Show();
+		}
+	}
 
-    /// <summary>
-    /// Show all players the reward screen, only the player who reached the goal will be able to control this menu
-    /// </summary>
-    public void ShowPlayerChoosingRewards(string playerName)
+	/// <summary>
+	/// Show all players the reward screen, only the player who reached the goal will be able to control this menu
+	/// </summary>
+	public void ShowPlayerChoosingRewards(string playerName)
     {
         PlayerChoosingRewardsGameObject.SetActive(true);
         PlayerChoosingRewardsGameObject.GetComponent<FormattedText>()

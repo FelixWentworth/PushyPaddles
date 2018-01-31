@@ -66,7 +66,7 @@ public class Player : MovingObject
     [SyncVar] public int ConnectionId;
     private int _currentModel;
     [SyncVar] private int _playerModel;
-    [SyncVar] public string SyncNickName;
+    [SyncVar] public string SyncNickName = "";
     [SyncVar] public string PlayerID;
 #if PSL_ENABLED
     private PlatformSelection.PSLPlayerData _playerData;
@@ -79,9 +79,9 @@ public class Player : MovingObject
     [SyncVar] public bool OnPlatform;
     
     private Rigidbody _rigidbody;
-    private TextMesh _playerText;
+	[SerializeField] private TextMesh _playerText;
 
-    private GameManager _gameManager;
+	private GameManager _gameManager;
 
     private InstructionManager _instructionManager;
     private Controls_UI _controls;
@@ -112,7 +112,6 @@ public class Player : MovingObject
 
         //GetComponent<Rigidbody>().isKinematic = !isServer;
         _rigidbody = GetComponent<Rigidbody>();
-        _playerText = GetComponentInChildren<TextMesh>();
         if (SyncNickName == "")
         {
             _playerText.text = SyncNickName;
@@ -1613,6 +1612,7 @@ public class Player : MovingObject
         {
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
+		_gameManager.DistributingRewards = false;
         _gameManager.NextRound();
         if (SP_Manager.Instance.IsSinglePlayer())
         {
@@ -1625,7 +1625,6 @@ public class Player : MovingObject
             RpcRemoveRewards();
         }
         
-        _gameManager.DistributingRewards = false;
     }
 
     [ClientRpc]

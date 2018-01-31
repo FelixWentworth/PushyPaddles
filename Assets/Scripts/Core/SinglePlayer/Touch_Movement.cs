@@ -43,7 +43,13 @@ public class Touch_Movement : MonoBehaviour
 		var sp = SP_Manager.Instance.IsSinglePlayer();
 	    if (_useTouch || (sp && SP_Manager.Instance.Get<SP_GameManager>().GameSetup()))
 	    {
-	        if (Input.GetMouseButtonDown(0))
+		    if (!UseTouch && _touchControlsOption.activeSelf)
+		    {
+				// Touch controls can be toggled, but have not been activated so dont allow touch movements
+				return;
+			    
+		    }
+		    if (Input.GetMouseButtonDown(0))
 	        {
 	            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 	            RaycastHit hit;
