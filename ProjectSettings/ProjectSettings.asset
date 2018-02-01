@@ -500,14 +500,14 @@ PlayerSettings:
   webGLDebugSymbols: 0
   webGLEmscriptenArgs: 
   webGLModulesDirectory: 
-  webGLTemplate: PROJECT:PSL
+  webGLTemplate: APPLICATION:Minimal
   webGLAnalyzeBuildSize: 0
   webGLUseEmbeddedResources: 0
   webGLUseWasm: 0
   webGLCompressionFormat: 0
   scriptingDefineSymbols:
     1: PSL_ENABLED
-    13: PSL_ENABLED
+    13: PSL_ENABLEDA
   platformArchitecture:
     iOS: 0
   scriptingBackend:

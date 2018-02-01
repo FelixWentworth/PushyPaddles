@@ -64,8 +64,12 @@ public class GameManager : NetworkBehaviour
 
 	void Awake()
 	{
-		var level = GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>();
-		level.Sign.SetActive(level.SignActive);
+		// cannot rejoin in single player so sign active will be set later
+		if (!SP_Manager.Instance.IsSinglePlayer())
+		{
+			var level = GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>();
+			level.Sign.SetActive(level.SignActive);
+		}
 		Platform.SetActive(false);
 	}
 

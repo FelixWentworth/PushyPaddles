@@ -41,13 +41,17 @@ public class Touch_Movement : MonoBehaviour
 	void Update ()
 	{
 		var sp = SP_Manager.Instance.IsSinglePlayer();
-	    if (_useTouch || (sp && SP_Manager.Instance.Get<SP_GameManager>().GameSetup()))
+		if (sp && _touchControlsOption.activeSelf)
+		{
+			_touchControlsOption.SetActive(false);
+			_useTouch = true;
+		}
+	    if (sp && SP_Manager.Instance.Get<SP_GameManager>().GameSetup())
 	    {
 		    if (!UseTouch && _touchControlsOption.activeSelf)
 		    {
 				// Touch controls can be toggled, but have not been activated so dont allow touch movements
 				return;
-			    
 		    }
 		    if (Input.GetMouseButtonDown(0))
 	        {
@@ -71,8 +75,6 @@ public class Touch_Movement : MonoBehaviour
 		                if (sp)
 		                {
 			                player = track.GetPlayer(pressPos.x);
-			                
-			                
 		                }
 		                else
 		                {
