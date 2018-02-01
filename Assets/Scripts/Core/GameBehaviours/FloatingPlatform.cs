@@ -46,13 +46,13 @@ public class FloatingPlatform : MovingObject
 	    {
 			// Set the respawn position to be further along the path so that the paddlers must help
 			RespawnLocation.Add(StartPositionOnline);
-		    RespawnLocation.Add(new Vector3(StartPositionOnline.x * -1, StartPositionOnline.y, StartPositionOnline.x));
+		    RespawnLocation.Add(new Vector3(StartPositionOnline.x * -1, StartPositionOnline.y, StartPositionOnline.z));
 		}
 		else
 	    {
 			// Set the respawn position to be closer to the middle to ensure it can be seen in portrait mode
 		    RespawnLocation.Add(StartPositionOffline);
-		    RespawnLocation.Add(new Vector3(StartPositionOffline.x * -1, StartPositionOffline.y, StartPositionOffline.x));
+		    RespawnLocation.Add(new Vector3(StartPositionOffline.x * -1, StartPositionOffline.y, StartPositionOffline.z));
 		}
 		_pickupText = GetComponentInChildren<Text>();
         PickupValue = "";
