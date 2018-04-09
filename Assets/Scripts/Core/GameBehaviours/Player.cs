@@ -384,7 +384,7 @@ public class Player : MovingObject
                     }
 
                 }
-                else
+                else 
                 {
                     if (!_gameManager.GamePlaying())
                     {
@@ -414,35 +414,55 @@ public class Player : MovingObject
 	                {
 						// keep target position updated
 		                _targetPosition = transform.position;
+	                
+					
+						var x = Input.GetAxis("Horizontal");
+						var z = Input.GetAxis("Vertical");
+
+						if (PlayerRole == Role.Floater && x != 0)
+						{
+							Move(gameObject, x, 0);
+						}
+						else if (PlayerRole == Role.Paddler && z != 0)
+						{
+							Move(gameObject, 0, z);
+						}
+						else if (_targetGameObject == null)
+		                {
+			                // Stopped moving
+			                if (_animationState != AnimationState.IDLE)
+			                {
+				                if (SP_Manager.Instance.IsSinglePlayer())
+				                {
+					                ChangeState((int) AnimationState.IDLE);
+				                }
+				                else
+				                {
+					                CmdChangeState((int) AnimationState.IDLE);
+				                }
+			                }
+
+
+		                }
 	                }
-                    var x = Input.GetAxis("Horizontal");
-                    var z = Input.GetAxis("Vertical");
-
-                    if (PlayerRole == Role.Floater && x != 0)
-                    {
-                        Move(gameObject, x, 0);
-                    }
-                    else if (PlayerRole == Role.Paddler && z != 0)
-                    {
-                        Move(gameObject, 0, z);
-                    }
-                    else if (!Touch_Movement.UseTouch || _targetGameObject == null)
-                    {
-						// TODO Make sure that player is not using touch controls to move, resets anim
-                        // Stopped moving
-                        if (_animationState != AnimationState.IDLE)
-                        {
-                            if (SP_Manager.Instance.IsSinglePlayer())
-                            {
-                                ChangeState((int)AnimationState.IDLE);
-                            }
-                            else
-                            {
-                                CmdChangeState((int)AnimationState.IDLE);
-                            }
-                        }
-
-                    }
+	                else
+	                {
+						if (_targetGameObject == null)
+						{
+							// Stopped moving
+							if (_animationState != AnimationState.IDLE)
+							{
+								if (SP_Manager.Instance.IsSinglePlayer())
+								{
+									ChangeState((int)AnimationState.IDLE);
+								}
+								else
+								{
+									CmdChangeState((int)AnimationState.IDLE);
+								}
+							}
+						}
+					}
                     _elapsedTime += Time.deltaTime;
                     if (_elapsedTime > _updateInterval)
                     {

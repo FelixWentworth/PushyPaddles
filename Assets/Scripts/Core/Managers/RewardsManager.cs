@@ -116,13 +116,22 @@ public class RewardsManager : MonoBehaviour
         Complete();
     }
 
+	public void ButtonPress(int choice)
+	{
+		_currentlyHighlighting = choice;
+		Select();
+	}
+
     private void UpdateHighlighted()
     {
         foreach (var reward in Rewards)
         {
             reward.SetHighlight(false);
         }
-        Rewards[_currentlyHighlighting].SetHighlight(true);
+	    if (!Touch_Movement.UseTouch)
+	    {
+		    Rewards[_currentlyHighlighting].SetHighlight(true);
+	    }
     }
 
     public void RewardSelected(RewardScreenManager.RewardType type, string playerId)

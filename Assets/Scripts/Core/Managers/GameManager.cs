@@ -64,8 +64,12 @@ public class GameManager : NetworkBehaviour
 
 	void Awake()
 	{
-		var level = GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>();
-		level.Sign.SetActive(level.SignActive);
+		// cannot rejoin in single player so sign active will be set later
+		if (!SP_Manager.Instance.IsSinglePlayer())
+		{
+			var level = GameObject.Find("LevelColliders/SpawnedObjects").GetComponent<CollectibleGeneration>();
+			level.Sign.SetActive(level.SignActive);
+		}
 		Platform.SetActive(false);
 	}
 
@@ -236,13 +240,14 @@ public class GameManager : NetworkBehaviour
         //}
 #if PSL_ENABLED
         PauseScreen.SetActive(!_gamePlaying);
+	    LessonSelectRequired = PSL_GameConfig.LessonSelectionRequired;
 #else
 
 #endif
-	    //LessonSelectRequired = PSL_GameConfig.LessonSelectionRequired;
-    }
 
-    [ServerAccess]
+	}
+
+	[ServerAccess]
     void RestartGame()
     {
         var method = MethodBase.GetCurrentMethod();
