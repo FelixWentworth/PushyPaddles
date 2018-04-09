@@ -240,13 +240,14 @@ public class GameManager : NetworkBehaviour
         //}
 #if PSL_ENABLED
         PauseScreen.SetActive(!_gamePlaying);
+	    LessonSelectRequired = PSL_GameConfig.LessonSelectionRequired;
 #else
 
 #endif
-	    //LessonSelectRequired = PSL_GameConfig.LessonSelectionRequired;
-    }
 
-    [ServerAccess]
+	}
+
+	[ServerAccess]
     void RestartGame()
     {
         var method = MethodBase.GetCurrentMethod();

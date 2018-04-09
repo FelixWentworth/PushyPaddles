@@ -46,17 +46,27 @@ public class Touch_Movement : MonoBehaviour
 			_touchControlsOption.SetActive(false);
 			_useTouch = true;
 		}
-	    if (sp && SP_Manager.Instance.Get<SP_GameManager>().GameSetup())
+		// TODO check if touch movemoent is enabled
+	    if (UseTouch || (sp && SP_Manager.Instance.Get<SP_GameManager>().GameSetup()))
 	    {
 		    if (!UseTouch && _touchControlsOption.activeSelf)
 		    {
 				// Touch controls can be toggled, but have not been activated so dont allow touch movements
 				return;
 		    }
-		    if (Input.GetMouseButtonDown(0))
+		    if (Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
 	        {
-	            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-	            RaycastHit hit;
+				var ray = new Ray();
+		        if (Input.touchCount > 0)
+		        {
+			        ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+		        }
+		        else
+		        {
+			        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+				}
+
+				RaycastHit hit;
 
 	            if (Physics.Raycast(ray, out hit, Mask))
 	            {

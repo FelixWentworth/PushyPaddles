@@ -34,7 +34,7 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
-		#if PSL_ENABLED
+#if PSL_ENABLED
 		if (PlatformSelection.ConnectionType != ConnectionType.Testing)
         {
             _useDefault = false;

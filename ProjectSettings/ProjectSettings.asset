@@ -119,7 +119,7 @@ PlayerSettings:
     16:10: 1
     16:9: 0
     Others: 0
-  bundleVersion: 1.2
+  bundleVersion: 1.2.1
   preloadedAssets: []
   metroInputSource: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -141,7 +141,7 @@ PlayerSettings:
     iOS: com.PlayGen.PushyPaddles
   buildNumber:
     iOS: 9
-  AndroidBundleVersionCode: 9
+  AndroidBundleVersionCode: 10
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
@@ -500,14 +500,14 @@ PlayerSettings:
   webGLDebugSymbols: 0
   webGLEmscriptenArgs: 
   webGLModulesDirectory: 
-  webGLTemplate: APPLICATION:Minimal
+  webGLTemplate: PROJECT:PSL
   webGLAnalyzeBuildSize: 0
   webGLUseEmbeddedResources: 0
   webGLUseWasm: 0
-  webGLCompressionFormat: 0
+  webGLCompressionFormat: 1
   scriptingDefineSymbols:
     1: PSL_ENABLED
-    13: PSL_ENABLEDA
+    13: PSL_ENABLED
   platformArchitecture:
     iOS: 0
   scriptingBackend:
