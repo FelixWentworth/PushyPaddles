@@ -6,6 +6,6 @@ public class FPSDisplay : MonoBehaviour {
 
     void OnGUI()
     {
-        GUI.Label(new Rect(10, 10, 100, 20), Mathf.RoundToInt(1 / Time.deltaTime).ToString());
+        GUI.Label(new Rect(20, 0, 100, 20), Mathf.RoundToInt(1 / Time.deltaTime).ToString());
     }
 }
